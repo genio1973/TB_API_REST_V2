@@ -20,14 +20,17 @@ spl_autoload_register(function ($classname) {
 });
 
 
-// instanciation de l'objet Slim
-$app = new \Slim\App;
+
 
 // ID utilisateur - variable globale
+//global $user_id;
 $user_id = NULL;
+
+
 
 // toutes les routes accessibles à tout utilisateur de l'API
 require_once('src/routes/public.php');
+
 
 
 //Groupement des routes pour les administrateurs

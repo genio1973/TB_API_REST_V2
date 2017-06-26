@@ -7,16 +7,16 @@
  */
 class DbHandler {
 
-    private $conn;
+    private $pdo;
 
     function __construct() {
         require_once dirname(__FILE__) . '/DbConnect.php';
         //Ouverture connexion db
         $db = new DbConnect();
-        $this->conn = $db->connect();
+        $this->pdo = $db->connect();
     }
 
-    /* ------------- méthodes de la table `user` ------------------ */
+    /* ------------- méthodes de la table `users` ------------------ */
 
     /**
      * Creation nouvel utilisateur
@@ -44,7 +44,7 @@ class DbHandler {
             // requete d'insertion
             $tokenExpiration = date('Y-m-d H:i:s', strtotime('+2 hour'));//the expiration date will be in two hour from the current moment
 
-            $stmt = $this->conn->prepare("INSERT INTO users(email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user)
+            $stmt = $this->pdo->prepare("INSERT INTO users(email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user)
                                          values (:email, :mot_de_passe, :api_key, :tokenExpiration, :id_role, :nom, :prenom)");
             
             $stmt->bindParam(":email", $email, PDO::PARAM_STR);   
@@ -78,7 +78,7 @@ class DbHandler {
      */
     public function checkLogin($email, $password) {
         // Obtention de l'utilisateur par email
-        $stmt = $this->conn->prepare("SELECT mot_de_passe FROM users WHERE email = :email");
+        $stmt = $this->pdo->prepare("SELECT mot_de_passe FROM users WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
 
    
@@ -86,8 +86,25 @@ class DbHandler {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if (PassHash::check_password($result['mot_de_passe'], $password)) {
             //if (PassHash::check_password_sha1($result['mot_de_passe'], $password)) {
-                // Mot de passe utilisateur est correcte
-                return TRUE;
+                // Mot de passe utilisateur est correct
+
+                // Création d'une nouvelle clé API
+                // Générer API key
+                $api_key = $this->generateApiKey();
+                //return $api_key;
+
+                // requete d'insertion
+                $tokenExpiration = date('Y-m-d H:i:s', strtotime('+2 hour'));//the expiration date will be in two hour from the current moment
+                
+                $stmt = $this->pdo->prepare("UPDATE users u SET u.token = :api_key, u.token_expire = :token_exp  WHERE email = :email");
+                $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+                $stmt->bindParam(":api_key", $api_key, PDO::PARAM_STR);
+                $stmt->bindParam(":token_exp", $tokenExpiration, PDO::PARAM_STR);
+
+                if ($stmt->execute())
+                {
+                    return TRUE;
+                }
             }
         }            
          // mot de passe utilisateur est incorrect ou utilisateur non trouvé !
@@ -100,7 +117,7 @@ class DbHandler {
      * @return boolean
      */
     private function isUserExists($email) {
-        $stmt = $this->conn->prepare("SELECT id_user from users WHERE email = :email");
+        $stmt = $this->pdo->prepare("SELECT id_user from users WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
 
         if ($stmt->execute())
@@ -118,23 +135,38 @@ class DbHandler {
      * @param String $email
      */
     public function getUserByEmail($email) {
-        $stmt = $this->conn->prepare("SELECT id_user, email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user, status FROM users WHERE email = :email");
+        $stmt = $this->pdo->prepare("SELECT id_user, email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user, status FROM users WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         if ($stmt->execute())
         {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->conn = NULL;
+            $this->pdo = NULL;
             return $user;
         }
         return NULL;
     }
 
     /**
+     *Obtention des utilisateurs
+     */
+    public function getUsers() {
+        $stmt = $this->pdo->prepare("SELECT * FROM users");       
+        if ($stmt->execute())
+        {
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $users;
+        }
+        return NULL;
+    }
+
+
+    /**
      * Obtention de la clé API de l'utilisateur
      * @param String $user_id clé primaire de l'utilisateur
      */
     public function getApiKeyById($user_id) {
-        $stmt = $this->conn->prepare("SELECT token FROM user WHERE id = ?");
+        $stmt = $this->pdo->prepare("SELECT token FROM user WHERE id = ?");
         $stmt->bind_param("i", $user_id);
         if ($stmt->execute()) {
             $stmt->bind_result($api_key);
@@ -150,7 +182,7 @@ class DbHandler {
      * @param String $api_key
      */
     public function getUserId($api_key) {
-        $stmt = $this->conn->prepare("SELECT id FROM user WHERE token = ?");
+        $stmt = $this->pdo->prepare("SELECT id FROM user WHERE token = ?");
         $stmt->bind_param("s", $api_key);
         if ($stmt->execute()) {
             $stmt->bind_result($user_id);
@@ -170,7 +202,7 @@ class DbHandler {
      * @return boolean
      */
     public function isValidApiKey($api_key) {
-        $stmt = $this->conn->prepare("SELECT token_expire from user WHERE token = ?");
+        $stmt = $this->pdo->prepare("SELECT token_expire from user WHERE token = ?");
         $stmt->bind_param("s", $api_key);
         if ($stmt->execute()) {
             $stmt->bind_result($tokenExpiration);
@@ -193,7 +225,7 @@ class DbHandler {
      * @return boolean
      */
     public function isValidApiKeyWithID($api_key, $id) {
-        $stmt = $this->conn->prepare("SELECT token_expire from user WHERE token = ? AND id = ?");
+        $stmt = $this->pdo->prepare("SELECT token_expire from user WHERE token = ? AND id = ?");
         $stmt->bind_param("si", $api_key, $id);
         if ($stmt->execute()) {
             $stmt->bind_result($tokenExpiration);
@@ -217,7 +249,7 @@ class DbHandler {
      * @return boolean
      */
     public function isValidRoleApiKeyWithID($api_key, $id, $role) {
-        $stmt = $this->conn->prepare("SELECT token_expire, id_role from user WHERE token = ? AND id = ?");
+        $stmt = $this->pdo->prepare("SELECT token_expire, id_role from user WHERE token = ? AND id = ?");
         $stmt->bind_param("si", $api_key, $id);
         if ($stmt->execute()) {
             $stmt->bind_result($tokenExpiration, $id_role);
@@ -232,17 +264,238 @@ class DbHandler {
     }
 
 
-
-
-
-
-
     /**
      * Génération aléatoire unique MD5 String pour utilisateur clé Api
      */
     private function generateApiKey() {
         return md5(uniqid(rand(), true));
     }
+
+
+
+/************************************************************************************
+------------- méthode de la table`tournois` ------------------
+*************************************************************************************/
+
+    /**
+     *Obtention des tournois créés par utilisateur
+     * @param String $email
+     */
+    public function getTournamentCreatedUserByEmail($email) {
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                            u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
+                                    FROM tournois t
+                                    INNER JOIN users u ON u.id_user=t.id_user
+                                    INNER JOIN roles r ON r.id_role=u.id_role
+                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  
+                                    WHERE u.email = :email");
+        /*
+        $stmt = $this->pdo->prepare("SELECT *
+                                    FROM users u
+                                    WHERE u.email = :email");  
+                                    */
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+
+    /**
+     *Obtention des tournois créés par utilisateur (id)
+     * @param String $email
+     */
+    public function getTournamentCreatedUserById($id_user) {
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                            u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
+                                    FROM tournois t
+                                    INNER JOIN users u ON u.id_user=t.id_user
+                                    INNER JOIN roles r ON r.id_role=u.id_role
+                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  
+                                    WHERE u.id_user = :id_user");
+        /*
+        $stmt = $this->pdo->prepare("SELECT *
+                                    FROM users u
+                                    WHERE u.email = :email");  
+                                    */
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+
+    /**
+     *Obtention d'un tournoi par id
+     * @param Int $id_tournoi
+     */
+    public function getTournamentById($id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                            u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
+                                    FROM tournois t
+                                    INNER JOIN users u ON u.id_user=t.id_user
+                                    INNER JOIN roles r ON r.id_role=u.id_role
+                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  
+                                    WHERE t.id_tournoi = :id_tournoi");
+                                   
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $tournoi = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournoi;
+        }
+        return NULL;
+    }
+
+    /**
+     *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     */
+    public function getTeamsTournamentByIdAndUserId($id_user, $id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe 
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        WHERE t.id_tournoi LIKE :id_tournoi
+                                        AND t.id_user = :id_user");
+                                   
+
+
+
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+/**
+     *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     * @param Int $id_groupe
+     */
+    public function getTeamsByGroupTournamentByIdAndUserId($id_user, $id_tournoi, $id_groupe) {
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe 
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        WHERE t.id_tournoi LIKE :id_tournoi                                        
+                                        AND t.id_user LIKE :id_user
+                                        AND g.id_groupe LIKE :id_groupe");
+                                   
+
+
+
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+    
+/**
+     *Obtention des matchs pour un tournoi selon son id du tournoi et de l'utilisateur
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     */
+    public function getMatchsByTournamentIdAndUserId($id_user, $id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match, e.nom_equipe, e2.nom_equipe
+                                        FROM tournois t
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                        WHERE t.id_tournoi LIKE :id_tournoi
+                                        AND t.id_user LIKE :id_user");
+                                   
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+/**
+     *Obtention des matchs d'un groupe d'un tournoi selon son id du tournoi et de l'utilisateur
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     */
+    public function getMatchsByGroupAndUserId($id_user, $id_groupe) {
+        $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match,
+                                        e.id_equipe as 'num_eq_home', e.nom_equipe as 'equipe_home',
+                                        e2.nom_equipe as 'equipe_visiteur',e.id_equipe as 'num_eq_visiteur'
+                                        FROM tournois t
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                        WHERE g.id_groupe LIKE :id_groupe
+                                        AND t.id_user LIKE :id_user");
+                                   
+        $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+
+
+
+    /**
+     * Obtention des tournois
+     */
+    public function getTournaments() {
+        $stmt = $this->pdo->prepare("SELECT * FROM tournois");       
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+
+
+
+
+
+
+
+
 
     /* ------------- méthodes table`tasks` ------------------ */
 
@@ -253,7 +506,7 @@ class DbHandler {
      */
 /*
     public function createTask($user_id, $task) {
-        $stmt = $this->conn->prepare("INSERT INTO tasks(task) VALUES(?)");
+        $stmt = $this->pdo->prepare("INSERT INTO tasks(task) VALUES(?)");
         $stmt->bind_param("s", $task);
         $result = $stmt->execute();
         $stmt->close();
@@ -261,7 +514,7 @@ class DbHandler {
         if ($result) {
             // ligne de tâche créé
             // maintenant assigner la tâche à l'utilisateur
-            $new_task_id = $this->conn->insert_id;
+            $new_task_id = $this->pdo->insert_id;
             $res = $this->createUserTask($user_id, $new_task_id);
             if ($res) {
                 // tâche créée avec succès
@@ -282,7 +535,7 @@ class DbHandler {
      */
 /*
     public function getTask($task_id, $user_id) {
-        $stmt = $this->conn->prepare("SELECT t.id, t.task, t.status, t.created_at from tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
+        $stmt = $this->pdo->prepare("SELECT t.id, t.task, t.status, t.created_at from tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
         $stmt->bind_param("ii", $task_id, $user_id);
         if ($stmt->execute()) {
             $res = array();
@@ -306,7 +559,7 @@ class DbHandler {
      */
 /*
     public function getAllUserTasks($user_id) {
-        $stmt = $this->conn->prepare("SELECT t.* FROM tasks t, user_tasks ut WHERE t.id = ut.task_id AND ut.user_id = ?");
+        $stmt = $this->pdo->prepare("SELECT t.* FROM tasks t, user_tasks ut WHERE t.id = ut.task_id AND ut.user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $tasks = $stmt->get_result();
@@ -322,7 +575,7 @@ class DbHandler {
      */
   /*
     public function updateTask($user_id, $task_id, $task, $token) {
-        $stmt = $this->conn->prepare("UPDATE tasks t, user_tasks ut set t.task = ?, t.status = ? WHERE t.id = ? AND t.id = ut.task_id AND ut.user_id = ?");
+        $stmt = $this->pdo->prepare("UPDATE tasks t, user_tasks ut set t.task = ?, t.status = ? WHERE t.id = ? AND t.id = ut.task_id AND ut.user_id = ?");
         $stmt->bind_param("siii", $task, $token, $task_id, $user_id);
         $stmt->execute();
         $num_affected_rows = $stmt->affected_rows;
@@ -336,7 +589,7 @@ class DbHandler {
      */
   /*
     public function deleteTask($user_id, $task_id) {
-        $stmt = $this->conn->prepare("DELETE t FROM tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
+        $stmt = $this->pdo->prepare("DELETE t FROM tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
         $stmt->bind_param("ii", $task_id, $user_id);
         $stmt->execute();
         $num_affected_rows = $stmt->affected_rows;
@@ -353,7 +606,7 @@ class DbHandler {
      */
   /*
     public function createUserTask($user_id, $task_id) {
-        $stmt = $this->conn->prepare("INSERT INTO user_tasks(user_id, task_id) values(?, ?)");
+        $stmt = $this->pdo->prepare("INSERT INTO user_tasks(user_id, task_id) values(?, ?)");
         $stmt->bind_param("ii", $user_id, $task_id);
         $result = $stmt->execute();
 
@@ -380,7 +633,7 @@ class DbHandler {
     public function createRole($id, $droits) {
 
             // requete d'insertion
-            $stmt = $this->conn->prepare("INSERT INTO role(id, droits) values (?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO role(id, droits) values (?, ?)");
             $stmt->bind_param('is', $id, $droits);
             $result = $stmt->execute();
             $stmt->close();
@@ -404,12 +657,12 @@ class DbHandler {
      * @param Int $id
      */
     public function getRoleById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM roles WHERE id_role = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM roles WHERE id_role = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
             $role = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->conn = NULL;
+            $this->pdo = NULL;
             return $role;
         } else {
             return NULL;
@@ -422,11 +675,11 @@ class DbHandler {
      *Obtention de tous les rolesd
      */
     public function getRoles() {
-        $stmt = $this->conn->prepare("SELECT * FROM roles");
+        $stmt = $this->pdo->prepare("SELECT * FROM roles");
         
         if ($stmt->execute()) {
             $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->conn = NULL;
+            $this->pdo = NULL;
             return $roles;
         } else {
             return NULL;
