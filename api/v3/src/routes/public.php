@@ -282,10 +282,10 @@ $app->get('/resp/tournament/{id_tournoi}/matchs', function (Request $request, Re
         });
 
 /* Liste des matchs d'un groupe pour l'utilisateur en cours, selon son id dans son entête
- * url - /resp/tournament/matchs/groupe/{id_groupe}
+ * url - /resp/matchs/groupe/{id_groupe}
  * methode - GET
  */
-$app->get('/resp/tournament/matchs/groupe/{id_groupe}', function (Request $request, Response $response) {
+$app->get('/resp/matchs/groupe/{id_groupe}', function (Request $request, Response $response) {
             // Obtenir les en-têtes de requêtes
             // Nullement besoin de test la présence, car cela est fait précédement
             // en vérifiant l'authentifcation sur la route du group responsable
@@ -297,11 +297,33 @@ $app->get('/resp/tournament/matchs/groupe/{id_groupe}', function (Request $reque
             $db = new DbHandler();
             $res = array();
             $res = $db->getMatchsByGroupAndUserId($id_current_user, $id_groupe);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des matchs d'une équipe pour l'utilisateur en cours, selon son id dans son entête
+ * url - /resp/matchs/groupe/{id_groupe}
+ * methode - GET
+ */
+$app->get('/resp/matchs/equipe/{id_equipe}', function (Request $request, Response $response) {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $id_equipe = $request->getAttribute('id_equipe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamMatchsByIdAndUserId($id_current_user, $id_equipe);
             //$res['id_groupe'] = $id_groupe;
             //$res['id_current_user'] = $id_current_user;
             // echo de la repense  JSON
             return echoRespnse(201, $response, $res);
         });
+
 
 /*
 $app->get('/hello', function ($request, $response) use ($app) {
