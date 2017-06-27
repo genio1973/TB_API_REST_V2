@@ -391,6 +391,34 @@ class DbHandler {
      * @param Int $id_tournoi
      * @param Int $id_groupe
      */
+    public function getTeamsByGroupByIdAndUserId($id_user, $id_groupe) {
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
+                                        p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
+                                        WHERE t.id_user LIKE :id_user
+                                        AND g.id_groupe LIKE :id_groupe");
+                                   
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
+
+/**
+     *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     * @param Int $id_groupe
+     */
     public function getTeamsByGroupTournamentByIdAndUserId($id_user, $id_tournoi, $id_groupe) {
         $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
                                         p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
@@ -402,9 +430,6 @@ class DbHandler {
                                         WHERE t.id_tournoi LIKE :id_tournoi                                        
                                         AND t.id_user LIKE :id_user
                                         AND g.id_groupe LIKE :id_groupe");
-                                   
-
-
 
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
@@ -417,7 +442,6 @@ class DbHandler {
         }
         return NULL;
     }
-
     
 /**
      *Obtention des matchs pour un tournoi selon son id du tournoi et de l'utilisateur

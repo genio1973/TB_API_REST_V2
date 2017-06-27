@@ -159,7 +159,7 @@ $app->get('/admin/tournament/{id}', function (Request $request, Response $respon
         });
 
 /* Liste des tournois créés par un utilateur, selon son email
- * url - /admin/tournament/{email}
+ * url - /admin/tournament/email/{email}
  * methode - GET
  */
 $app->get('/admin/tournaments/email/{email}', function (Request $request, Response $response) {
@@ -174,7 +174,7 @@ $app->get('/admin/tournaments/email/{email}', function (Request $request, Respon
         });
 
 /* Liste des tournois créés par un utilateur, selon son id
- * url - /admin/tournament/{email}
+ * url - /admin/tournaments/id/{id}
  * methode - GET
  */
 $app->get('/admin/tournaments/id/{id}', function (Request $request, Response $response) {
@@ -216,7 +216,7 @@ $app->get('/resp/tournaments', function (Request $request, Response $response)  
 
 
 /* Liste des équipes pour un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
- * url - /resp/tournament/{id_tournoi}
+ * url - /resp/tournament/{id_tournoi}/equipes
  * methode - GET
  */
 $app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
@@ -237,6 +237,28 @@ $app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, R
         });
 
 /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours, selon son id dans son entête
+ * url - /resp/groupe/{id_groupe}/equipes
+ * methode - GET
+ */
+$app->get('/resp/groupe/{id_groupe}/equipes', function (Request $request, Response $response) {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $id_tournoi = $request->getAttribute('id_tournoi');
+            $id_groupe = $request->getAttribute('id_groupe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamsByGroupByIdAndUserId($id_current_user, $id_groupe);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
  * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
  * methode - GET
  */
@@ -256,7 +278,7 @@ $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (
 
             // echo de la repense  JSON
             return echoRespnse(201, $response, $res);
-        });
+        });        
 
 
 
