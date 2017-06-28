@@ -67,6 +67,52 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
             return echoRespnse(200, $response, $data);
         });
 
+/* Liste des matchs d'un groupe
+ * url - /public/matchs/groupe/{id_groupe}
+ * methode - GET
+ */
+$app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Response $response) {
+            $id_groupe = $request->getAttribute('id_groupe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getMatchsByGroup($id_groupe);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des matchs d'une équipe
+ * url - /public/matchs/equipe/{id_equipe}
+ * methode - GET
+ */
+$app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Response $response) {
+            $id_equipe = $request->getAttribute('id_equipe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamMatchsById($id_equipe);
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des matchs pour un tournoi
+ * url - /public/tournament/{id_tournoi}/matchs
+ * methode - GET
+ */
+$app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id_tournoi');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getMatchsByTournamentId($id_tournoi);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+
 
 /************************************************************************************
 API admin
@@ -236,23 +282,16 @@ $app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, R
             return echoRespnse(201, $response, $res);
         });
 
-/* Liste des équipes dans un groupe appartenant à l'utilisateur en cours, selon son id dans son entête
- * url - /resp/groupe/{id_groupe}/equipes
+/* Liste des équipes dans un groupe appartenant 
+ * url - /public/groupe/{id_groupe}/equipes
  * methode - GET
  */
-$app->get('/resp/groupe/{id_groupe}/equipes', function (Request $request, Response $response) {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $id_tournoi = $request->getAttribute('id_tournoi');
+$app->get('/public/groupe/{id_groupe}/equipes', function (Request $request, Response $response) {
             $id_groupe = $request->getAttribute('id_groupe');
 
             $db = new DbHandler();
             $res = array();
-            $res = $db->getTeamsByGroupByIdAndUserId($id_current_user, $id_groupe);
+            $res = $db->getTeamsByGroupById( $id_groupe);
 
             // echo de la repense  JSON
             return echoRespnse(201, $response, $res);
@@ -282,69 +321,6 @@ $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (
 
 
 
-/* Liste des matchs pour un tournoi à l'utilisateur en cours, selon son id dans son entête
- * url - /resp/tournament/{id_tournoi}/matchs
- * methode - GET
- */
-$app->get('/resp/tournament/{id_tournoi}/matchs', function (Request $request, Response $response) {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $id_tournoi = $request->getAttribute('id_tournoi');
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getMatchsByTournamentIdAndUserId($id_current_user, $id_tournoi);
-
-            // echo de la repense  JSON
-            return echoRespnse(201, $response, $res);
-        });
-
-/* Liste des matchs d'un groupe pour l'utilisateur en cours, selon son id dans son entête
- * url - /resp/matchs/groupe/{id_groupe}
- * methode - GET
- */
-$app->get('/resp/matchs/groupe/{id_groupe}', function (Request $request, Response $response) {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $id_groupe = $request->getAttribute('id_groupe');
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getMatchsByGroupAndUserId($id_current_user, $id_groupe);
-
-            // echo de la repense  JSON
-            return echoRespnse(201, $response, $res);
-        });
-
-/* Liste des matchs d'une équipe pour l'utilisateur en cours, selon son id dans son entête
- * url - /resp/matchs/groupe/{id_groupe}
- * methode - GET
- */
-$app->get('/resp/matchs/equipe/{id_equipe}', function (Request $request, Response $response) {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $id_equipe = $request->getAttribute('id_equipe');
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getTeamMatchsByIdAndUserId($id_current_user, $id_equipe);
-            //$res['id_groupe'] = $id_groupe;
-            //$res['id_current_user'] = $id_current_user;
-            // echo de la repense  JSON
-            return echoRespnse(201, $response, $res);
-        });
 
 
 /*
