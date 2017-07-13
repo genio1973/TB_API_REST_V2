@@ -385,6 +385,25 @@ class DbHandler {
         }
         return NULL;
     }
+    /**
+     *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
+     * @param Int $id_tournoi
+     */
+    public function getTeamsTournamentById($id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe
+                                        FROM tournois t
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        WHERE t.id_tournoi LIKE :id_tournoi");
+
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        if ($stmt->execute()){
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
 /**
      *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
      * @param Int $id_tournoi
@@ -497,9 +516,9 @@ class DbHandler {
         return NULL;
     }
 
-/**
+    /**
      *Obtention des matchs d'un groupe d'un tournoi selon son id du tournoi 
-     * @param Int $id_tournoi
+     * @param Int $id_groupe
      */
     public function getMatchsByGroup($id_groupe) {
         $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match,
@@ -542,9 +561,58 @@ class DbHandler {
 
 
 
+    /**
+     * Obtention des matchs listés par terrain pour un tounoi spécifique i 
+     * @param Int $id_tournoi
+     */
+    public function getMatchsPitchesByTournamentId($id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT ter.id_terrain, ter.nom_terrain, g.nom_groupe, m.id_match, e.nom_equipe, e2.nom_equipe, arbitre.id_equipe, arbitre.nom_equipe, dirige.id_user, dirige.nom_user, dirige.prenom_user
+                                        FROM tournois t
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                        INNER JOIN terrains ter ON ter.id_terrain = m.id_terrain
+                                        LEFT JOIN equipes arbitre ON arbitre.id_equipe = m.id_equipe_arbitre
+                                        LEFT JOIN users dirige ON dirige.id_user = m.id_user_dirige
+                                        WHERE t.id_tournoi LIKE :id_tournoi
+                                        GROUP BY id_terrain, ter.nom_terrain, m.id_match");
+                                   
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
 
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
 
+    /**
+     * Obtention des matchs pour un terrain spécifique 
+     * @param Int $id_terrain
+     */
+    public function getMatchsByPitchId($id_terrain) {
+        $stmt = $this->pdo->prepare("SELECT m.id_match, m.id_equipe_home, e1.nom_equipe, m.id_equipe_visiteur, e2.nom_equipe, t.nom_terrain, arbitre.id_equipe, arbitre.nom_equipe, dirige.id_user, dirige.nom_user, dirige.prenom_user
+                                    FROM matchs m
+                                    INNER JOIN equipes e1 ON m.id_equipe_home = e1.id_equipe
+                                    INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                    INNER JOIN terrains t ON m.id_terrain = t.id_terrain
+                                    LEFT JOIN equipes arbitre ON arbitre.id_equipe = m.id_equipe_arbitre
+                                    LEFT JOIN users dirige ON dirige.id_user = m.id_user_dirige
+                                    WHERE m.id_terrain LIKE :id_terrain");
+                                   
+        $stmt->bindParam(":id_terrain", $id_terrain, PDO::PARAM_INT);
 
+        if ($stmt->execute())
+        {
+            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->pdo = NULL;
+            return $tournois;
+        }
+        return NULL;
+    }
 
 
 

@@ -111,7 +111,20 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
             return echoRespnse(201, $response, $res);
         });
 
+/* Liste les noms des équipes pour un tournoi
+ * url - /pulic/tournament/{id_tournoi}/equipes
+ * methode - GET
+ */
+$app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id_tournoi');
 
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamsTournamentById($id_tournoi);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
 
 /************************************************************************************
@@ -240,6 +253,19 @@ API responsables de tournoi
 Routes par défauts : vx/responsable/route
 *************************************************************************************/
 
+/* ????????????????????
+ * url - /resp/???????
+ * methode - POST
+ */
+//$app->post('/some/path', function () use ($app) { 
+/*
+$app->post('/some/path', function (Request $request, Response $response) {
+    $json = $app->request->getBody();
+    $data = json_decode($json, true); // parse the JSON into an assoc. array
+    // do other tasks
+});
+*/
+
 
 /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
  * url - /resp/tournaments
@@ -296,6 +322,38 @@ $app->get('/public/groupe/{id_groupe}/equipes', function (Request $request, Resp
             // echo de la repense  JSON
             return echoRespnse(201, $response, $res);
         });
+
+
+/* Liste des matchs listés par terrain pour un tounoi spécifique 
+ * url - /public/tournament/{id_tournoi}/matchs/terrains
+ * methode - GET
+ */
+$app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id_tournoi');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getMatchsPitchesByTournamentId($id_tournoi);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des matchs pour un terrain spécifique 
+ * url - /public/matchs/terrain/{id_terrain}
+ * methode - GET
+ */
+$app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Response $response) {
+            $id_terrain = $request->getAttribute('id_terrain');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getMatchsByPitchId($id_terrain);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
 
 /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
  * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
