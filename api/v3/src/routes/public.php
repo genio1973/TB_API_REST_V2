@@ -355,6 +355,25 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
         });
 
 
+/* Obtient le classement d'un groupe par l'id du groupe
+ * url - /public/classement/groupe/{id_groupe}
+ * methode - GET
+ */
+$app->get('/public/classement/groupe/{id_groupe}', function (Request $request, Response $response) {
+            $id_groupe = $request->getAttribute('id_groupe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getRankingByGroupID($id_groupe);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });   
+
+
+
+
+
 /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
  * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
  * methode - GET
@@ -376,6 +395,9 @@ $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (
             // echo de la repense  JSON
             return echoRespnse(201, $response, $res);
         });        
+
+
+
 
 
 

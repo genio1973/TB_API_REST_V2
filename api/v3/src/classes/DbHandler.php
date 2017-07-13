@@ -297,9 +297,9 @@ class DbHandler {
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -325,9 +325,9 @@ class DbHandler {
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -349,9 +349,9 @@ class DbHandler {
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         if ($stmt->execute())
         {
-            $tournoi = $stmt->fetch(PDO::FETCH_ASSOC);
+            $response = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournoi;
+            return $response;
         }
         return NULL;
     }
@@ -379,9 +379,9 @@ class DbHandler {
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -398,9 +398,9 @@ class DbHandler {
 
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         if ($stmt->execute()){
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -422,9 +422,9 @@ class DbHandler {
         $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -452,9 +452,9 @@ class DbHandler {
         $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -480,9 +480,9 @@ class DbHandler {
 
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -509,9 +509,9 @@ class DbHandler {
 
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -535,9 +535,9 @@ class DbHandler {
 
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -552,9 +552,9 @@ class DbHandler {
         $stmt = $this->pdo->prepare("SELECT * FROM tournois");       
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -582,9 +582,9 @@ class DbHandler {
 
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
@@ -607,13 +607,26 @@ class DbHandler {
 
         if ($stmt->execute())
         {
-            $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
-            return $tournois;
+            return $response;
         }
         return NULL;
     }
 
+
+
+    /**
+     * Obtention le classement d'un groupe par son id 
+     * @param Int $id_groupe
+     */
+    public function getRankingByGroupID($id_groupe) {
+        $group = new Group($this->pdo, $id_groupe);
+        
+        return $group->getTeams();
+        //return $group->toList();
+
+    }
 
 
 
