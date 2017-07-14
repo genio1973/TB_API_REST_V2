@@ -4,9 +4,8 @@ class Group {
 
     // liste des équipes
     private $teams = array();
-    
+
     function __construct($pdo, $id_group) {
-        
         //récupère tous les id des équipes dans le groupe spécifié
         $stmt = $pdo->prepare("SELECT e.id_equipe 
                                 FROM equipes e
@@ -27,6 +26,10 @@ class Group {
         }
     }
 
+    /**
+     * Renvoi les informations complètes sur chaque équipes du groupe. 
+     * @return array : Liste des équipes avec détails dans l'état actuel
+     */
     public function getTeams(){
         if(!$this->teams) 
             return NULL;
@@ -36,9 +39,6 @@ class Group {
         }
         return $teams;
     }
-
-    
-
 }
 
 ?>
