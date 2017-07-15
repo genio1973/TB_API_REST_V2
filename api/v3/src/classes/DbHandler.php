@@ -70,6 +70,29 @@ class DbHandler {
         }
     }
 
+
+    /**
+     * Creation nouveau tournoi
+     * @param String $nom_tournoi, nom du tournoi
+     * @param Int $id_user, créateur du tournoi
+     * @return Boolean
+     */
+     public function createTournament($nom_tournoi, $id_user) {
+        require 'src/include/config.php';
+
+        $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
+                                        VALUES (NULL, :nom, :user)");
+        
+        $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
+        $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
+        
+        //Exécution et retour pour une insertion réussie
+        $result = $stmt->execute();
+        return $result;
+    }
+
+
+
     /**
      * Vérification de connexion de l'utilisateur
      * @param String $email

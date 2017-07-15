@@ -22,8 +22,7 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
             $email = $request->getParam('email');
             // valider adresse email
             $res = validateEmail($email, $response);
-            if($res !== true)
-            {
+            if($res !== true){
                 return $res;
             }
 
@@ -38,8 +37,7 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                 $user = $db->getUserByEmail($email);
 
                 if ($user != NULL) {
-                    if($user['status']==1)
-                    {
+                    if($user['status']==1){
                         $data['error'] = false;
                         $data['id_user'] = $user['id_user'];
                         $data['status'] = $user['status'];
@@ -78,7 +76,7 @@ $app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Respo
             $res = array();
             $res = $db->getMatchsByGroup($id_groupe);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -92,7 +90,7 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
             $db = new DbHandler();
             $res = array();
             $res = $db->getTeamMatchsById($id_equipe);
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -107,7 +105,7 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
             $res = array();
             $res = $db->getMatchsByTournamentId($id_tournoi);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -122,7 +120,7 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
             $res = array();
             $res = $db->getTeamsTournamentById($id_tournoi);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -150,8 +148,7 @@ $app->post('/admin/register', function(Request $request, Response $response) {
             // valider adresse email
             $res = validateEmail($email, $response);
 
-            if($res !== true)
-            {
+            if($res !== true) {
                 return $res;
             }
 
@@ -169,7 +166,7 @@ $app->post('/admin/register', function(Request $request, Response $response) {
                 $data["error"] = true;
                 $data["message"] = "Désolé, cet E-mail éxiste déja";
             }
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
 
         });
@@ -184,7 +181,7 @@ $app->get('/admin/users', function (Request $request, Response $response) {
             $db = new DbHandler();
             $users = $db->getUsers();
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $users);
 
         });
@@ -197,7 +194,7 @@ $app->get('/admin/tournaments', function (Request $request, Response $response) 
             $db = new DbHandler();
             $users = $db->getTournaments();
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $users);
 
         });
@@ -212,7 +209,7 @@ $app->get('/admin/tournament/{id}', function (Request $request, Response $respon
             $db = new DbHandler();
             $res = $db->getTournamentById($id_tournoi);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
 
         });
@@ -227,7 +224,7 @@ $app->get('/admin/tournaments/email/{email}', function (Request $request, Respon
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserByEmail($email);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
 
         });
@@ -242,7 +239,7 @@ $app->get('/admin/tournaments/id/{id}', function (Request $request, Response $re
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserById($id);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
 
         });
@@ -266,6 +263,32 @@ $app->post('/some/path', function (Request $request, Response $response) {
 });
 */
 
+/* Enregistrement  de l'utilisateur (création d'un nouveau')
+ * url - /admin/register
+ * methode - POST
+ * params - email, password, role
+ */
+$app->post('/resp/tournoi', function(Request $request, Response $response) use ($app) {
+            //require 'src/include/config.php';
+            
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->createTournament($data['nom_tournoi'], $id_current_user);
+
+
+            //$data[] = "test";
+            //$res = $data;
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+
+        });
 
 /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
  * url - /resp/tournaments
@@ -282,7 +305,7 @@ $app->get('/resp/tournaments', function (Request $request, Response $response)  
             $res = array();
             $res = $db->getTournamentCreatedUserById($id_current_user);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -304,7 +327,7 @@ $app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, R
             $res = array();
             $res = $db->getTeamsTournamentByIdAndUserId($id_current_user, $id_tournoi);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -319,7 +342,7 @@ $app->get('/public/groupe/{id_groupe}/equipes', function (Request $request, Resp
             $res = array();
             $res = $db->getTeamsByGroupById( $id_groupe);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -335,7 +358,7 @@ $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $
             $res = array();
             $res = $db->getMatchsPitchesByTournamentId($id_tournoi);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -350,7 +373,7 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
             $res = array();
             $res = $db->getMatchsByPitchId($id_terrain);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
 
@@ -366,7 +389,7 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             $res = array();
             $res = $db->getRankingByGroupID($id_groupe);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });   
 
@@ -381,7 +404,7 @@ $app->get('/public/teams/groupe/{id_groupe}', function (Request $request, Respon
             $res = array();
             $res = $db->getTeamDetailsgByGroupID($id_groupe);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });  
 
@@ -405,7 +428,7 @@ $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (
             $res = array();
             $res = $db->getTeamsByGroupTournamentByIdAndUserId($id_current_user, $id_tournoi, $id_groupe);
 
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });        
 

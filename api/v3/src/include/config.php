@@ -48,6 +48,7 @@ $config['message']['USER_ALREADY_EXISTED'] = 2;
 $config['message']['ROLE_CREATED_SUCCESSFULLY'] = 0;
 $config['message']['ROLE_CREATE_FAILED'] = 1;
 
+
 $config['role']['ADMIN'] = 1;
 $config['role']['RESPONSABLE'] = 2;
 $config['role']['ARBITRE'] = 4;
