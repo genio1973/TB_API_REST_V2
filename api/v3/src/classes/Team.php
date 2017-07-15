@@ -51,6 +51,7 @@ class Team {
         $this->teamInfo['sets_ratio'] = 1;
         $this->teamInfo['points_sets_realises'] = 1;
         $this->teamInfo['points_sets_encaisses'] = 1;
+        $this->teamInfo['points_sets_ratio'] = 0;
         $this->teamInfo['adversersaires_joues'] =array();
      }
 
@@ -60,6 +61,38 @@ class Team {
      */
     public function getTeam(){
         return $this->teamInfo;
+    }
+
+    /**
+     * Renvoi l'id de l'équipe
+     * @return int : id de l'équipe
+     */
+    public function getIdTeam(){
+        return $this->teamInfo['id_equipe'];
+    }
+
+    /**
+     * Renvoi le nombre de points obtenus 
+     * @return int : nombre de points
+     */
+    public function getPoints(){
+        return $this->teamInfo['points_actuels'];
+    }
+
+    /**
+     * Renvoi le ratio des points marqués dans les sets par les points encaissés 
+     * @return int : ratio
+     */
+    public function getPointsRatio(){
+        return $this->teamInfo['points_sets_ratio'];
+    }
+
+    /**
+     * Renvoi le ratio des points marqués dans les sets par les points encaissés 
+     * @return int : ratio
+     */
+    public function getSetsRatio(){
+        return $this->teamInfo['sets_ratio'];
     }
 
      /*
@@ -74,11 +107,13 @@ class Team {
         
         // Compter les sets perdus
         $this->teamInfo['sets_perdus'] = $this->teamInfo['sets_joues'] - $this->teamInfo['sets_gagnes'];
+        $this->teamInfo['sets_ratio'] = $this->teamInfo['sets_gagnes'] / $this->teamInfo['sets_perdus'];
         
         // Compter les points des sets gagnés et compter les points des sets perdus
         $this->setsPointsWin();
+
         // Et en ressortir les ratio
-        $this->teamInfo['sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
+        $this->teamInfo['points_sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
     }
 
 
@@ -247,11 +282,10 @@ class Team {
         $stmt->bindParam(":id_team", $this->teamInfo['id_equipe'], PDO::PARAM_INT);
 
         if ($stmt->execute()){
-            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if($res){
-                $this->teamInfo['points_sets_realises'] = $res['points_sets_realises'];
-                if($res['points_sets_encaisses'])
-                    $this->teamInfo['points_sets_encaisses'] = $res['points_sets_encaisses'];
+                $this->teamInfo['points_sets_realises'] = $res[0]['points_sets_realises'] + $res[1]['points_sets_realises'];
+                $this->teamInfo['points_sets_encaisses'] = $res[0]['points_sets_encaisses'] + $res[1]['points_sets_encaisses'];
             }
 
         }

@@ -26,6 +26,29 @@ class Group {
     }
 
     /**
+     * Renvoi le classement du groupe. 
+     * Les équipes à égalité de points sont départagées selon les critères suivants, appliqués successivement:
+     *    a. Le nombre de matchs gagnés (pour autant que le nombre de matchs disputés sont égal, ou, à défaut);
+     *    b. le quotient le plus élevé des sets sur l’ensemble des matchs (le nombre de sets gagnés divisé par le nombre de sets perdus);
+     *    c. le quotient le plus élevé des points marqués sur l’ensemble des matchs (le nombre de points gagnés divisés par le nombre de points perdus);
+     *    d. les rencontres directes en application de la let. b;
+     *    e. les rencontres directes en application de la let. c;
+     * @return array : classement des équipes
+     */
+    public function getRanking(){
+        if(!$this->teams) 
+            return NULL;
+        $ranking = $this->teams;
+        usort($ranking, array('Group','sortTeamsByPoints'));
+        //return $ranking[1]->getPoints();
+        foreach($ranking as $equipe){
+            $teams[] = $equipe->getTeam();
+        }
+        return $teams;
+    }
+
+
+    /**
      * Renvoi les informations complètes sur chaque équipes du groupe. 
      * @return array : Liste des équipes avec détails dans l'état actuel
      */
@@ -37,6 +60,19 @@ class Group {
             $teams[] = $equipe->getTeam();
         }
         return $teams;
+    }
+
+    private static function sortTeamsByPoints($a, $b) {
+	    if($a->getPoints() == $b->getPoints()){ // même nb de points
+            if($a->getSetsRatio() == $b->getSetsRatio()){ // même ratio des sets
+                if($a->getPointsRatio() == $b->getPointsRatio()){ // même ratio des pts
+                    return 0;
+                }
+                return ($a->getPointsRatio() < $b->getPointsRatio()) ? 1 : -1; // qui a le meilleur ratio de points dans les sets ?
+            }
+            return ($a->getSetsRatio() < $b->getSetsRatio()) ? 1 : -1; // qui a le meilleure ratio dans sets gagnés/perdus ?
+        }
+	    return ($a->getPoints() < $b->getPoints()) ? 1 : -1; // qui a le plus de points ?
     }
 }
 

@@ -367,11 +367,23 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             $res = $db->getRankingByGroupID($id_groupe);
 
             // echo de la repense  JSON
-            //return var_dump($res);
             return echoRespnse(201, $response, $res);
         });   
 
+/* Obtient le détail des équipes d'un groupe par l'id du groupe
+ * url - /public/teams/groupe/{id_groupe}
+ * methode - GET
+ */
+$app->get('/public/teams/groupe/{id_groupe}', function (Request $request, Response $response) {
+            $id_groupe = $request->getAttribute('id_groupe');
 
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamDetailsgByGroupID($id_groupe);
+
+            // echo de la repense  JSON
+            return echoRespnse(201, $response, $res);
+        });  
 
 
 

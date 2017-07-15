@@ -622,13 +622,18 @@ class DbHandler {
      */
     public function getRankingByGroupID($id_groupe) {
         $group = new Group($this->pdo, $id_groupe);
-        
-        return $group->getTeams();
-        //return $group->toList();
-
+        return $group->getRanking();
     }
 
 
+    /**
+     * Obtention du détail des équipes d'un groupe par l'id du groupe 
+     * @param Int $id_groupe
+     */
+    public function getTeamDetailsgByGroupID($id_groupe) {
+        $group = new Group($this->pdo, $id_groupe);
+        return $group->getTeams();
+    }
 
     /* ------------- méthodes table`tasks` ------------------ */
 
