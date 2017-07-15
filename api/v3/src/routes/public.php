@@ -367,6 +367,7 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             $res = $db->getRankingByGroupID($id_groupe);
 
             // echo de la repense  JSON
+            //return var_dump($res);
             return echoRespnse(201, $response, $res);
         });   
 
