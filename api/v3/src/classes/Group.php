@@ -1,7 +1,6 @@
 <?php
 
 class Group {
-
     // liste des équipes
     private $teams = array();
 

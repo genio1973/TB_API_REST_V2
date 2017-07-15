@@ -40,16 +40,14 @@ class Team {
         $this->teamInfo['id_equipe'] = FALSE;
         $this->teamInfo['nom_equipe'] = FALSE;
         $this->teamInfo['points_actuels'] = 0;
+        $this->teamInfo['matchs_joues'] = 0;
         $this->teamInfo['matchs_gagnes_3pts'] = 0;
         $this->teamInfo['matchs_gagnes_2pts'] = 0; 
         $this->teamInfo['matchs_perdus_1pt'] = 0;
         $this->teamInfo['matchs_perdus_0pt'] = 0;
-        $this->teamInfo['matchs_joues'] = 0;
         $this->teamInfo['sets_joues'] = 0;
         $this->teamInfo['sets_gagnes'] = 0;
         $this->teamInfo['sets_perdus'] = 0;
-        $this->teamInfo['matchs_joues'] = 0;
-        $this->teamInfo['points_actuels'] = 0;
         $this->teamInfo['sets_ratio'] = 1;
         $this->teamInfo['points_sets_realises'] = 1;
         $this->teamInfo['points_sets_encaisses'] = 1;
@@ -80,7 +78,7 @@ class Team {
         // Compter les points des sets gagnés et compter les points des sets perdus
         $this->setsPointsWin();
         // Et en ressortir les ratio
-         $this->teamInfo['sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
+        $this->teamInfo['sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
     }
 
 
@@ -88,7 +86,7 @@ class Team {
      * Compter les matchs et sets joués
      */
     private function matchsAndSetsPlayed(){
-        
+        // récupère les matchs joués par l'équipe en cours avec les scores de chaque set
         $stmt = $this->pdo->prepare("SELECT m.id_match, m.id_equipe_visiteur as 'adversaire', e2.nom_equipe, s.score_home as 'set_team', s.score_visiteur as 'set_oppenent'
                                         FROM matchs m
                                         INNER JOIN equipes e1 ON m.id_equipe_home = e1.id_equipe
@@ -111,17 +109,17 @@ class Team {
             $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if($res){
-                $this->teamInfo['sets_joues'] = count($res);
-                $equipes_adverses_matchs_joues =  array_unique(array_column($res, 'id_match', 'id_match'));
-                $this->teamInfo['matchs_joues'] = count($equipes_adverses_matchs_joues);
-                $this->teamInfo['adversersaires_joues'] = $res;
-                $this->teamInfo['points_actuels'] = 0;
-                //$this->teamInfo['test'] =  $equipes_adverses_matchs_joues;
+                $this->teamInfo['sets_joues'] = count($res); // nombre de sets joués, correspond au nombre d'enregistrements
+                $equipes_adverses_matchs_joues =  array_unique(array_column($res, 'id_match', 'id_match')); // rend unique l'id_match pour récupérer qu'une seule fois l'équipe adversaire (sinon plusieurs fois car plusieurs set)
+                $this->teamInfo['matchs_joues'] = count($equipes_adverses_matchs_joues);  // nombre d'adversaires joués
+                $this->teamInfo['adversersaires_joues'] = $res; // conserve tous les sets joués
 
-                // Compte le nombre de points obtenus lors des matchs joués et les comptes les victoires, défaites
+                // Compte le nombre de points obtenus lors des matchs joués et les comptes les victoires, défaites...
                 foreach($equipes_adverses_matchs_joues as $id_match => $id_adversaire){
-                    $points = $this->matchResult($id_match);
+                    $points = $this->matchResult($id_match); // nombre de points obtenus
                     $this->teamInfo['points_actuels'] += $points;
+
+                    // Selon le nombre de points obtenus, défini si victoire à 3pts, 2pts ou défaite...
                     switch($points){
                         case 0 : $this->teamInfo['matchs_perdus_0pt'] ++; break;
                         case 1 : $this->teamInfo['matchs_perdus_1pt'] ++; break;
