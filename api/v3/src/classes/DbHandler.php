@@ -78,8 +78,6 @@ class DbHandler {
      * @return Boolean
      */
      public function createTournament($nom_tournoi, $id_user) {
-        require 'src/include/config.php';
-
         $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
                                         VALUES (NULL, :nom, :user)");
         
@@ -91,7 +89,55 @@ class DbHandler {
         return $result;
     }
 
+    /**
+     * Creation nouvel personne
+     * @param Array : tableau de liste des personnes
+     * @return Boolean
+     */
+     /*
+     public function createPersons($persons) {
+        $sql='';
+        foreach($persons as $pers){
+            $sql.= "INSERT INTO personnes (id_personne";
+            $values = "VALUES (NULL";
+            foreach($pers as $key=>$val){
+                $sql.= ", $key";
+                $values.=", '$val'";
+            }
+            $sql.= ")".$values .");";
+        }
+        $stmt = $this->pdo->prepare($sql);
+        
+        //Exécution et retour pour une insertion réussie
+        $result = $stmt->execute();
+        return $result;
+    }
+*/
 
+    /**
+     * Creation nouveaux enregistrements
+     * @param String : BDD table
+     * @param Array : tableau de liste des personnes
+     * @return Boolean
+     */
+     public function createMultiple($table, $array) {
+        $sql='';
+        foreach($array as $a){
+            $sql.= "INSERT INTO $table (";
+            $values = "VALUES (";
+            foreach($a as $key=>$val){
+                $sql.= " $key,";
+                $values.=" '$val',";
+            }
+            $sql = rtrim($sql,','). ")" . rtrim($values,',') .");";
+        }
+        //return $sql;
+        $stmt = $this->pdo->prepare($sql);
+        
+        //Exécution et retour pour une insertion réussie
+        $result = $stmt->execute();
+        return $result;
+    }
 
     /**
      * Vérification de connexion de l'utilisateur
@@ -294,8 +340,52 @@ class DbHandler {
         return md5(uniqid(rand(), true));
     }
 
+    /**
+     * Validation de la propriété du groupe pour un utilsateur
+     * @param Integer $id_current_user
+     * @param Integer $id_group
+     * @return boolean
+     */
+    public function isGroupOwner($id_current_user, $id_group) {
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi 
+                                         FROM users u
+                                         INNER JOIN tournois t ON t.id_user = u.id_user
+                                         INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                         WHERE u.id_user = :id_user AND g.id_groupe = :id_group");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_group", $id_group, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
+    }
 
-
+    /**
+     * Validation de la propriété du tournoi pour un utilsateur
+     * @param Integer $id_current_user
+     * @param Integer $id_tournoi
+     * @return boolean
+     */
+    public function isTournamentOwner($id_current_user, $id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi 
+                                         FROM  tournois t
+                                         WHERE t.id_tournoi = :id_tournoi
+                                         AND t.id_user = :id_user ");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
+    }
 /************************************************************************************
 ------------- méthode de la table`tournois` ------------------
 *************************************************************************************/

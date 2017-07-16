@@ -123,230 +123,6 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
-
-
-/************************************************************************************
-API admin
-Routes par défauts : vx/admin/route
-*************************************************************************************/
-
- /* Enregistrement  de l'utilisateur (création d'un nouveau')
- * url - /admin/register
- * methode - POST
- * params - email, password, role
- */
-$app->post('/admin/register', function(Request $request, Response $response) {
-            require 'src/include/config.php';
-            // lecture des params de post
-            $email = $request->getParam('email');
-            $password = $request->getParam('password');
-            $id_role = $request->getParam('role');
-            $nom = $request->getParam('nom');
-            $prenom = $request->getParam('prenom');
-
-            
-            // valider adresse email
-            $res = validateEmail($email, $response);
-
-            if($res !== true) {
-                return $res;
-            }
-
-            $db = new DbHandler();
-            $res = $db->createUser($email, $password, $id_role, $nom, $prenom);
-            
-            $data = array();
-            if ($res == $config['message']['USER_CREATED_SUCCESSFULLY']) {
-                $data["error"] = false;
-                $data["message"] = "Nouvel utilisateur inscrit avec succès";
-            } else if ($res == $config['message']['USER_CREATE_FAILED']) {
-                $data["error"] = true;
-                $data["message"] = "Oops! Une erreur est survenue lors de l'inscription";
-            } else if ($res == $config['message']['USER_ALREADY_EXISTED']) {
-                $data["error"] = true;
-                $data["message"] = "Désolé, cet E-mail éxiste déja";
-            }
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $data);
-
-        });
-
-
-// Get All users
-/* Liste des utilisateurs
- * url - /admin/users
- * methode - GET
- */
-$app->get('/admin/users', function (Request $request, Response $response) {
-            $db = new DbHandler();
-            $users = $db->getUsers();
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $users);
-
-        });
-
-/* Liste des tournois
- * url - /admin/tournaments
- * methode - GET
- */
-$app->get('/admin/tournaments', function (Request $request, Response $response) {
-            $db = new DbHandler();
-            $users = $db->getTournaments();
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $users);
-
-        });
-
-/* Informations d'un tournoi, selon son id
- * url - /admin/tournament/{id_tournoi}
- * methode - GET
- */
-$app->get('/admin/tournament/{id}', function (Request $request, Response $response) {
-            $id_tournoi = $request->getAttribute('id');
-
-            $db = new DbHandler();
-            $res = $db->getTournamentById($id_tournoi);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-
-        });
-
-/* Liste des tournois créés par un utilateur, selon son email
- * url - /admin/tournament/email/{email}
- * methode - GET
- */
-$app->get('/admin/tournaments/email/{email}', function (Request $request, Response $response) {
-            $email = $request->getAttribute('email');
-
-            $db = new DbHandler();
-            $res = $db->getTournamentCreatedUserByEmail($email);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-
-        });
-
-/* Liste des tournois créés par un utilateur, selon son id
- * url - /admin/tournaments/id/{id}
- * methode - GET
- */
-$app->get('/admin/tournaments/id/{id}', function (Request $request, Response $response) {
-            $id = $request->getAttribute('id');
-
-            $db = new DbHandler();
-            $res = $db->getTournamentCreatedUserById($id);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-
-        });
-
-
-/************************************************************************************
-API responsables de tournoi
-Routes par défauts : vx/responsable/route
-*************************************************************************************/
-
-/* ????????????????????
- * url - /resp/???????
- * methode - POST
- */
-//$app->post('/some/path', function () use ($app) { 
-/*
-$app->post('/some/path', function (Request $request, Response $response) {
-    $json = $app->request->getBody();
-    $data = json_decode($json, true); // parse the JSON into an assoc. array
-    // do other tasks
-});
-*/
-
-/* Enregistrement  de l'utilisateur (création d'un nouveau')
- * url - /admin/register
- * methode - POST
- * params - email, password, role
- */
-$app->post('/resp/tournoi', function(Request $request, Response $response) use ($app) {
-            //require 'src/include/config.php';
-            
-            // récupère les données passée aux forma json
-            $json = $request->getBody();
-            $data = json_decode($json, true); // transofme en tableau associatif
-
-            // récupère l'id du responsable en cours
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $db = new DbHandler();
-            $res = $db->createTournament($data['nom_tournoi'], $id_current_user);
-
-
-            //$data[] = "test";
-            //$res = $data;
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-
-        });
-
-/* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
- * url - /resp/tournaments
- * methode - GET
- */
-$app->get('/resp/tournaments', function (Request $request, Response $response)  {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getTournamentCreatedUserById($id_current_user);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-        });
-
-
-/* Liste des équipes pour un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
- * url - /resp/tournament/{id_tournoi}/equipes
- * methode - GET
- */
-$app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
-            $headers = $request->getHeaders();
-            $id_current_user = $headers['HTTP_USERID'][0];
-
-            $id_tournoi = $request->getAttribute('id_tournoi');
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getTeamsTournamentByIdAndUserId($id_current_user, $id_tournoi);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-        });
-
-/* Liste des équipes dans un groupe appartenant 
- * url - /public/groupe/{id_groupe}/equipes
- * methode - GET
- */
-$app->get('/public/groupe/{id_groupe}/equipes', function (Request $request, Response $response) {
-            $id_groupe = $request->getAttribute('id_groupe');
-
-            $db = new DbHandler();
-            $res = array();
-            $res = $db->getTeamsByGroupById( $id_groupe);
-
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
-        });
-
-
 /* Liste des matchs listés par terrain pour un tounoi spécifique 
  * url - /public/tournament/{id_tournoi}/matchs/terrains
  * methode - GET
@@ -393,6 +169,7 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             return echoRespnse(201, $response, $res);
         });   
 
+
 /* Obtient le détail des équipes d'un groupe par l'id du groupe
  * url - /public/teams/groupe/{id_groupe}
  * methode - GET
@@ -410,8 +187,199 @@ $app->get('/public/teams/groupe/{id_groupe}', function (Request $request, Respon
 
 
 
+/************************************************************************************
+API admin
+Routes par défauts : vx/admin/route
+*************************************************************************************/
+
+/* Enregistrement  de l'utilisateur (création d'un nouveau')
+ * url - /admin/register
+ * methode - POST
+ * headears - content id_user and API_KEY
+ * params - email, password, role
+ */
+$app->post('/admin/register', function(Request $request, Response $response) {
+            require 'src/include/config.php';
+            // lecture des params de post
+            $email = $request->getParam('email');
+            $password = $request->getParam('password');
+            $id_role = $request->getParam('role');
+            $nom = $request->getParam('nom');
+            $prenom = $request->getParam('prenom');
+            
+            // valider adresse email
+            $res = validateEmail($email, $response);
+            if($res !== true) {
+                return $res;
+            }
+
+            $db = new DbHandler();
+            $res = $db->createUser($email, $password, $id_role, $nom, $prenom);
+            
+            $data = array();
+            if ($res == $config['message']['USER_CREATED_SUCCESSFULLY']) {
+                $data["error"] = false;
+                $data["message"] = "Nouvel utilisateur inscrit avec succès";
+            } else if ($res == $config['message']['USER_CREATE_FAILED']) {
+                $data["error"] = true;
+                $data["message"] = "Oops! Une erreur est survenue lors de l'inscription";
+            } else if ($res == $config['message']['USER_ALREADY_EXISTED']) {
+                $data["error"] = true;
+                $data["message"] = "Désolé, cet E-mail éxiste déja";
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $data);
+
+        });
+
+
+// Get All users
+/* Liste des utilisateurs
+ * url - /admin/users
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/admin/users', function (Request $request, Response $response) {
+            $db = new DbHandler();
+            $users = $db->getUsers();
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $users);
+
+        });
+
+/* Liste des tournois
+ * url - /admin/tournaments
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/admin/tournaments', function (Request $request, Response $response) {
+            $db = new DbHandler();
+            $users = $db->getTournaments();
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $users);
+
+        });
+
+/* Informations d'un tournoi, selon son id
+ * url - /admin/tournament/{id_tournoi}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/admin/tournament/{id}', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentById($id_tournoi);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+
+        });
+
+/* Liste des tournois créés par un utilateur, selon son email
+ * url - /admin/tournament/email/{email}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/admin/tournaments/email/{email}', function (Request $request, Response $response) {
+            $email = $request->getAttribute('email');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentCreatedUserByEmail($email);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+
+        });
+
+/* Liste des tournois créés par un utilateur, selon son id
+ * url - /admin/tournaments/id/{id}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/admin/tournaments/id/{id}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentCreatedUserById($id);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+
+        });
+
+
+/************************************************************************************
+API responsables de tournoi
+Routes par défauts : vx/responsable/route
+*************************************************************************************/
+
+/* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
+ * url - /resp/tournaments
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/resp/tournaments', function (Request $request, Response $response)  {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTournamentCreatedUserById($id_current_user);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+/* Liste des équipes pour un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
+ * url - /resp/tournament/{id_tournoi}/equipes
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/resp/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $id_tournoi = $request->getAttribute('id_tournoi');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamsTournamentByIdAndUserId($id_current_user, $id_tournoi);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+/* Liste des équipes dans un groupe appartenant 
+ * url - /resp/groupe/{id_groupe}/equipes
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/resp/groupe/{id_groupe}/equipes', function (Request $request, Response $response) {
+            $id_groupe = $request->getAttribute('id_groupe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getTeamsByGroupById( $id_groupe);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+
 /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
  * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
+ * headears - content id_user and API_KEY
  * methode - GET
  */
 $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (Request $request, Response $response) {
@@ -433,11 +401,122 @@ $app->get('/resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (
         });        
 
 
+/* Ajout d'un tournoi (création d'un nouveau')
+ * url - /resp/tournoi
+ * methode - POST
+ * headears - content id_user and API_KEY
+ * body - Json : {"nom_tournoi":"2017-07-15 créer par post"}
+ */
+$app->post('/resp/tournoi', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->createTournament($data['nom_tournoi'], $id_current_user);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
 
+/* Ajout de personnes représentant les équipes
+ * url - /resp/personnes
+ * methode - POST
+ * headears - content id_user and API_KEY
+ * body - Json : [
+ *	{"prenom":"Nicole","nom":"Schnyder","courriel":"nicole.schnyder@vebb.com","tel":"+41 31 336 54 78","tel_mobile":"+41 78 123 45 67","adresse":"Feuille 12","localite":"Bienne","Pays":"Suisse" },
+ *	{"prenom":"André","nom":"Duprès","courriel":"a.dup@gmail.com","tel":"+41 22 123 45 678","tel_mobile":"+41 77 777 77 67","adresse":"Treffle 1a","localite":"Cointrin","Pays":"Suisse" }
+ * ]
+ */
+$app->post('/resp/personnes', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            //$headers = $request->getHeaders();
+            //$id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            //$res = $db->createPersons($data);
+            $res = $db->createMultiple('personnes', $data);
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
 
+/* Ajout d'équipes
+ * url - /resp/equipes
+ * methode - POST
+ * headears - content id_user and API_KEY
+ * body - Json : [
+ *	{"niveau":"M15","nom_equipe":"VDT","id_groupe":"2","id_personne":"2" },
+ *	{"niveau":"FM17","nom_equipe":"Savagnier","id_groupe":"2","id_personne":"2" }
+ *  ]
+ */
+$app->post('/resp/equipes', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
 
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+
+            // permission pour ajouter dans les groupes lui appartenant
+            foreach($data as $equipe){
+                $res = $db->isGroupOwner($id_current_user, $equipe['id_groupe']);
+                if(!$res){
+                    return echoRespnse(201, $response, $res);
+                }
+            }
+            
+            // insertion des enregistrements
+            $res = $db->createMultiple('equipes', $data);
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+/* Ajout de groupes 
+ * url - /resp/groupes
+ * methode - POST
+ * headears - content id_user and API_KEY
+ * body - Json : [
+ *	{"nom_groupe":"GrA","id_tournoi":"1"},
+ *	{"nom_groupe":"GrB","id_tournoi":"1"}
+ * ]
+ */
+$app->post('/resp/groupes', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            // permission pour ajouter dans les groupes lui appartenant
+            foreach($data as $groupe){
+                $res = $db->isTournamentOwner($id_current_user, $groupe['id_tournoi']);
+                if(!$res){
+                    return echoRespnse(201, $response, $res);
+                }
+            }
+
+            // insertion des enregistrements
+            $res = $db->createMultiple('groupes', $data);
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
 /*
 $app->get('/hello', function ($request, $response) use ($app) {
