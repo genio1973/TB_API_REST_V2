@@ -202,6 +202,35 @@ class DbHandler {
             return $res;
         }
 
+/**
+     * Suppression de tous les terrains pour un id de tournoi
+     * @param Integer : id_tournament
+     */
+     public function deletePitchByTournamentID($id_tournament) {
+            // Cherche tous les id des terrains du tournois
+            $stmt = $this->pdo->prepare("SELECT DISTINCT m.id_terrain FROM tournois t
+                                            INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                            INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                            INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                            INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                            WHERE t.id_tournoi LIKE :id");
+            $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+            
+            if ($stmt->execute()){
+                $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $idList ="";
+                foreach($ids as $id){
+                    $idList .=$id['id_terrain'].","; 
+                }
+                $idList = rtrim($idList,',');
+                $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
+                $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+                if ($stmt->execute()){
+                   return TRUE;
+                }
+            }
+            return FALSE;
+        }
 
 /*     
      public function createMultipleOLD($table, $array) {

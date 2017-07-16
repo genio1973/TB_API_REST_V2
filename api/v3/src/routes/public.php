@@ -98,7 +98,7 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
  * url - /public/tournament/{id_tournoi}/matchs
  * methode - GET
  */
-$app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
+$app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 
             $db = new DbHandler();
@@ -692,7 +692,7 @@ Routes par défauts : vx/responsable/route
 
 
 
-       /* Suppression d'un tournoi (création d'un nouveau')
+       /* Suppression d'un tournoi 
         * url - /resp/tournoi
         * methode - DELETE
         * headears - content id_user and API_KEY
@@ -700,28 +700,115 @@ Routes par défauts : vx/responsable/route
         * return - {
         *            "error": false,
         *            "error_mgs": null,
-        *            "nombre_suppression": 1
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "
         *           }
         */
         $app->delete('/resp/tournoi/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
             // récupère l'id du responsable en cours
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
             $id = $request->getAttribute('id');
 
             $db = new DbHandler();
-            $res = $db->isTournamentOwner($id_current_user, $id);
+            $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
                 $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
                 return echoRespnse(201, $response, $resultat);
             }
-
             
-
+            // supprime les terrains du tournoi manuellement
+            // Pas de cascade, car on veut les consrver en cas de suppression de matchs !
+            if(!$db->deletePitchByTournamentID($id)){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Problème de suppression des terrains !";
+                return echoRespnse(201, $response, $resultat);
+            }
             
+            // suppression du tournoi en cascade avec les enfants du tournoi
             $res = $db->deleteByID('tournois', $id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
+
+       /* Suppression d'une équipe 
+        * url - /resp/equipe/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/equipe/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+            
+            $db = new DbHandler();
+            $res = $db->isTeamOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('equipes', $id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+       /* Suppression d'un groupe 
+        * url - /resp/groupe/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/groupe/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isGroupOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('groupes', $id);
+            
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
