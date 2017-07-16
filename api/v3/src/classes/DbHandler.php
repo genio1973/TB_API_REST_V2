@@ -170,6 +170,38 @@ class DbHandler {
         }
         return $res;
     }
+/**
+     * Suppression d'un enregistrement
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Integer : id de l'élément à supprimer
+     * @param Integer : id_user, l'élément à supprimer doit appartenir à l'id_user
+     * @return Asso array :     {
+     *            "error": false,
+     *            "error_mgs": null,
+     *            "nombre_suppression": 1
+     *           }
+     */
+     public function deleteByID($table, $id_to_delete) {
+            $res['error'] = FALSE;
+            $res['error_mgs'] = NULL;
+            $res['nombre_suppression'] = 0;
+            $res['id_supprimer'] = 0;
+            $id_table = 'id_'.rtrim($table,'s');
+
+            $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $id_table = :id");
+            $stmt->bindParam(":id", $id_to_delete, PDO::PARAM_INT);
+
+            if($stmt->execute()){
+                $res['nombre_suppression'] = 1;
+                $res['id_supprimer'] = $id_to_delete;
+            }
+            else{
+                $res['error'] = TRUE;
+                $res['error_mgs'] = "Suppression non réussie !";
+            }
+            return $res;
+        }
+
 
 /*     
      public function createMultipleOLD($table, $array) {
@@ -395,9 +427,35 @@ class DbHandler {
     }
 
     /**
-     * Validation de la propriété du groupe pour un utilsateur
+     * Validation de la propriété du groupe pour un match
      * @param Integer $id_current_user
-     * @param Integer $id_group
+     * @param Integer $id_match
+     * @return boolean
+     */
+    public function isMatchOwner($id_current_user, $id_match) {
+        $stmt = $this->pdo->prepare("SELECT g.id_groupe, m.id_match 
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        WHERE u.id_user = :id_user AND m.id_match = :id_match");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_match", $id_match, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Validation de la propriété de l'équipe dans un groupe de l'utilsateur
+     * @param Integer $id_current_user
+     * @param Integer $id_team
      * @return boolean
      */
     public function isTeamOwner($id_current_user, $id_team) {
@@ -560,7 +618,7 @@ class DbHandler {
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
+                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
                                         WHERE t.id_tournoi LIKE :id_tournoi
                                         AND t.id_user = :id_user");
                                    
@@ -608,7 +666,7 @@ class DbHandler {
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
+                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
                                         WHERE g.id_groupe LIKE :id_groupe");
                                    
         $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
@@ -628,13 +686,13 @@ class DbHandler {
      * @param Int $id_groupe
      */
     public function getTeamsByGroupTournamentByIdAndUserId($id_user, $id_tournoi, $id_groupe) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, u.id_user, u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
                                         p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
                                         FROM users u
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
+                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
                                         WHERE t.id_tournoi LIKE :id_tournoi                                        
                                         AND t.id_user LIKE :id_user
                                         AND g.id_groupe LIKE :id_groupe");

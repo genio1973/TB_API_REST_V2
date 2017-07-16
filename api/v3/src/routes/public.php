@@ -98,7 +98,7 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
  * url - /public/tournament/{id_tournoi}/matchs
  * methode - GET
  */
-$app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, Response $response) {
+$app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 
             $db = new DbHandler();
@@ -110,7 +110,7 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
         });
 
 /* Liste les noms des équipes pour un tournoi
- * url - /pulic/tournament/{id_tournoi}/equipes
+ * url - /public/tournament/{id_tournoi}/equipes
  * methode - GET
  */
 $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
@@ -171,10 +171,10 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
 
 
 /* Obtient le détail des équipes d'un groupe par l'id du groupe
- * url - /public/teams/groupe/{id_groupe}
+ * url - /public/equipes/groupe/{id_groupe}
  * methode - GET
  */
-$app->get('/public/teams/groupe/{id_groupe}', function (Request $request, Response $response) {
+$app->get('/public/equipes/groupe/{id_groupe}', function (Request $request, Response $response) {
             $id_groupe = $request->getAttribute('id_groupe');
 
             $db = new DbHandler();
@@ -295,12 +295,12 @@ $app->get('/admin/tournaments/email/{email}', function (Request $request, Respon
         });
 
 /* Liste des tournois créés par un utilateur, selon son id
- * url - /admin/tournaments/id/{id}
+ * url - /admin/tournaments/id/{id_user}
  * headears - content id_user and API_KEY
  * methode - GET
  */
-$app->get('/admin/tournaments/id/{id}', function (Request $request, Response $response) {
-            $id = $request->getAttribute('id');
+$app->get('/admin/tournaments/id/{id_user}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id_user');
 
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserById($id);
@@ -436,8 +436,8 @@ Routes par défauts : vx/responsable/route
         * methode - POST
         * headears - content id_user and API_KEY
         * body - Json : [
-        *	{"prenom":"Nicole","nom":"Schnyder","courriel":"nicole.schnyder@vebb.com","tel":"+41 31 336 54 78","tel_mobile":"+41 78 123 45 67","adresse":"Feuille 12","localite":"Bienne","Pays":"Suisse" },
-        *	{"prenom":"André","nom":"Duprès","courriel":"a.dup@gmail.com","tel":"+41 22 123 45 678","tel_mobile":"+41 77 777 77 67","adresse":"Treffle 1a","localite":"Cointrin","Pays":"Suisse" }
+        *	{"prenom":"Nicole","nom":"Schnyder","courriel":"nicole.schnyder@vebb.com","tel":"+41 31 336 54 78","tel_mobile":"+41 78 123 45 67","adresse":"Feuille 12","localite":"Bienne","Pays":"Suisse", "id_equipe":"5" },
+        *	{"prenom":"André","nom":"Duprès","courriel":"a.dup@gmail.com","tel":"+41 22 123 45 678","tel_mobile":"+41 77 777 77 67","adresse":"Treffle 1a","localite":"Cointrin","Pays":"Suisse", "id_equipe":"6" }
         * ]
         * return - {
         *            "error": false,
@@ -451,8 +451,20 @@ Routes par défauts : vx/responsable/route
             // récupère les données passée aux forma json
             $json = $request->getBody();
             $data = json_decode($json, true); // transofme en tableau associatif
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
 
             $db = new DbHandler();
+            // permission pour ajouter dans des personnes avec les équipes des groupes lui appartenant
+            foreach($data as $personne){
+                if( !$db->isTeamOwner($id_current_user, $personne['id_equipe']) ){
+                        $resultat['error'] = TRUE;
+                        $resultat['error_mgs'] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
+                        return echoRespnse(201, $response, $resultat);
+                }
+            }
+
             //$res = $db->createPersons($data);
             $res = $db->createMultiple('personnes', $data);
             // echo de la réponse  JSON
@@ -465,8 +477,8 @@ Routes par défauts : vx/responsable/route
         * methode - POST
         * headears - content id_user and API_KEY
         * body - Json : [
-        *	{"niveau":"M15","nom_equipe":"VDT","id_groupe":"2","id_personne":"2" },
-        *	{"niveau":"FM17","nom_equipe":"Savagnier","id_groupe":"2","id_personne":"2" }
+        *	{"niveau":"M15","nom_equipe":"VDT","id_groupe":"2" },
+        *	{"niveau":"FM17","nom_equipe":"Savagnier","id_groupe":"2" }
         *  ]
         * return - {
         *            "error": false,
@@ -576,7 +588,7 @@ Routes par défauts : vx/responsable/route
                     return echoRespnse(201, $response, $res);
                 });
 
-        /* Ajout d'équipes
+        /* Ajout de matchs
         * url - /resp/matchs
         * methode - POST
         * headears - content id_user and API_KEY
@@ -628,6 +640,91 @@ Routes par défauts : vx/responsable/route
             return echoRespnse(201, $response, $res);
         });
 
+        /* Ajout de sets
+        * url - /resp/sets
+        * methode - POST
+        * headears - content id_user and API_KEY
+        * body - Json : [
+        *	                {"date_match":"2017-09-28","heure":"18:00:00","id_terrain":"3","id_equipe_home":"1","id_equipe_visiteur":"2" },
+        *	                {"date_match":"2017-09-28","heure":"20:00:00","id_terrain":"3","id_equipe_home":"2","id_equipe_visiteur":"3" },
+        *	                {"date_match":"2017-09-28","heure":"21:00:00","id_terrain":"3","id_equipe_home":"3","id_equipe_visiteur":"2" }
+        *               ]
+        *
+        * Il égaglement possible de spécifier les champs (ou mixer les possibilités) : id_user_dirige, id_equipe_arbitre
+        * [
+        *	{"date_match":"2017-09-28","heure":"18:00:00","id_user_dirige":"12","id_terrain":"3","id_equipe_home":"1","id_equipe_visiteur":"2","id_equipe_arbitre":"2" },
+        *	{"date_match":"2017-09-28","heure":"20:00:00","id_user_dirige":"15","id_terrain":"3","id_equipe_home":"3","id_equipe_visiteur":"2","id_equipe_arbitre":"4" },
+        *   {"date_match":"2017-09-28","heure":"21:00:00","id_user_dirige":"10","id_terrain":"3","id_equipe_home":"1","id_equipe_visiteur":"3","id_equipe_arbitre":"3" }
+        *  ]
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_insert": 3,
+        *            "id_dernier_insert": 55,
+        *            "id_premier_insert": 53
+        *           }
+        */
+        $app->post('/resp/sets', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+
+            // permission pour ajouter dans des matchs des groupes lui appartenant
+            foreach($data as $match){
+                if( !$db->isMatchOwner($id_current_user, $match['id_match']) ){
+                        $resultat['error'] = TRUE;
+                        $resultat['error_mgs'] = "Permission refusée pour votre identitifant. Au moins un sets pour un match mentionnés ne correspond pas au numéro de groupe vous appartenant !";
+                        return echoRespnse(201, $response, $resultat);
+                }
+            }
+            
+            // insertion des enregistrements
+            $res = $db->createMultiple('sets', $data);
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
+
+
+
+       /* Suppression d'un tournoi (création d'un nouveau')
+        * url - /resp/tournoi
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1
+        *           }
+        */
+        $app->delete('/resp/tournoi/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isTournamentOwner($id_current_user, $id);
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(201, $response, $resultat);
+            }
+
+            
+
+            
+            $res = $db->deleteByID('tournois', $id);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
 
 
 /*
