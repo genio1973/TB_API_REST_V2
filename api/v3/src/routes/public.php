@@ -813,6 +813,43 @@ Routes par défauts : vx/responsable/route
             return echoRespnse(200, $response, $res);
         });
 
+       /* Suppression d'un match 
+        * url - /resp/match/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/match/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isTeamOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('matchs', $id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
+
 
 /*
 $app->get('/hello', function ($request, $response) use ($app) {
