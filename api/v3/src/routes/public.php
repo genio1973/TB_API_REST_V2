@@ -77,7 +77,7 @@ $app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Respo
             $res = $db->getMatchsByGroup($id_groupe);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 /* Liste des matchs d'une équipe
@@ -91,7 +91,7 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
             $res = array();
             $res = $db->getTeamMatchsById($id_equipe);
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 /* Liste des matchs pour un tournoi
@@ -106,7 +106,7 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
             $res = $db->getMatchsByTournamentId($id_tournoi);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 /* Liste les noms des équipes pour un tournoi
@@ -121,7 +121,7 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
             $res = $db->getTeamsTournamentById($id_tournoi);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 /* Liste des matchs listés par terrain pour un tounoi spécifique 
  * url - /public/tournament/{id_tournoi}/matchs/terrains
@@ -135,7 +135,7 @@ $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $
             $res = $db->getMatchsPitchesByTournamentId($id_tournoi);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 /* Liste des matchs pour un terrain spécifique 
@@ -150,7 +150,7 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
             $res = $db->getMatchsByPitchId($id_terrain);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
@@ -182,7 +182,7 @@ $app->get('/public/equipes/groupe/{id_groupe}', function (Request $request, Resp
             $res = $db->getTeamDetailsgByGroupID($id_groupe);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });  
 
 
@@ -274,7 +274,7 @@ $app->get('/admin/tournament/{id}', function (Request $request, Response $respon
             $res = $db->getTournamentById($id_tournoi);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
 
         });
 
@@ -290,7 +290,7 @@ $app->get('/admin/tournaments/email/{email}', function (Request $request, Respon
             $res = $db->getTournamentCreatedUserByEmail($email);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
 
         });
 
@@ -306,7 +306,7 @@ $app->get('/admin/tournaments/id/{id_user}', function (Request $request, Respons
             $res = $db->getTournamentCreatedUserById($id);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
 
         });
 
@@ -333,7 +333,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->getTournamentCreatedUserById($id_current_user);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
@@ -356,7 +356,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->getTeamsTournamentByIdAndUserId($id_current_user, $id_tournoi);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
         /* Liste des équipes dans un groupe appartenant 
@@ -372,7 +372,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->getTeamsByGroupById( $id_groupe);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
@@ -397,7 +397,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->getTeamsByGroupTournamentByIdAndUserId($id_current_user, $id_tournoi, $id_groupe);
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });        
 
 
@@ -734,7 +734,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->deleteByID('tournois', $id);
             
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
@@ -772,7 +772,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->deleteByID('equipes', $id);
             
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
@@ -810,7 +810,7 @@ Routes par défauts : vx/responsable/route
             $res = $db->deleteByID('groupes', $id);
             
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $res);
         });
 
 
