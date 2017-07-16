@@ -71,49 +71,105 @@ class DbHandler {
     }
 
 
+
     /**
      * Creation nouveau tournoi
      * @param String $nom_tournoi, nom du tournoi
      * @param Int $id_user, créateur du tournoi
-     * @return Boolean
+     * @return Asso array :     {
+     *                          "nombre_insert": 2,
+     *                          "error": false,
+     *                          "id_dernier_insert": 35,
+     *                          "id_premier_insert": 33
+     *                          }
      */
      public function createTournament($nom_tournoi, $id_user) {
-        $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
-                                        VALUES (NULL, :nom, :user)");
-        
-        $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
-        $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
-        
-        //Exécution et retour pour une insertion réussie
-        $result = $stmt->execute();
-        return $result;
-    }
 
-    /**
-     * Creation nouvel personne
-     * @param Array : tableau de liste des personnes
-     * @return Boolean
-     */
-     /*
-     public function createPersons($persons) {
-        $sql='';
-        foreach($persons as $pers){
-            $sql.= "INSERT INTO personnes (id_personne";
-            $values = "VALUES (NULL";
-            foreach($pers as $key=>$val){
-                $sql.= ", $key";
-                $values.=", '$val'";
-            }
-            $sql.= ")".$values .");";
+         $res['error'] = FALSE;
+         $res['error_mgs'] = NULL;
+         $res['nombre_insert'] = 0;
+         $res['id_premier_insert'] = 0;
+         $res['id_dernier_insert'] = 0;
+         try {  
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->pdo->beginTransaction();
+
+                // préparation des la requêtes multiple
+                $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
+                                                    VALUES (NULL, :nom, :user)");
+
+                $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
+                $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
+                $stmt->execute();
+                //$this->pdo->exec($stmt);
+                $res['nombre_insert'] = 1;
+                $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
+                $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'] + 1;
+
+                // enregistrement des requêtes
+                $this->pdo->commit();
+           } catch (Exception $e) {
+                $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
+                $res['error'] = TRUE;
+                $res['id_premier_insert'] = 0;
+                $res['id_dernier_insert'] = 0;
+                $res['nombre_insert'] = 0;
+                $res['error_mgs'] = "Veuillez vérifier la requête ! ---> " . $e->getMessage();
         }
-        $stmt = $this->pdo->prepare($sql);
-        
-        //Exécution et retour pour une insertion réussie
-        $result = $stmt->execute();
-        return $result;
+        return $res;        
     }
-*/
 
+
+    
+    /**
+     * Creation nouveaux enregistrements
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Array : tableau de liste des enregistrements
+     * @return Asso array :     {
+     *                          "nombre_insert": 2,
+     *                          "error": false,
+     *                          "id_dernier_insert": 35,
+     *                          "id_premier_insert": 33
+     *                          }
+     */
+     public function createMultiple($table, $array) {
+            $res['error'] = FALSE;
+            $res['error_mgs'] = NULL;
+            $res['nombre_insert'] = 0;
+            $res['id_premier_insert'] = 0;
+            $res['id_dernier_insert'] = 0;
+
+            try {  
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->pdo->beginTransaction();
+
+                // préparation des la requêtes multiple
+                foreach($array as $a){
+                    $res['nombre_insert']++;
+                    $sql= "INSERT INTO $table (";
+                    $values = " VALUES (";
+                    foreach($a as $key=>$val){
+                        $sql.= "$key,";
+                        $values.="'$val',";
+                    }
+                    $sql = rtrim($sql,','). ")" . rtrim($values,',') ."); ";
+                    $this->pdo->exec($sql);
+                }
+                $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
+                $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'];
+
+                // enregistrement des requêtes
+                $this->pdo->commit();
+            } catch (Exception $e) {
+                $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
+                $res['error'] = TRUE;
+                $res['id_premier_insert'] = 0;
+                $res['id_dernier_insert'] = 0;
+                $res['nombre_insert'] = 0;
+                $res['error_mgs'] = "Veuillez vérifier les requêtes, l'une ou plusieur d'entre elle contienne une erreur ! ---> " . $e->getMessage();
+        }
+        return $res;
+    }
 
 /*     
      public function createMultipleOLD($table, $array) {
@@ -135,52 +191,6 @@ class DbHandler {
         return $result;
     }
 */
-    
-    /**
-     * Creation nouveaux enregistrements
-     * @param String : nom de la table pour les nouveaux enregistrements
-     * @param Array : tableau de liste des enregistrements
-     * @return Asso array :     {
-     *                          "nombre_insert": 2,
-     *                          "resultat": true,
-     *                          "id_dernier_insert": 35,
-     *                          "id_premier_insert": 33
-     *                          }
-     */
-     public function createMultiple($table, $array) {
-        try {  
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo->beginTransaction();
-
-            // préparation des la requêtes multiple
-            $res['nombre_insert'] = 0;
-            foreach($array as $a){
-                $res['nombre_insert']++;
-                $sql= "INSERT INTO $table (";
-                $values = " VALUES (";
-                foreach($a as $key=>$val){
-                    $sql.= "$key,";
-                    $values.="'$val',";
-                }
-                $sql = rtrim($sql,','). ")" . rtrim($values,',') ."); ";
-                $this->pdo->exec($sql);
-            }
-            $res['resultat'] = TRUE;
-            $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
-            $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'];
-            $this->pdo->commit();
-        } catch (Exception $e) {
-            $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
-            $res['resultat'] = FALSE;
-            $res['id_premier_insert'] = 0;
-            $res['id_dernier_insert'] = 0;
-            $res['nombre_insert'] = 0;
-            //echo "Failed: " . $e->getMessage();
-        }
-        return $res;
-    }
-
-
 
 
     /**
@@ -382,6 +392,31 @@ class DbHandler {
      */
     private function generateApiKey() {
         return md5(uniqid(rand(), true));
+    }
+
+    /**
+     * Validation de la propriété du groupe pour un utilsateur
+     * @param Integer $id_current_user
+     * @param Integer $id_group
+     * @return boolean
+     */
+    public function isTeamOwner($id_current_user, $id_team) {
+        $stmt = $this->pdo->prepare("SELECT g.id_groupe 
+                                         FROM users u
+                                         INNER JOIN tournois t ON t.id_user = u.id_user
+                                         INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                         INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                         WHERE u.id_user = :id_user AND e.id_equipe = :id_team");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_team", $id_team, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
