@@ -114,13 +114,9 @@ class DbHandler {
     }
 */
 
-    /**
-     * Creation nouveaux enregistrements
-     * @param String : BDD table
-     * @param Array : tableau de liste des personnes
-     * @return Boolean
-     */
-     public function createMultiple($table, $array) {
+
+/*     
+     public function createMultipleOLD($table, $array) {
         $sql='';
         foreach($array as $a){
             $sql.= "INSERT INTO $table (";
@@ -138,6 +134,54 @@ class DbHandler {
         $result = $stmt->execute();
         return $result;
     }
+*/
+    
+    /**
+     * Creation nouveaux enregistrements
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Array : tableau de liste des enregistrements
+     * @return Asso array :     {
+     *                          "nombre_insert": 2,
+     *                          "resultat": true,
+     *                          "id_dernier_insert": 35,
+     *                          "id_premier_insert": 33
+     *                          }
+     */
+     public function createMultiple($table, $array) {
+        try {  
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo->beginTransaction();
+
+            // préparation des la requêtes multiple
+            $res['nombre_insert'] = 0;
+            foreach($array as $a){
+                $res['nombre_insert']++;
+                $sql= "INSERT INTO $table (";
+                $values = " VALUES (";
+                foreach($a as $key=>$val){
+                    $sql.= "$key,";
+                    $values.="'$val',";
+                }
+                $sql = rtrim($sql,','). ")" . rtrim($values,',') ."); ";
+                $this->pdo->exec($sql);
+            }
+            $res['resultat'] = TRUE;
+            $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
+            $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'];
+            $this->pdo->commit();
+        } catch (Exception $e) {
+            $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
+            $res['resultat'] = FALSE;
+            $res['id_premier_insert'] = 0;
+            $res['id_dernier_insert'] = 0;
+            $res['nombre_insert'] = 0;
+            //echo "Failed: " . $e->getMessage();
+        }
+        return $res;
+    }
+
+
+
 
     /**
      * Vérification de connexion de l'utilisateur

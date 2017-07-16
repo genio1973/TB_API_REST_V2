@@ -438,10 +438,6 @@ $app->post('/resp/personnes', function(Request $request, Response $response) use
             $json = $request->getBody();
             $data = json_decode($json, true); // transofme en tableau associatif
 
-            // récupère l'id du responsable en cours
-            //$headers = $request->getHeaders();
-            //$id_current_user = $headers['HTTP_USERID'][0];
-
             $db = new DbHandler();
             //$res = $db->createPersons($data);
             $res = $db->createMultiple('personnes', $data);
@@ -517,6 +513,31 @@ $app->post('/resp/groupes', function(Request $request, Response $response) use (
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $res);
         });
+
+        /* Ajout de terrains 
+        * url - /resp/terrains
+        * methode - POST
+        * headears - content id_user and API_KEY
+        * body - Json : [
+        *        {"nom_terrain":"Terrain OUEST" },
+        *        {"nom_terrain":"Terrain EST" }
+        *        {"nom_terrain":"Terrain PRINCIPAL" }
+        *    ]
+        * return - Arras : VRAI si réussi, avec l'id du dernire élément inséré
+        * 
+        */
+        $app->post('/resp/terrains', function(Request $request, Response $response) use ($app) {
+                    // récupère les données passée aux forma json
+                    $json = $request->getBody();
+                    $data = json_decode($json, true); // transofme en tableau associatif
+
+                    $db = new DbHandler();
+                    // insertion des enregistrements
+                    $res = $db->createMultiple('terrains', $data);
+                    // echo de la réponse  JSON
+                    return echoRespnse(201, $response, $res);
+                });
+
 
 /*
 $app->get('/hello', function ($request, $response) use ($app) {
