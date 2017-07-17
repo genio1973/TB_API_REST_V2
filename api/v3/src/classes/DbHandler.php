@@ -278,28 +278,6 @@ class DbHandler {
             return $resultat;
         }
 
-/*     
-     public function createMultipleOLD($table, $array) {
-        $sql='';
-        foreach($array as $a){
-            $sql.= "INSERT INTO $table (";
-            $values = "VALUES (";
-            foreach($a as $key=>$val){
-                $sql.= " $key,";
-                $values.=" '$val',";
-            }
-            $sql = rtrim($sql,','). ")" . rtrim($values,',') .");";
-        }
-        //return $sql;
-        $stmt = $this->pdo->prepare($sql);
-        
-        //Exécution et retour pour une insertion réussie
-        $result = $stmt->execute();
-        return $result;
-    }
-*/
-
-
     /**
      * Vérification de connexion de l'utilisateur
      * @param String $email
@@ -365,12 +343,12 @@ class DbHandler {
      * @param String $email
      */
     public function getUserByEmail($email) {
-        $stmt = $this->pdo->prepare("SELECT id_user, email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user, status FROM users WHERE email = :email");
+        $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits FROM users u
+                                        INNER JOIN roles r ON r.id_role = u.id_role
+                                        WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        if ($stmt->execute())
-        {
+        if ($stmt->execute()){
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
             return $user;
         }
         return NULL;
@@ -380,9 +358,9 @@ class DbHandler {
      *Obtention des utilisateurs
      */
     public function getUsers() {
-        $stmt = $this->pdo->prepare("SELECT * FROM users");       
-        if ($stmt->execute())
-        {
+        $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits FROM users u
+                                        INNER JOIN roles r ON r.id_role = u.id_role");       
+        if ($stmt->execute()){
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $this->pdo = NULL;
             return $users;
@@ -396,12 +374,12 @@ class DbHandler {
      * @param String $user_id clé primaire de l'utilisateur
      */
     public function getApiKeyById($user_id) {
-        $stmt = $this->pdo->prepare("SELECT token FROM user WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
+        $stmt = $this->pdo->prepare("SELECT token FROM users WHERE id_user = :id");
+        $stmt->bindParam(":id", $user_id, PDO::PARAM_INT);
+
         if ($stmt->execute()) {
-            $stmt->bind_result($api_key);
-            $stmt->close();
-            return $api_key;
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            return  $res['token'];
         } else {
             return NULL;
         }
@@ -412,14 +390,12 @@ class DbHandler {
      * @param String $api_key
      */
     public function getUserId($api_key) {
-        $stmt = $this->pdo->prepare("SELECT id FROM user WHERE token = ?");
-        $stmt->bind_param("s", $api_key);
-        if ($stmt->execute()) {
-            $stmt->bind_result($user_id);
-            $stmt->fetch();
+        $stmt = $this->pdo->prepare("SELECT id_user FROM users WHERE token = :api_key");
+        $stmt->bindParam(":api_key", $api_key, PDO::PARAM_STR);
 
-            $stmt->close();
-            return $user_id;
+        if ($stmt->execute()) {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $res['id_user'];
         } else {
             return NULL;
         }
@@ -432,12 +408,13 @@ class DbHandler {
      * @return boolean
      */
     public function isValidApiKey($api_key) {
-        $stmt = $this->pdo->prepare("SELECT token_expire from user WHERE token = ?");
-        $stmt->bind_param("s", $api_key);
+        $stmt = $this->pdo->prepare("SELECT token_expire from users WHERE token = :api_key");
+        $stmt->bindParam(":api_key", $api_key, PDO::PARAM_STR);
+
         if ($stmt->execute()) {
-            $stmt->bind_result($tokenExpiration);
-            $stmt->fetch();
-            $stmt->close();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            $tokenExpiration = $res['token_expire'];
+
             //API Key expiration ?
             if($tokenExpiration > date('Y-m-d H:i:s')){
                 return true;
@@ -455,12 +432,14 @@ class DbHandler {
      * @return boolean
      */
     public function isValidApiKeyWithID($api_key, $id) {
-        $stmt = $this->pdo->prepare("SELECT token_expire from user WHERE token = ? AND id = ?");
-        $stmt->bind_param("si", $api_key, $id);
+        $stmt = $this->pdo->prepare("SELECT token_expire from users WHERE token = :api_key AND id_user = :id");
+        $stmt->bindParam(":api_key", $api_key, PDO::PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
         if ($stmt->execute()) {
-            $stmt->bind_result($tokenExpiration);
-            $stmt->fetch();
-            $stmt->close();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            $tokenExpiration = $res['token_expire'];
+
             //API Key expiration ?
             if($tokenExpiration > date('Y-m-d H:i:s')){
                 return true;
@@ -479,16 +458,24 @@ class DbHandler {
      * @return boolean
      */
     public function isValidRoleApiKeyWithID($api_key, $id, $role) {
-        $stmt = $this->pdo->prepare("SELECT token_expire, id_role from user WHERE token = ? AND id = ?");
-        $stmt->bind_param("si", $api_key, $id);
-        if ($stmt->execute()) {
-            $stmt->bind_result($tokenExpiration, $id_role);
-            $stmt->fetch();
-            $stmt->close();
-            //API Key expiration ?
-            if( $id_role <= $role && $tokenExpiration > date('Y-m-d H:i:s')){
-                return true;
-            } 
+        try{
+            $stmt = $this->pdo->prepare("SELECT token_expire, id_role from users WHERE token = :api_key AND id_user = :id");
+            $stmt->bindParam(":api_key", $api_key, PDO::PARAM_STR);
+            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+           
+            if ($stmt->execute()) {
+                $res = $stmt->fetch(PDO::FETCH_ASSOC);
+                $tokenExpiration = $res['token_expire'];
+                $id_role = $res['id_role'];
+
+                //API Key expiration ?
+                if( $id_role <= $role && $tokenExpiration > date('Y-m-d H:i:s')){
+                    return true;
+                } 
+            }
+        } catch (Exception $e) {
+            //return $e->getMessage();
+            return false;
         }
         return false;
     }
@@ -624,9 +611,7 @@ class DbHandler {
         }
         return false;
     }
-/************************************************************************************
-------------- méthode de la table`tournois` ------------------
-*************************************************************************************/
+
 
     /**
      *Obtention des tournois créés par utilisateur
@@ -640,11 +625,7 @@ class DbHandler {
                                     INNER JOIN roles r ON r.id_role=u.id_role
                                     INNER JOIN statuts s ON s.id_statut = t.id_statut  
                                     WHERE u.email = :email");
-        /*
-        $stmt = $this->pdo->prepare("SELECT *
-                                    FROM users u
-                                    WHERE u.email = :email");  
-                                    */
+
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         if ($stmt->execute())
         {
@@ -894,8 +875,6 @@ class DbHandler {
     }
 
 
-
-
     /**
      * Obtention des tournois
      */
@@ -909,7 +888,6 @@ class DbHandler {
         }
         return NULL;
     }
-
 
 
     /**
@@ -966,7 +944,6 @@ class DbHandler {
     }
 
 
-
     /**
      * Obtention le classement d'un groupe par son id 
      * @param Int $id_groupe
@@ -975,7 +952,6 @@ class DbHandler {
         $group = new Group($this->pdo, $id_groupe);
         return $group->getRanking();
     }
-
 
     /**
      * Obtention du détail des équipes d'un groupe par l'id du groupe 
@@ -986,133 +962,6 @@ class DbHandler {
         return $group->getTeams();
     }
 
-    /* ------------- méthodes table`tasks` ------------------ */
-
-    /**
-     * Creation nouvelle tache
-     * @param String $user_id id de l'utilisateur à qui la tâche appartient
-     * @param String $task texte de la tache
-     */
-/*
-    public function createTask($user_id, $task) {
-        $stmt = $this->pdo->prepare("INSERT INTO tasks(task) VALUES(?)");
-        $stmt->bind_param("s", $task);
-        $result = $stmt->execute();
-        $stmt->close();
-
-        if ($result) {
-            // ligne de tâche créé
-            // maintenant assigner la tâche à l'utilisateur
-            $new_task_id = $this->pdo->insert_id;
-            $res = $this->createUserTask($user_id, $new_task_id);
-            if ($res) {
-                // tâche créée avec succès
-                return $new_task_id;
-            } else {
-                //tâche n'a pas pu être créé
-                return NULL;
-            }
-        } else {
-            //tâche n'a pas pu être créé
-            return NULL;
-        }
-    }
-*/
-    /**
-     * Obtention d'une seule tâche
-     * @param String $task_id id de la tâche
-     */
-/*
-    public function getTask($task_id, $user_id) {
-        $stmt = $this->pdo->prepare("SELECT t.id, t.task, t.status, t.created_at from tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
-        $stmt->bind_param("ii", $task_id, $user_id);
-        if ($stmt->execute()) {
-            $res = array();
-            $stmt->bind_result($id, $task, $token, $tokenExpiration, $id_role);
-            $stmt->fetch();
-            $res["id"] = $id;
-            $res["task"] = $task;
-            $res["status"] = $token;
-            $res["created_at"] = $tokenExpiration, $id_role;
-            $stmt->close();
-            return $res;
-        } else {
-            return NULL;
-        }
-    }
-*/
-
-    /**
-     *Obtention de  tous les  tâches de l'utilisateur
-     * @param String $user_id id de l'utilisateur
-     */
-/*
-    public function getAllUserTasks($user_id) {
-        $stmt = $this->pdo->prepare("SELECT t.* FROM tasks t, user_tasks ut WHERE t.id = ut.task_id AND ut.user_id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $tasks = $stmt->get_result();
-        $stmt->close();
-        return $tasks;
-    }
-*/
-    /**
-     * Mise à jour de la tâche
-     * @param String $task_id id de la tâche
-     * @param String $task Le texte de la tâche
-     * @param String $token le statut de la tâche
-     */
-  /*
-    public function updateTask($user_id, $task_id, $task, $token) {
-        $stmt = $this->pdo->prepare("UPDATE tasks t, user_tasks ut set t.task = ?, t.status = ? WHERE t.id = ? AND t.id = ut.task_id AND ut.user_id = ?");
-        $stmt->bind_param("siii", $task, $token, $task_id, $user_id);
-        $stmt->execute();
-        $num_affected_rows = $stmt->affected_rows;
-        $stmt->close();
-        return $num_affected_rows > 0;
-    }
-*/
-    /**
-     * Suppression d'une tâche
-     * @param String $task_id id de la tâche à supprimer
-     */
-  /*
-    public function deleteTask($user_id, $task_id) {
-        $stmt = $this->pdo->prepare("DELETE t FROM tasks t, user_tasks ut WHERE t.id = ? AND ut.task_id = t.id AND ut.user_id = ?");
-        $stmt->bind_param("ii", $task_id, $user_id);
-        $stmt->execute();
-        $num_affected_rows = $stmt->affected_rows;
-        $stmt->close();
-        return $num_affected_rows > 0;
-    }
-*/
-    /* ------------- méthode de la table`user_tasks` ------------------ */
-
-    /**
-     * Fonction d'assigner une tâche à l'utilisateur
-     * @param String $user_id id de l'utilisateur
-     * @param String $task_id id de la tâche
-     */
-  /*
-    public function createUserTask($user_id, $task_id) {
-        $stmt = $this->pdo->prepare("INSERT INTO user_tasks(user_id, task_id) values(?, ?)");
-        $stmt->bind_param("ii", $user_id, $task_id);
-        $result = $stmt->execute();
-
-        if (false === $result) {
-            die('execute() failed: ' . htmlspecialchars($stmt->error));
-        }
-        $stmt->close();
-        return $result;
-    }
-*/
-
-
-
-
-
-
-/* ------------- méthodes de la table `role` ------------------ */
 
     /**
      * Creation nouveau role
@@ -1120,26 +969,28 @@ class DbHandler {
      * @param String $droits nom tel que : Admin, responsable, arbitre
      */
     public function createRole($id, $droits) {
-
+        try{
             // requete d'insertion
-            $stmt = $this->pdo->prepare("INSERT INTO role(id, droits) values (?, ?)");
-            $stmt->bind_param('is', $id, $droits);
+            $stmt = $this->pdo->prepare("INSERT INTO roles(id_role, droits) values (:id, :droits)");
+            $stmt->bindParam(":droits", $droits, PDO::PARAM_STR);
+            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            
             $result = $stmt->execute();
-            $stmt->close();
 
             //Vérifiez pour une insertion réussie
             if ($result) {
                 // Utilisateur inséré avec succès
-                return ROLE_CREATED_SUCCESSFULLY;
+                return $id;
             } else {
                 //Échec de la création de l'utilisateur
-                return ROLE_CREATE_FAILED;
+                return FALSE;;
             }
+        }catch(EXCEPTION $e){
+            return FALSE;
+        }
+            
 
     }
-
-
-
 
     /**
      *Obtention d'un role par id
@@ -1158,8 +1009,6 @@ class DbHandler {
         }
     }
 
-
-
     /**
      *Obtention de tous les rolesd
      */
@@ -1174,8 +1023,6 @@ class DbHandler {
             return NULL;
         }
     }
-
-
 
 
 }

@@ -1,13 +1,12 @@
 <?php
-    $app->get('/hello1', function ($request, $response) {
-        $data['auth'] = 'Hello ADMIN 1';
-            return echoRespnse(200, $response, $data);
-    });
-    $app->get('/hello2', function ($request, $response) {
-        $data['auth'] = 'Hello ADMIN 2';
-            return echoRespnse(200, $response, $data);
-    });
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+require 'src/include/config.php';
 
+/************************************************************************************
+API admin
+Routes par défauts : vx/admin/route
+*************************************************************************************/
     
 /**
  *Création d'une nouveau role dans db
@@ -15,7 +14,7 @@
  * params - name
  * url - /role/{id}/{droits}
  */
-$app->post('/user/role/{id}/{droits}', function(Request $request, Response $response) {
+$app->post('/role/{id}/{droits}', function(Request $request, Response $response) {
 
             $data = array();
             //$task = $app->request->post('task');
@@ -45,13 +44,13 @@ $app->post('/user/role/{id}/{droits}', function(Request $request, Response $resp
 
 
 /**
- * Récupèreation d'un rôle dans db
+ * Récupèreation rôles dans db
  * method GET
  * params - name
- * url - /role/{id}
+ * url - /admin/roles
  */
  
-$app->get('/user/roles', function(Request $request, Response $response) {
+$app->get('/roles', function(Request $request, Response $response) {
 
             $data = array();
 
@@ -80,10 +79,10 @@ $app->get('/user/roles', function(Request $request, Response $response) {
  * Récupèreation d'un rôle dans db
  * method GET
  * params - name
- * url - /role/{id}
+ * url - /admin/role/{id}
  */
  
-$app->get('/user/role/{id}', function(Request $request, Response $response) {
+$app->get('/role/{id}', function(Request $request, Response $response) {
 
             $data = array();
 
@@ -109,41 +108,121 @@ $app->get('/user/role/{id}', function(Request $request, Response $response) {
             }
         });
 
-
-
-/**
- * Enregistrement de l'utilisateur
- * url - /register
+/* Enregistrement  de l'utilisateur (création d'un nouveau')
+ * url - /admin/register
  * methode - POST
+ * headears - content id_user and API_KEY
  * params - email, password, role
  */
- /*
-$app->post('/user/register', function(Request $request, Response $response) {
+$app->post('/register', function(Request $request, Response $response) {
+            require 'src/include/config.php';
             // lecture des params de post
             $email = $request->getParam('email');
             $password = $request->getParam('password');
             $id_role = $request->getParam('role');
-
+            $nom = $request->getParam('nom');
+            $prenom = $request->getParam('prenom');
+            
             // valider adresse email
             $res = validateEmail($email, $response);
-            if($res !== true)
-            {
+            if($res !== true) {
                 return $res;
             }
+
             $db = new DbHandler();
-            $res = $db->createUser($email, $password, $id_role);
+            $res = $db->createUser($email, $password, $id_role, $nom, $prenom);
+            
             $data = array();
-            if ($res == USER_CREATED_SUCCESSFULLY) {
+            if ($res == $config['message']['USER_CREATED_SUCCESSFULLY']) {
                 $data["error"] = false;
-                $data["message"] = "Vous êtes inscrit avec succès";
-            } else if ($res == USER_CREATE_FAILED) {
+                $data["message"] = "Nouvel utilisateur inscrit avec succès";
+            } else if ($res == $config['message']['USER_CREATE_FAILED']) {
                 $data["error"] = true;
                 $data["message"] = "Oops! Une erreur est survenue lors de l'inscription";
-            } else if ($res == USER_ALREADY_EXISTED) {
+            } else if ($res == $config['message']['USER_ALREADY_EXISTED']) {
                 $data["error"] = true;
                 $data["message"] = "Désolé, cet E-mail éxiste déja";
             }
-            // echo de la repense  JSON
+            // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
+
         });
-*/
+
+
+// Get All users
+/* Liste des utilisateurs
+ * url - /admin/users
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/users', function (Request $request, Response $response) {
+            $db = new DbHandler();
+            $users = $db->getUsers();
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $users);
+
+        });
+
+/* Liste des tournois
+ * url - /admin/tournaments
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/tournaments', function (Request $request, Response $response) {
+            $db = new DbHandler();
+            $users = $db->getTournaments();
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $users);
+
+        });
+
+/* Informations d'un tournoi, selon son id
+ * url - /admin/tournament/{id_tournoi}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/tournament/{id}', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentById($id_tournoi);
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+
+        });
+
+/* Liste des tournois créés par un utilateur, selon son email
+ * url - /admin/tournament/email/{email}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/tournaments/email/{email}', function (Request $request, Response $response) {
+            $email = $request->getAttribute('email');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentCreatedUserByEmail($email);
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+
+        });
+
+/* Liste des tournois créés par un utilateur, selon son id
+ * url - /admin/tournaments/id/{id_user}
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/tournaments/id/{id_user}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id_user');
+
+            $db = new DbHandler();
+            $res = $db->getTournamentCreatedUserById($id);
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+
+        });
+

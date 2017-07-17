@@ -35,7 +35,10 @@ class AuthenticateApiKey
             $id = $headers['HTTP_USERID'][0];
 
             // Valider la clé API
-            if (!$db->isValidRoleApiKeyWithID($api_key, $id, $this->role)) {
+            $res = $db->isValidRoleApiKeyWithID($api_key, $id, $this->role);
+            //                $data["error_msg"] = $res;
+            //    return echoRespnse(401, $response, $data);
+            if (!$res) {
                 //  Clé API n'est pas présente dans la table des utilisateurs
                 $data["error"] = true;
                 $data["message"] = "Accès Refusé. Clé APIKEY ($api_key) avec l'id ($id) : invalide";

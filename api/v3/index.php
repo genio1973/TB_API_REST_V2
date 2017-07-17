@@ -48,7 +48,6 @@ $app->group('/resp', function () use ($app) {
 })->add(new AuthenticateApiKey($config['role']['RESPONSABLE']));
 
 
-
 //Groupement des routes pour les arbitres
 $app->group('/arbitre', function () use ($app) {
     require_once('src/routes/arbitre.php');
