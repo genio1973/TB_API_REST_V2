@@ -166,10 +166,52 @@ class DbHandler {
                 $res['id_premier_insert'] = 0;
                 $res['id_dernier_insert'] = 0;
                 $res['nombre_insert'] = 0;
-                $res['error_mgs'] = "Veuillez vérifier les requêtes, l'une ou plusieur d'entre elle contienne une erreur ! ---> " . $e->getMessage();
+                $res['error_mgs'] = "Veuillez vérifier les requêtes, l'une ou plusieurs d'entre elles contiennent une erreur ! ---> " . $e->getMessage();
         }
         return $res;
     }
+
+    /**
+     * Mise à jour d'enregistrements
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Array : tableau de liste des enregistrements
+     * @param Integer : id de l'élément à mettre à jour
+     * @return Asso array :     {
+     *                          "error": false,
+     *                          "error_mgs": false
+     *                          }
+     */
+     public function updateByID($table, $array, $id) {
+            $res['error'] = FALSE;
+            $res['error_mgs'] = NULL;
+
+            try {  
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->pdo->beginTransaction();
+
+                // préparation des la requêtes multiple
+                    $sql= "UPDATE $table SET ";
+                    
+                    foreach($array as $key=>$val){
+                        $sql.= " $key=";
+                        $sql.="'$val',";
+                    }
+                    $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
+                    //return $sql;
+
+                    $this->pdo->exec($sql);
+
+                // enregistrement des requêtes
+                $this->pdo->commit();
+            } catch (Exception $e) {
+                $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
+                $res['error'] = TRUE;
+                $res['error_mgs'] = "Veuillez vérifier la requête et ses champs ! ---> " . $e->getMessage();
+        }
+        return $res;
+    }
+
+
 /**
      * Suppression d'un enregistrement
      * @param String : nom de la table pour les nouveaux enregistrements

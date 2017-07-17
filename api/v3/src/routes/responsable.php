@@ -656,3 +656,46 @@ Routes par défauts : vx/resp/route
         });
 
 
+       /* Modifier les données d'un tournoi, uniquement le nom et le statut peuvent être changés 
+        * url - /resp/tournoi/{id}
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : {"nom_tournoi":"2017-09-15 SVRN","id_statut":2}
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/tournoi/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+            $id = $request->getAttribute('id');
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+
+            // filtre les champs qu'il faut mettre à jour
+            $arrayFields = array();
+            if(isset($data['nom_tournoi'])){
+                $arrayFields['nom_tournoi'] = $data['nom_tournoi'];
+            }
+            if(isset($data['id_statut'])){
+                $arrayFields['id_statut'] = $data['id_statut'];
+            }
+            $res = $db->updateByID('tournois', $arrayFields, $id);
+
+            // echo de la réponse  JSON
+            return echoRespnse(201, $response, $res);
+        });
