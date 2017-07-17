@@ -43,6 +43,25 @@ function validateEmail($email, $response) {
     }
     return true;
 }
+
+/**
+ * Vérification des champs nécessaires avant de passé une requête
+ * renvoi uniquement les valeur de $data pour les clés
+ * se trouvant dans $fieldsToCheck
+ * @param Array avec les clés à tester
+ * @param Array avec les champs autorisés
+ * @return Array avec les clé et valeurs acceptées 
+ */
+function verifyRequiredFields($data, $fieldsToCheck) {
+    $arrayFields = array();
+    foreach ($data as $key => $value){
+        if(in_array($key, $fieldsToCheck) ){
+                $arrayFields[$key] = $value;
+        }
+    }
+    return $arrayFields;
+}
+
 /**
  * Faisant écho à la réponse JSON au client
  * @param String $status_code  Code de réponse HTTP

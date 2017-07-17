@@ -190,16 +190,15 @@ class DbHandler {
                 $this->pdo->beginTransaction();
 
                 // préparation des la requêtes multiple
-                    $sql= "UPDATE $table SET ";
-                    
-                    foreach($array as $key=>$val){
-                        $sql.= " $key=";
-                        $sql.="'$val',";
-                    }
-                    $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-                    //return $sql;
-
-                    $this->pdo->exec($sql);
+                $sql= "UPDATE $table SET ";
+                
+                foreach($array as $key=>$val){
+                    $sql.= " $key=";
+                    $sql.="'$val',";
+                }
+                $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
+                //return $sql;
+                $this->pdo->exec($sql);
 
                 // enregistrement des requêtes
                 $this->pdo->commit();
