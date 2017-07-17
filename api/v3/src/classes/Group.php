@@ -44,7 +44,7 @@ class Group {
         foreach($ranking as $equipe){
             $teams[] = $equipe->getTeam();
         }
-        return $teams;
+        return arrayCopy($teams);
     }
 
 
@@ -74,6 +74,9 @@ class Group {
         }
 	    return ($a->getPoints() < $b->getPoints()) ? 1 : -1; // qui a le plus de points ?
     }
-}
 
+
+
+
+}
 ?>

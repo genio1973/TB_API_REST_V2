@@ -245,6 +245,8 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             $db = new DbHandler();
             $res = array();
             $res = $db->getRankingByGroupID($id_groupe);
+            
+            //$res = "test";
             if ($res != NULL) {
                 $data["error"] = false;
                 $data["message"] = "200";

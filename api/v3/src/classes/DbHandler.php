@@ -1008,7 +1008,6 @@ class DbHandler {
         return NULL;
     }
 
-
     /**
      * Obtention le classement d'un groupe par son id 
      * @param Int $id_groupe

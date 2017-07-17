@@ -107,13 +107,17 @@ class Team {
         
         // Compter les sets perdus
         $this->teamInfo['sets_perdus'] = $this->teamInfo['sets_joues'] - $this->teamInfo['sets_gagnes'];
-        $this->teamInfo['sets_ratio'] = $this->teamInfo['sets_gagnes'] / $this->teamInfo['sets_perdus'];
+        if($this->teamInfo['sets_perdus'] !== 0){
+            $this->teamInfo['sets_ratio'] = $this->teamInfo['sets_gagnes'] / $this->teamInfo['sets_perdus'];
+        }
         
         // Compter les points des sets gagnés et compter les points des sets perdus
         $this->setsPointsWin();
 
         // Et en ressortir les ratio
-        $this->teamInfo['points_sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
+        if($this->teamInfo['points_sets_encaisses'] !== 0){
+            $this->teamInfo['points_sets_ratio'] = $this->teamInfo['points_sets_realises'] / $this->teamInfo['points_sets_encaisses'];
+        }
     }
 
 
