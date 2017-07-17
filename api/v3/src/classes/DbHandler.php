@@ -202,7 +202,8 @@ class DbHandler {
             return $res;
         }
 
-/**
+    
+    /**
      * Suppression de tous les terrains pour un id de tournoi
      * @param Integer : id_tournament
      */
@@ -218,18 +219,63 @@ class DbHandler {
             
             if ($stmt->execute()){
                 $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $idList ="";
-                foreach($ids as $id){
-                    $idList .=$id['id_terrain'].","; 
-                }
-                $idList = rtrim($idList,',');
-                $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
-                $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
-                if ($stmt->execute()){
-                   return TRUE;
+                if($ids){
+                    $idList ="";
+                    foreach($ids as $id){
+                        $idList .=$id['id_terrain'].","; 
+                    }
+                    $idList = rtrim($idList,',');
+                    $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
+                    // $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+                    if ($stmt->execute()){
+                        return TRUE;
+                    }
                 }
             }
             return FALSE;
+        }
+
+
+    /**
+     * Suppression du score (sets liés à un match)
+     * @param Integer : id_match
+     */
+     public function deleteScoreByMatchID($id_match) {
+            $resultat['error'] = TRUE;
+            $resultat['error_mgs'] = "Echec de la suppression des sets !";
+            $resultat['nombre_suppression'] = 0;
+            $resultat['id_supprimer'] = 0;
+
+            // Cherche tous les id des sets du match
+            $stmt = $this->pdo->prepare("SELECT DISTINCT s.id_set FROM sets s
+                                            INNER JOIN matchs m ON m.id_match = s.id_match
+                                            WHERE s.id_match LIKE :id");
+            $stmt->bindParam(":id", $id_match, PDO::PARAM_INT);
+            
+            if ($stmt->execute()){
+                $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if($ids){
+                    $idList ="";
+                    foreach($ids as $id){
+                        $idList .=$id['id_set'].","; 
+                    }
+                    $idList = rtrim($idList,',');
+
+                    // Avec la liste des id des match on supprimer dans les sets
+                    $stmt = $this->pdo->prepare("DELETE from sets WHERE id_set IN ($idList)");
+                    if ($stmt->execute()){
+                        $resultat['error'] = FALSE;
+                        $resultat['error_mgs'] = "Suppression réussie !";
+                        $resultat['nombre_suppression'] = 0;
+                        $resultat['id_supprimer'] = $id_match;
+                    }
+                }
+                else{
+                    $resultat['error'] = FALSE;
+                    $resultat['error_mgs'] = "Pas de score à supprimer !";
+                }
+            }
+            return $resultat;
         }
 
 /*     
@@ -453,6 +499,32 @@ class DbHandler {
      */
     private function generateApiKey() {
         return md5(uniqid(rand(), true));
+    }
+
+    /**
+     * Validation de la propriété d'un personne
+     * @param Integer $id_current_user
+     * @param Integer $id_personne
+     * @return boolean
+     */
+    public function isPeopleOwner($id_current_user, $id_personne) {
+        $stmt = $this->pdo->prepare("SELECT p.id_personne 
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
+                                        WHERE u.id_user = :id_user AND p.id_personne = :id_personne");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_personne", $id_personne, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

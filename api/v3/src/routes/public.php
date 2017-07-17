@@ -851,6 +851,120 @@ Routes par défauts : vx/responsable/route
         });
 
 
+       /* Suppression d'un match 
+        * url - /resp/personne/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/personne/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isPeopleOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('personnes', $id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
+
+
+
+       /* Suppression d'un terrain 
+        * url - /resp/tournament/{id_tournament}/terrain/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/tournament/{id_tournament}/terrain/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['error_mgs'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+            $id_tournament = $request->getAttribute('id_tournament');
+
+            $db = new DbHandler();
+            $res = $db->isTournamentOwner($id_current_user, $id_tournament); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(201, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('terrains', $id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
+
+
+       /* Suppression des sets d'un match
+        * url - /resp/score/match/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "error_mgs": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/resp/score/match/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isMatchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['error_mgs'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(200, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteScoreByMatchID($id);
+            
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
+
+
+
 /*
 $app->get('/hello', function ($request, $response) use ($app) {
 
