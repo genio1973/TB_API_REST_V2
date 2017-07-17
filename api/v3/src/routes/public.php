@@ -38,7 +38,8 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
 
                 if ($user != NULL) {
                     if($user['status']==1){
-                        $data['error'] = false;
+                        $result['error'] = false;
+                        $result['message'] = NULL;
                         $data['id_user'] = $user['id_user'];
                         $data['status'] = $user['status'];
                         $data['name'] = $user['nom_user'];
@@ -46,23 +47,24 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                         $data['email'] = $user['email'];
                         $data['apiKey'] = $user['token'];
                         $data['valid_until'] = $user['token_expire'];
+                        $result['result'] = $data;
                     }
                     else {
-                        $data['error'] = true;
-                        $data['message'] = "Votre compte a été suspendu";
+                        $result['error'] = true;
+                        $result['message'] = "Votre compte a été suspendu";
                     }
                 } else {
                     // erreur inconnue est survenue
-                    $data['error'] = true;
-                    $data['message'] = "Une erreur est survenue. S'il vous plaît essayer à nouveau";
+                    $result['error'] = true;
+                    $result['message'] = "Une erreur est survenue. S'il vous plaît essayer à nouveau";
                 }
             } else {
                 // identificateurs de l'utilisateur sont erronés
-                $data['error'] = true;
-                $data['message'] = 'Échec de la connexion. identificateurs incorrectes';
+                $result['error'] = true;
+                $result['message'] = 'Échec de la connexion. identificateurs incorrectes';
             }
 
-            return echoRespnse(200, $response, $data);
+            return echoRespnse(200, $response, $result);
         });
 
 /* Liste des matchs d'un groupe
@@ -75,9 +77,19 @@ $app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Respo
             $db = new DbHandler();
             $res = array();
             $res = $db->getMatchsByGroup($id_groupe);
-
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Liste des résultats d'un groupe
@@ -90,9 +102,18 @@ $app->get('/public/resultats/groupe/{id_groupe}', function (Request $request, Re
             $db = new DbHandler();
             $res = array();
             $res = $db->getScoresByGroup($id_groupe);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 /* Liste des matchs d'une équipe
  * url - /public/matchs/equipe/{id_equipe}
@@ -104,8 +125,18 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
             $db = new DbHandler();
             $res = array();
             $res = $db->getTeamMatchsById($id_equipe);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Liste des matchs pour un tournoi
@@ -118,9 +149,18 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
             $db = new DbHandler();
             $res = array();
             $res = $db->getMatchsByTournamentId($id_tournoi);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Liste les noms des équipes pour un tournoi
@@ -133,9 +173,18 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
             $db = new DbHandler();
             $res = array();
             $res = $db->getTeamsTournamentById($id_tournoi);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 /* Liste des matchs listés par terrain pour un tounoi spécifique 
  * url - /public/tournament/{id_tournoi}/matchs/terrains
@@ -147,9 +196,18 @@ $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $
             $db = new DbHandler();
             $res = array();
             $res = $db->getMatchsPitchesByTournamentId($id_tournoi);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Liste des matchs pour un terrain spécifique 
@@ -162,9 +220,18 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
             $db = new DbHandler();
             $res = array();
             $res = $db->getMatchsByPitchId($id_terrain);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -178,9 +245,18 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
             $db = new DbHandler();
             $res = array();
             $res = $db->getRankingByGroupID($id_groupe);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(200, $response, $data);
         });   
 
 
@@ -195,9 +271,18 @@ $app->get('/public/equipes/groupe/{id_groupe}', function (Request $request, Resp
             $db = new DbHandler();
             $res = array();
             $res = $db->getTeamDetailsgByGroupID($id_groupe);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }     
+             
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });  
 
 

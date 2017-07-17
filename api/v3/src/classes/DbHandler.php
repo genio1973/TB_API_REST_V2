@@ -83,13 +83,7 @@ class DbHandler {
      *                          "id_premier_insert": 33
      *                          }
      */
-     public function createTournament($nom_tournoi, $id_user) {
-
-         $res['error'] = FALSE;
-         $res['error_mgs'] = NULL;
-         $res['nombre_insert'] = 0;
-         $res['id_premier_insert'] = 0;
-         $res['id_dernier_insert'] = 0;
+     public function createTournament($nom_tournoi, $id_user) {       
          try {  
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->pdo->beginTransaction();
@@ -100,8 +94,10 @@ class DbHandler {
 
                 $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
                 $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
+                
                 $stmt->execute();
-                //$this->pdo->exec($stmt);
+                
+                
                 $res['nombre_insert'] = 1;
                 $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
                 $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'] + 1;
@@ -110,11 +106,8 @@ class DbHandler {
                 $this->pdo->commit();
            } catch (Exception $e) {
                 $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
-                $res['error'] = TRUE;
-                $res['id_premier_insert'] = 0;
-                $res['id_dernier_insert'] = 0;
-                $res['nombre_insert'] = 0;
-                $res['error_mgs'] = "Veuillez vérifier la requête ! ---> " . $e->getMessage();
+
+                $res = NULL;
         }
         return $res;        
     }
@@ -133,8 +126,6 @@ class DbHandler {
      *                          }
      */
      public function createMultiple($table, $array) {
-            $res['error'] = FALSE;
-            $res['error_mgs'] = NULL;
             $res['nombre_insert'] = 0;
             $res['id_premier_insert'] = 0;
             $res['id_dernier_insert'] = 0;
@@ -162,11 +153,7 @@ class DbHandler {
                 $this->pdo->commit();
             } catch (Exception $e) {
                 $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
-                $res['error'] = TRUE;
-                $res['id_premier_insert'] = 0;
-                $res['id_dernier_insert'] = 0;
-                $res['nombre_insert'] = 0;
-                $res['error_mgs'] = "Veuillez vérifier les requêtes, l'une ou plusieurs d'entre elles contiennent une erreur ! ---> " . $e->getMessage();
+                $res = NULL;
         }
         return $res;
     }
@@ -176,15 +163,9 @@ class DbHandler {
      * @param String : nom de la table pour les nouveaux enregistrements
      * @param Array : tableau de liste des enregistrements
      * @param Integer : id de l'élément à mettre à jour
-     * @return Asso array :     {
-     *                          "error": false,
-     *                          "error_mgs": false
-     *                          }
+     * @return resultat ou NULL
      */
      public function updateByID($table, $array, $id) {
-            $res['error'] = FALSE;
-            $res['error_mgs'] = NULL;
-
             try {  
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->pdo->beginTransaction();
@@ -202,10 +183,10 @@ class DbHandler {
 
                 // enregistrement des requêtes
                 $this->pdo->commit();
+                $res['id_update'] = $id;
             } catch (Exception $e) {
                 $this->pdo->rollBack(); // en cas d'erreur annule les transaction en cours
-                $res['error'] = TRUE;
-                $res['error_mgs'] = "Veuillez vérifier la requête et ses champs ! ---> " . $e->getMessage();
+                $res = NULL;
         }
         return $res;
     }
@@ -218,13 +199,11 @@ class DbHandler {
      * @param Integer : id_user, l'élément à supprimer doit appartenir à l'id_user
      * @return Asso array :     {
      *            "error": false,
-     *            "error_mgs": null,
+     *            "message": null,
      *            "nombre_suppression": 1
      *           }
      */
      public function deleteByID($table, $id_to_delete) {
-            $res['error'] = FALSE;
-            $res['error_mgs'] = NULL;
             $res['nombre_suppression'] = 0;
             $res['id_supprimer'] = 0;
             $id_table = 'id_'.rtrim($table,'s');
@@ -237,8 +216,7 @@ class DbHandler {
                 $res['id_supprimer'] = $id_to_delete;
             }
             else{
-                $res['error'] = TRUE;
-                $res['error_mgs'] = "Suppression non réussie !";
+                $res = NULL;
             }
             return $res;
         }
@@ -273,7 +251,7 @@ class DbHandler {
                     }
                 }
             }
-            return FALSE;
+            return NULL;
         }
 
 
@@ -282,9 +260,6 @@ class DbHandler {
      * @param Integer : id_match
      */
      public function deleteScoreByMatchID($id_match) {
-            $resultat['error'] = TRUE;
-            $resultat['error_mgs'] = "Echec de la suppression des sets !";
-            $resultat['nombre_suppression'] = 0;
             $resultat['id_supprimer'] = 0;
 
             // Cherche tous les id des sets du match
@@ -305,15 +280,14 @@ class DbHandler {
                     // Avec la liste des id des match on supprimer dans les sets
                     $stmt = $this->pdo->prepare("DELETE from sets WHERE id_set IN ($idList)");
                     if ($stmt->execute()){
-                        $resultat['error'] = FALSE;
-                        $resultat['error_mgs'] = "Suppression réussie !";
-                        $resultat['nombre_suppression'] = 0;
                         $resultat['id_supprimer'] = $id_match;
                     }
+                    else {
+                        $resultat = NULL;
+                     }
                 }
                 else{
-                    $resultat['error'] = FALSE;
-                    $resultat['error_mgs'] = "Pas de score à supprimer !";
+                   $resultat = NULL;
                 }
             }
             return $resultat;
@@ -680,7 +654,7 @@ class DbHandler {
 
     /**
      *Obtention des tournois créés par utilisateur (id)
-     * @param String $email
+     * @param Integer $id
      */
     public function getTournamentCreatedUserById($id_user) {
         $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
@@ -690,11 +664,7 @@ class DbHandler {
                                     INNER JOIN roles r ON r.id_role=u.id_role
                                     INNER JOIN statuts s ON s.id_statut = t.id_statut  
                                     WHERE u.id_user = :id_user");
-        /*
-        $stmt = $this->pdo->prepare("SELECT *
-                                    FROM users u
-                                    WHERE u.email = :email");  
-                                    */
+
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
         if ($stmt->execute())
         {
@@ -706,10 +676,10 @@ class DbHandler {
     }
 
 
-    /**
-     *Obtention d'un tournoi par id
-     * @param Int $id_tournoi
-     */
+   /**
+    * Obtention d'un tournoi par id
+    * @param Int $id_tournoi
+    */
     public function getTournamentById($id_tournoi) {
         $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                             u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
@@ -920,9 +890,6 @@ class DbHandler {
      * @param Int $id_groupe
      */
     public function getScoresByGroup($id_groupe) {
-        $res['error'] = FALSE;
-        $res['error_mgs'] = NULL;
-        $res['result'] = NULL;
         try{
             $stmt = $this->pdo->prepare("SELECT m.id_match, m.statut, m.id_equipe_home, e1.nom_equipe, m.id_equipe_visiteur, e2.nom_equipe, s.score_home, s.score_visiteur, t.nom_terrain
                                             FROM matchs m
@@ -964,12 +931,11 @@ class DbHandler {
                     $resultat[$row['id_match']]['score_sets'][] =  $row['score_home'].'-'.$row['score_visiteur'];
                     $resultat[$row['id_match']]['set_home_gagne'] = $set_home;
                     $resultat[$row['id_match']]['set_visiteur_gagne'] = $set_visiteur;
-                    $res['result'] = $resultat;
+                    $res = $resultat;
                 }
-            } 
+            }
         } catch (Exception $e) {                
-                $res['error'] = TRUE;
-                $res['error_mgs'] = "Veuillez vérifier la requête et ses champs ! ---> " . $e->getMessage();
+                $res = NULL;
         }
         return $res;
     }

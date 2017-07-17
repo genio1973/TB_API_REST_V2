@@ -33,12 +33,10 @@ $app->post('/role/{id}/{droits}', function(Request $request, Response $response)
                 $data["message"] = "Rôle créé avec succès";
                 $data["role_id"] = $role_id;
                 return echoRespnse(201, $response, $data);
-                //echoRespnse(201, $response);
             } else {
                 $data["error"] = true;
                 $data["message"] = "Impossible de créer le rôle. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
-                //echoRespnse(200, $response);
             }
         });
 
@@ -62,15 +60,13 @@ $app->get('/roles', function(Request $request, Response $response) {
             if ($roles != NULL) {
                 $data["error"] = false;
                 $data["message"] = "200";
-                $data["roles"] = $roles;
+                $data["result"] = $roles;
 
                 return echoRespnse(200, $response, $data);
-                //echoRespnse(201, $response);
             } else {
                 $data["error"] = true;
                 $data["message"] = "Impossible de réucupérer les rôles. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
-                //echoRespnse(200, $response);
             }
         });
 
@@ -97,14 +93,12 @@ $app->get('/role/{id}', function(Request $request, Response $response) {
             if ($role_id != NULL) {
                 $data["error"] = false;
                 $data["message"] = "200";
-                $data["role"] = $role_id;
+                $data["result"] = $role_id;
                 return echoRespnse(200, $response, $data);
-                //echoRespnse(201, $response);
             } else {
                 $data["error"] = true;
                 $data["message"] = "Impossible de réucupérer le rôle. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
-                //echoRespnse(200, $response);
             }
         });
 
@@ -159,9 +153,18 @@ $app->get('/users', function (Request $request, Response $response) {
             $db = new DbHandler();
             $users = $db->getUsers();
 
-            // echo de la réponse  JSON
-            return echoRespnse(201, $response, $users);
+            if ($users != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["users"] = $users;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
 
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $users);
         });
 
 /* Liste des tournois
@@ -171,10 +174,18 @@ $app->get('/users', function (Request $request, Response $response) {
  */
 $app->get('/tournaments', function (Request $request, Response $response) {
             $db = new DbHandler();
-            $users = $db->getTournaments();
-
+            $res = $db->getTournaments();
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer les tournois. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $users);
+            return echoRespnse(200, $response, $res);
 
         });
 
@@ -189,9 +200,17 @@ $app->get('/tournament/{id}', function (Request $request, Response $response) {
             $db = new DbHandler();
             $res = $db->getTournamentById($id_tournoi);
 
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $res);
-
         });
 
 /* Liste des tournois créés par un utilateur, selon son email
@@ -204,7 +223,17 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
 
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserByEmail($email);
+            $res = $db->getTournamentById($id_tournoi);
 
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $res);
 
@@ -220,7 +249,15 @@ $app->get('/tournaments/id/{id_user}', function (Request $request, Response $res
 
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserById($id);
-
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $res);
 
