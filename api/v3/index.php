@@ -19,7 +19,6 @@ spl_autoload_register(function ($classname) {
     require ("./src/classes/" . $classname . ".php");
 });
 
-
 // ID utilisateur - variable globale
 //global $user_id;
 $user_id = NULL;

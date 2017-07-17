@@ -80,6 +80,20 @@ $app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Respo
             return echoRespnse(200, $response, $res);
         });
 
+/* Liste des résultats d'un groupe
+ * url - /public/resultats/groupe/{id_groupe}
+ * methode - GET
+ */
+$app->get('/public/resultats/groupe/{id_groupe}', function (Request $request, Response $response) {
+            $id_groupe = $request->getAttribute('id_groupe');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getScoresByGroup($id_groupe);
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
 /* Liste des matchs d'une équipe
  * url - /public/matchs/equipe/{id_equipe}
  * methode - GET

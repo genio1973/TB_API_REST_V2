@@ -915,6 +915,64 @@ class DbHandler {
         return NULL;
     }
 
+    /**
+     *Obtention des résultats des matchs d'un groupe d'un tournoi selon son id du tournoi 
+     * @param Int $id_groupe
+     */
+    public function getScoresByGroup($id_groupe) {
+        $res['error'] = FALSE;
+        $res['error_mgs'] = NULL;
+        $res['result'] = NULL;
+        try{
+            $stmt = $this->pdo->prepare("SELECT m.id_match, m.statut, m.id_equipe_home, e1.nom_equipe, m.id_equipe_visiteur, e2.nom_equipe, s.score_home, s.score_visiteur, t.nom_terrain
+                                            FROM matchs m
+                                            INNER JOIN equipes e1 ON m.id_equipe_home = e1.id_equipe
+                                            INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                            INNER JOIN groupes g ON g.id_groupe = e1.id_groupe
+                                            INNER JOIN terrains t ON m.id_terrain = t.id_terrain
+                                            INNER JOIN sets s ON s.id_match = m.id_match
+                                            WHERE g.id_groupe LIKE :id_groupe
+                                            ORDER BY m.id_match");
+                                    
+            $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
+
+            if ($stmt->execute())
+            {
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $id_match_tmp = 0;
+                //créer un tableau à 2 dimmension et conserve les scores pour le même indice de l'équipe
+                foreach($response as $row){
+                    //si c'est les détails d'un nouveau match les scores des sets reprennent à 0 !
+                    if($id_match_tmp !== $row['id_match']){
+                        $id_match_tmp = $row['id_match'];
+                        $set_home = 0;
+                        $set_visiteur = 0;
+                    }
+
+                    // qui a gagné le set en cours ?
+                    $row['score_home'] > $row['score_visiteur'] ? $set_home++ : $set_visiteur++;
+                    
+                    // reprendre tous les champs tel quel, sauf ceux des score
+                    foreach($row as $key => $val){
+                        if(strpos($key, 'score_') === false){
+                            $resultat[$row['id_match']][$key] = $val;
+                        }                    
+                    }
+
+                    // Mise en forme des score sous différents formats
+                    $resultat[$row['id_match']]['score_match'] = $set_home.'-'.$set_visiteur;
+                    $resultat[$row['id_match']]['score_sets'][] =  $row['score_home'].'-'.$row['score_visiteur'];
+                    $resultat[$row['id_match']]['set_home_gagne'] = $set_home;
+                    $resultat[$row['id_match']]['set_visiteur_gagne'] = $set_visiteur;
+                    $res['result'] = $resultat;
+                }
+            } 
+        } catch (Exception $e) {                
+                $res['error'] = TRUE;
+                $res['error_mgs'] = "Veuillez vérifier la requête et ses champs ! ---> " . $e->getMessage();
+        }
+        return $res;
+    }
 
     /**
      * Obtention des tournois
@@ -1024,7 +1082,7 @@ class DbHandler {
                 return $id;
             } else {
                 //Échec de la création de l'utilisateur
-                return FALSE;;
+                return FALSE;
             }
         }catch(EXCEPTION $e){
             return FALSE;
