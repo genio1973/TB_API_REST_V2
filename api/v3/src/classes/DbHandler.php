@@ -203,27 +203,30 @@ class DbHandler {
      * @param Integer : id_user, l'élément à supprimer doit appartenir à l'id_user
      * @return Asso array :     {
      *            "error": false,
-     *            "message": null,
-     *            "nombre_suppression": 1
+     *            "message": ....,
+     *            "id_deleted": 1
      *           }
      */
      public function deleteByID($table, $id_to_delete) {
-            $res['nombre_suppression'] = 0;
-            $res['id_supprimer'] = 0;
-            $id_table = 'id_'.rtrim($table,'s');
+         try {
+                $id_table = 'id_'.rtrim($table,'s');
 
-            $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $id_table = :id");
-            $stmt->bindParam(":id", $id_to_delete, PDO::PARAM_INT);
+                $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $id_table = :id");
+                $stmt->bindParam(":id", $id_to_delete, PDO::PARAM_INT);
 
-            if($stmt->execute()){
-                $res['nombre_suppression'] = 1;
-                $res['id_supprimer'] = $id_to_delete;
-            }
-            else{
+                if(!$stmt->execute()){
+                    throw new Exception();
+                }
+                if($stmt->rowCount()<=0){
+                    throw new Exception("Nothing was deleting !");
+                }
+                $res['nombre_suppression'] = $stmt->rowCount();
+                $res['id_deleted'] = $id_to_delete;
+         }catch(EXCEPTION $e){
                 $res = NULL;
-            }
-            return $res;
-        }
+         }
+         return $res;
+    }
 
     
     /**

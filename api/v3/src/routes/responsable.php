@@ -665,7 +665,6 @@ Routes par défauts : vx/resp/route
             if(!$res){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
                 return echoRespnse(200, $response, $resultat);
             }
                        
@@ -694,8 +693,7 @@ Routes par défauts : vx/resp/route
         * return - {
         *            "error": false,
         *            "message": null,
-        *            "nombre_suppression": 1,
-        *            "id_supprimer": "17"
+        *            "result": ...
         *           }
         */
         $app->delete('/match/{id}', function(Request $request, Response $response) use ($app) {
