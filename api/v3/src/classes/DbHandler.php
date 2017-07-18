@@ -196,7 +196,7 @@ class DbHandler {
     }
 
 
-/**
+    /**
      * Suppression d'un enregistrement
      * @param String : nom de la table pour les nouveaux enregistrements
      * @param Integer : id de l'élément à supprimer
@@ -211,9 +211,9 @@ class DbHandler {
          try {
                 $id_table = 'id_'.rtrim($table,'s');
 
-                $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $id_table = :id");
+                $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $id_table LIKE :id");
                 $stmt->bindParam(":id", $id_to_delete, PDO::PARAM_INT);
-
+                
                 if(!$stmt->execute()){
                     throw new Exception();
                 }
@@ -548,6 +548,28 @@ class DbHandler {
                                         WHERE u.id_user = :id_user AND p.id_personne = :id_personne");
         $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
         $stmt->bindParam(":id_personne", $id_personne, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Validation de la propriété d'un terrain
+     * @param Integer $id_current_user
+     * @param Integer $id_terrain
+     * @return boolean
+     */
+    public function isPitchOwner($id_current_user, $id_terrain) {
+        $stmt = $this->pdo->prepare("SELECT t.id_terrain 
+                                        FROM users u
+                                        INNER JOIN terrains t ON t.id_user = u.id_user
+                                        WHERE u.id_user = :id_user AND t.id_terrain = :id_terrain");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_terrain", $id_terrain, PDO::PARAM_INT);
         if ($stmt->execute())
         {
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1115,7 +1137,7 @@ class DbHandler {
     }
 
     /**
-     *Obtention de tous les rolesd
+     *Obtention de tous les roles
      */
     public function getRoles() {
         $stmt = $this->pdo->prepare("SELECT * FROM roles");
@@ -1129,6 +1151,32 @@ class DbHandler {
         }
     }
 
+/**
+     * Obtient tous les terrains créés par un utilisateur
+     * @param Integer : id de l'utilisateur
+     * @return Asso array :     {
+     *            "error": false,
+     *            "message": ....,
+     *            "result": ...
+     *           }
+     */
+     public function getPitchesByUserId($id_user) {
+         try {
+                $stmt = $this->pdo->prepare("SELECT t.id_terrain, t.nom_terrain FROM terrains t
+                                             WHERE t.id_user = :id");
+                $stmt->bindParam(":id", $id_user, PDO::PARAM_INT);
+
+                if ($stmt->execute()) {
+                    $terrains = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    return $terrains;
+                } else {
+                    return NULL;
+                }
+         }catch(EXCEPTION $e){
+                $res = NULL;
+         }
+         return $res;
+    }
 
 }
 ?>

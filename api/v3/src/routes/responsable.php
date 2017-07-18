@@ -33,7 +33,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -64,7 +64,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
         /* Liste des équipes dans un groupe appartenant 
@@ -88,10 +88,33 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
+        /* Liste des terrains de l'utilisateur courant
+        * url - /resp/terrains
+        * headears - content id_user and API_KEY
+        * methode - GET
+        */
+        $app->get('/terrains', function (Request $request, Response $response) {
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];            
 
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getPitchesByUserId($id_current_user);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
 
         /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
         * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
@@ -121,7 +144,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });        
 
 
@@ -169,7 +192,7 @@ Routes par défauts : vx/resp/route
             }
 
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(201, $response, $data);
         });
 
 
@@ -228,7 +251,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(201, $response, $data);
         });
 
 
@@ -290,7 +313,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(201, $response, $data);
         });
 
 
@@ -351,7 +374,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);            
+            return echoRespnse(201, $response, $data);            
         });
 
         /* Ajout de terrains 
@@ -376,6 +399,10 @@ Routes par défauts : vx/resp/route
             // récupère les données passée aux forma json
             $json = $request->getBody();
             $data = json_decode($json, true); // transofme en tableau associatif
+            
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("nom_terrain");
@@ -384,6 +411,12 @@ Routes par défauts : vx/resp/route
                 $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $resultat);
             }
+
+            // Ajouter l'appartenance des terrains créés
+            foreach($data as $key=>$terrain){
+                $data[$key]['id_user'] = $id_current_user;
+            }
+            //return echoRespnse(201, $response, $data);
 
             $db = new DbHandler();
             // insertion des enregistrements
@@ -399,7 +432,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);   
+            return echoRespnse(201, $response, $data);   
         });
 
         /* Ajout de matchs
@@ -468,7 +501,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(201, $response, $data);
         });
 
         /* Ajout de sets
@@ -529,7 +562,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $res);
+            return echoRespnse(201, $response, $data);
         });
 
 
@@ -565,7 +598,7 @@ Routes par défauts : vx/resp/route
 
                 return echoRespnse(200, $response, $resultat);
             }
-            
+            /*            
             // supprime les terrains du tournoi manuellement
             // Pas de cascade, car on veut les consrrver en cas de suppression de matchs !
             if(!$db->deletePitchByTournamentID($id)){
@@ -573,9 +606,57 @@ Routes par défauts : vx/resp/route
                 $resultat['message'] = "Problème de suppression des terrains !";
                 return echoRespnse(200, $response, $resultat);
             }
-            
+            */           
             // suppression du tournoi en cascade avec les enfants du tournoi
             $res = $db->deleteByID('tournois', $id);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "Le tournoi est supprimé. Les terrains restent à dipsosition, si nécessaire supprimez-les!";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+       /* Suppression d'un terrain 
+        * url - /resp/terrain/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/terrain/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['message'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+            
+            $db = new DbHandler();
+            $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
+
+                return echoRespnse(200, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('terrains', $id);
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;
@@ -586,10 +667,10 @@ Routes par défauts : vx/resp/route
                 $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
-
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
+
 
 
        /* Suppression d'une équipe 
@@ -635,7 +716,7 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -682,7 +763,7 @@ Routes par défauts : vx/resp/route
             }     
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
        /* Suppression d'un match 
@@ -728,7 +809,7 @@ Routes par défauts : vx/resp/route
             }     
              
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -776,7 +857,7 @@ Routes par défauts : vx/resp/route
             }     
              
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -826,7 +907,7 @@ Routes par défauts : vx/resp/route
             }     
              
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -871,7 +952,7 @@ Routes par défauts : vx/resp/route
             }     
              
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 
@@ -924,7 +1005,7 @@ Routes par défauts : vx/resp/route
              
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
        /* Modifier les données d'un match, l'un ou plusieurs champs : date_match, heure, id_terrain, statut, id_user_dirige, id_equipe_arbitre
@@ -976,7 +1057,7 @@ Routes par défauts : vx/resp/route
             }  
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
        /* Modifier les données d'une personne, l'un ou plusieurs champs : "prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays"
@@ -1038,5 +1119,5 @@ Routes par défauts : vx/resp/route
             }  
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });

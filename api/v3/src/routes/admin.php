@@ -230,7 +230,7 @@ $app->get('/tournaments', function (Request $request, Response $response) {
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
 
         });
 
@@ -255,7 +255,7 @@ $app->get('/tournament/{id}', function (Request $request, Response $response) {
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Liste des tournois créés par un utilateur, selon son email
@@ -280,7 +280,7 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
 
         });
 
@@ -291,23 +291,22 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
  * methode - GET
  */
 $app->get('/tournaments/id/{id_user}', function (Request $request, Response $response) {
-            $id = $request->getAttribute('id_user');
+        $id = $request->getAttribute('id_user');
 
-            $db = new DbHandler();
-            $res = $db->getTournamentCreatedUserById($id);
-            if ($res != NULL) {
-                $data["error"] = false;
-                $data["message"] = "200";
-                $data["result"] = $res;
-            } else {
-                $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
-            }
-            // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
-
-        });
+        $db = new DbHandler();
+        $res = $db->getTournamentCreatedUserById($id);
+        if ($res != NULL) {
+            $data["error"] = false;
+            $data["message"] = "200";
+            $data["result"] = $res;
+        } else {
+            $data["error"] = true;
+            $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(200, $response, $data);
+        }
+        // echo de la réponse  JSON
+        return echoRespnse(200, $response, $data);
+    });
 
 /* Suppression d'un user (responsable) 
 * url - /admin/user/{id}
@@ -321,37 +320,37 @@ $app->get('/tournaments/id/{id_user}', function (Request $request, Response $res
 *           }
 */
 $app->delete('/user/{id}', function(Request $request, Response $response) use ($app) {
-    $resultat['error'] = FALSE;
-    $resultat['message'] = "";
+        $resultat['error'] = FALSE;
+        $resultat['message'] = "";
 
-    // récupère l'id du responsable en cours
-    $headers = $request->getHeaders();
-    $id_current_user = $headers['HTTP_USERID'][0];
-    $id = $request->getAttribute('id');
+        // récupère l'id du responsable en cours
+        $headers = $request->getHeaders();
+        $id_current_user = $headers['HTTP_USERID'][0];
+        $id = $request->getAttribute('id');
 
-    if($id_current_user == $id){
-        $resultat['error'] = TRUE;
-        $resultat['message'] = "Permission refusée. Vous ne pouvez pas supprimer votre compte !";
-        return echoRespnse(200, $response, $resultat);
-    }
+        if($id_current_user == $id){
+            $resultat['error'] = TRUE;
+            $resultat['message'] = "Permission refusée. Vous ne pouvez pas supprimer votre compte !";
+            return echoRespnse(200, $response, $resultat);
+        }
 
-    $db = new DbHandler();
-    // suppression de l'utilisateur' mais pas de cascade
-    $res = $db->deleteByID('users', $id);
-    $data=NULL;
-    if ($res != NULL) {
-        $data["error"] = false;
-        $data["message"] = "Attention aux tournois créés par le utilisateurs supprimé. Ils existent toujours, mais ne sont affectés à personne. A vous de les supprimer ou des les affecter à qq d'autres";
-        $data["result"] = $res;
-    } else {
-        $data["error"] = true;
-        $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+        $db = new DbHandler();
+        // suppression de l'utilisateur' mais pas de cascade
+        $res = $db->deleteByID('users', $id);
+        $data=NULL;
+        if ($res != NULL) {
+            $data["error"] = false;
+            $data["message"] = "Attention aux tournois créés par l'utilisateur supprimé. Ils existent toujours, mais ne sont affectés à personne. A vous de les supprimer ou des les affecter à qq d'autres";
+            $data["result"] = $res;
+        } else {
+            $data["error"] = true;
+            $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(200, $response, $data);
+        }     
+
+        // echo de la réponse  JSON
         return echoRespnse(200, $response, $data);
-    }     
-
-    // echo de la réponse  JSON
-    return echoRespnse(200, $response, $data);
-});   
+    });   
 
 
 /* Suppression d'un tournoi 
@@ -367,44 +366,33 @@ $app->delete('/user/{id}', function(Request $request, Response $response) use ($
 *           }
 */
 $app->delete('/tournoi/{id}', function(Request $request, Response $response) use ($app) {
-    //require 'src/include/config.php';
-    $resultat['error'] = FALSE;
-    $resultat['message'] = "";
+        $resultat['error'] = FALSE;
+        $resultat['message'] = "";
 
-    // récupère l'id du responsable en cours
-    $headers = $request->getHeaders();
-    $id_current_user = $headers['HTTP_USERID'][0];
-    $id = $request->getAttribute('id');
+        // récupère l'id du responsable en cours
+        $headers = $request->getHeaders();
+        $id_current_user = $headers['HTTP_USERID'][0];
+        $id = $request->getAttribute('id');
 
-    $db = new DbHandler();                                  
-    // supprime les terrains du tournoi manuellement
-    // Pas de cascade, car on veut les consrrver en cas de suppression de matchs !
-    if(!$db->deletePitchByTournamentID($id)){
-        $resultat['error'] = TRUE;
-        $resultat['message'] = "Problème de suppression des terrains !";
-        return echoRespnse(200, $response, $resultat);
-    }
-    
-    // suppression du tournoi en cascade avec les enfants du tournoi
-    $res = $db->deleteByID('tournois', $id);
-    $data=NULL;
-    if ($res != NULL) {
-        $data["error"] = false;
-        $data["message"] = "200";
-        $data["result"] = $res;
-    } else {
-        $data["error"] = true;
-        $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+        $db = new DbHandler();                                      
+        // suppression du tournoi en cascade avec les enfants du tournoi
+        $res = $db->deleteByID('tournois', $id);
+        $data=NULL;
+        if ($res != NULL) {
+            $data["error"] = false;
+            $data["message"] = "200";
+            $data["result"] = $res;
+        } else {
+            $data["error"] = true;
+            $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(200, $response, $data);
+        }
+
+        // echo de la réponse  JSON
         return echoRespnse(200, $response, $data);
-    }
+    });
 
-    // echo de la réponse  JSON
-    return echoRespnse(200, $response, $res);
-});
-
-
-
-   
+  
 /* Modifier les données d'un utilisateur, l'un ou plusieurs champs : 'email', 'mot_de_passe', 'token', 'token_expire', 'id_role', 'nom_user', 'prenom_user', 'satus'
 * url - /admin/personne/{id}
 * methode - PUT
@@ -455,5 +443,5 @@ $app->put('/user/{id}', function(Request $request, Response $response) use ($app
             }  
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $res);
+            return echoRespnse(200, $response, $data);
         });
