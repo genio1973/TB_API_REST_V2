@@ -156,7 +156,7 @@ $app->get('/users', function (Request $request, Response $response) {
             if ($users != NULL) {
                 $data["error"] = false;
                 $data["message"] = "200";
-                $data["users"] = $users;
+                $data["result"] = $users;
             } else {
                 $data["error"] = true;
                 $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
@@ -167,6 +167,51 @@ $app->get('/users', function (Request $request, Response $response) {
             return echoRespnse(200, $response, $users);
         });
 
+/* Get an user by id
+ * url - /admin/user
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/user/{id}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id');
+            $db = new DbHandler();
+            $user = $db->getUserById($id);
+            if ($user != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $user;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $user);
+        });
+
+/* Get an user by email
+ * url - /admin/user
+ * headears - content id_user and API_KEY
+ * methode - GET
+ */
+$app->get('/userbyemail/{email}', function (Request $request, Response $response) {
+            $email = $request->getAttribute('email');
+            $db = new DbHandler();
+            $user = $db->getUserByEmail($email);
+            if ($user != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $user;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $user);
+        });
 /* Liste des tournois
  * url - /admin/tournaments
  * headears - content id_user and API_KEY

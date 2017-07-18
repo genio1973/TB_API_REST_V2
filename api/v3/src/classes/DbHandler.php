@@ -383,6 +383,22 @@ class DbHandler {
     }
 
     /**
+     *Obtention de l'utilisateur par son id
+     * @param String $email
+     */
+    public function getUserById($id) {
+        $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits
+                                        FROM users u
+                                        INNER JOIN roles r ON r.id_role = u.id_role
+                                        WHERE id_user = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_STR);
+        if ($stmt->execute()){
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
+        }
+        return NULL;
+    }
+    /**
      *Obtention des utilisateurs
      */
     public function getUsers() {
