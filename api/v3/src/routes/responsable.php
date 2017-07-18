@@ -116,6 +116,8 @@ Routes par défauts : vx/resp/route
             return echoRespnse(200, $response, $data);
         });
 
+       
+
         /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
         * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
         * headears - content id_user and API_KEY
@@ -1107,6 +1109,56 @@ Routes par défauts : vx/resp/route
 
             //$res = $fieldsToCheck;
             $res = $db->updateByID('personnes', $arrayFields, $id);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+       /* Modifier les données d'une terrain, l'un ou plusieurs champs : "nom_terrain"
+        * url - /resp/terrain/{id}
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"nom_terrain":"Terrain OUEST" }
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/terrain/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+            $id = $request->getAttribute('id');
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+                return echoRespnse(200, $response, $resultat);
+            }
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array("nom_terrain");
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
+            $res = $db->updateByID('terrains', $arrayFields, $id);
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;

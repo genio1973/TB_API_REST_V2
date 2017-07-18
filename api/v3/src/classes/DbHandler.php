@@ -366,7 +366,7 @@ class DbHandler {
     }
 
     /**
-     *Obtention de l'utilisateur par email
+     * Obtention de l'utilisateur par email
      * @param String $email
      */
     public function getUserByEmail($email) {
@@ -383,14 +383,14 @@ class DbHandler {
     }
 
     /**
-     *Obtention de l'utilisateur par son id
-     * @param String $email
+     * Obtention de l'utilisateur par son id
+     * @param Integer $id
      */
     public function getUserById($id) {
         $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits
                                         FROM users u
                                         INNER JOIN roles r ON r.id_role = u.id_role
-                                        WHERE id_user = :id");
+                                        WHERE u.id_user = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_STR);
         if ($stmt->execute()){
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -398,6 +398,24 @@ class DbHandler {
         }
         return NULL;
     }
+
+    /**
+     * Obtention d'un terrain par son id
+     * @param Integer $id
+     */
+    public function getPitchById($id) {
+        $stmt = $this->pdo->prepare("SELECT *
+                                        FROM terrains t
+                                        WHERE t.id_terrain = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_STR);
+        if ($stmt->execute()){
+            $pitch = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $pitch;
+        }
+        return NULL;
+    }
+
+
     /**
      *Obtention des utilisateurs
      */

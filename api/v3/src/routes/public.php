@@ -287,7 +287,26 @@ $app->get('/public/equipes/groupe/{id_groupe}', function (Request $request, Resp
         });  
 
 
-
+/* Liste les infos d'un terrain selon son id
+* url - /public/terrain/{id}
+* methode - GET
+*/
+$app->get('/public/terrain/{id}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id');          
+            $db = new DbHandler();
+            $res = $db->getPitchById($id);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
 
 
 
