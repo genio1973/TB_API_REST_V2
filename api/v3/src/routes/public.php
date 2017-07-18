@@ -189,6 +189,34 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
  * url - /public/tournament/{id_tournoi}/matchs/terrains
  * methode - GET
  */
+
+/* Liste des groupes pour un tournoi
+* url - /public/tournament/{id_tournoi}/groupes
+* headears - content id_user and API_KEY
+* methode - GET
+*/
+$app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request, Response $response) {
+            // Prépartaion de la ruquête sur une seule table
+            $id = $request->getAttribute('id_tournoi');
+            $table = 'groupes';
+            $fields = '*';
+            $field_filter = 'id_tournoi';
+
+            $db = new DbHandler();
+            $res = $db->getDetailsByID($table, $fields, $field_filter, $id);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
 $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 

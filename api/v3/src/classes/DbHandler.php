@@ -195,6 +195,25 @@ class DbHandler {
         return $res;
     }
 
+    /**
+     * Obtnenit les détails d'enregistrements d'une table, pement de n'avoir qu'une seule méthode.
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Array : tableau des champs $ récupérer
+     * @param Integer : id de l'élément à chercher
+     * @return resultat ou NULL
+     */
+     public function getDetailsByID($table, $fields, $field_filter, $id) {
+            // préparation des la requêtes multiple
+            $sql = "SELECT $fields FROM $table WHERE $table.$field_filter LIKE $id";
+
+            $stmt = $this->pdo->prepare($sql);
+            if ($stmt->execute()){
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
+            }
+            return NULL;
+    }
+
 
     /**
      * Suppression d'un enregistrement

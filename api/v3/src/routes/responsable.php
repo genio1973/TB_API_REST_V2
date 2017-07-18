@@ -67,6 +67,8 @@ Routes par défauts : vx/resp/route
             return echoRespnse(200, $response, $data);
         });
 
+        
+
         /* Liste des équipes dans un groupe appartenant 
         * url - /resp/groupe/{id_groupe}/equipes
         * headears - content id_user and API_KEY
