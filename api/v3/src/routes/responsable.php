@@ -23,14 +23,13 @@ Routes par défauts : vx/resp/route
             $db = new DbHandler();
             $res = array();
             $res = $db->getTournamentCreatedUserById($id_current_user);
-
             if ($res != NULL) {
                 $data["error"] = false;
                 $data["message"] = "200";
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
@@ -61,7 +60,7 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
@@ -85,7 +84,7 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
@@ -118,7 +117,7 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
@@ -548,6 +547,7 @@ Routes par défauts : vx/resp/route
         *           }
         */
         $app->delete('/tournoi/{id}', function(Request $request, Response $response) use ($app) {
+            require 'src/include/config.php';
             $resultat['error'] = FALSE;
             $resultat['message'] = "";
 
@@ -556,9 +556,10 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
             $id = $request->getAttribute('id');
 
-            $db = new DbHandler();
+            $db = new DbHandler();            
             $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
-            if(!$res){
+            $role = $db->getRoleById($id_current_user); // ou alors on est admin
+            if(!$res && $role['id_role'] != $config['role']['ADMIN']){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
 
@@ -566,7 +567,7 @@ Routes par défauts : vx/resp/route
             }
             
             // supprime les terrains du tournoi manuellement
-            // Pas de cascade, car on veut les consrver en cas de suppression de matchs !
+            // Pas de cascade, car on veut les consrrver en cas de suppression de matchs !
             if(!$db->deletePitchByTournamentID($id)){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "Problème de suppression des terrains !";
@@ -965,6 +966,68 @@ Routes par défauts : vx/resp/route
 
             //$res = $fieldsToCheck;
             $res = $db->updateByID('matchs', $arrayFields, $id);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });
+
+       /* Modifier les données d'une personne, l'un ou plusieurs champs : "prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays"
+        * Il n'est pas possible de modifer l'id de l'équipe qui n'appartient pas à l'utilisateur courant.
+        * url - /resp/personne/{id}
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"prenom":"Nicole","nom":"Schnyder","courriel":"nicole.schnyder@vebb.com","tel":"+41 31 336 54 78","tel_mobile":"+41 78 123 45 67","adresse":"Feuille 12","localite":"Bienne","Pays":"Suisse","id_equipe":"3" }
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/personne/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+            $id = $request->getAttribute('id');
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->isPeopleOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+                return echoRespnse(200, $response, $resultat);
+            }
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array("prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays","id_equipe");
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
+            // vérifie que l'id_equipe corresponde à un équipe de propriété de l'utilisateur courant
+            if(isset($data['id_equipe'])){
+                $res = $db->isTeamOwner($id_current_user, $data['id_equipe']); // Vérifie que l'utilisateur courant est le propriétaire
+                if(!$res){
+                    $resultat['error'] = TRUE;
+                    $resultat['message'] = "Permission refusée pour l'id_equipe ne correspond pas à une de vos équipes !";
+                    return echoRespnse(200, $response, $resultat);
+                }
+            }
+
+            //$res = $fieldsToCheck;
+            $res = $db->updateByID('personnes', $arrayFields, $id);
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;

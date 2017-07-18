@@ -178,8 +178,12 @@ class DbHandler {
                     $sql.="'$val',";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-                //return $sql;
-                $this->pdo->exec($sql);
+
+                // vérifier qu'il y a eu une mise à jour
+                if($this->pdo->exec($sql) == NULL){
+                    $res['id_update'] = NULL;
+                    throw new Exception("ID not found");
+                }
 
                 // enregistrement des requêtes
                 $this->pdo->commit();
@@ -227,29 +231,34 @@ class DbHandler {
      * @param Integer : id_tournament
      */
      public function deletePitchByTournamentID($id_tournament) {
-            // Cherche tous les id des terrains du tournois
-            $stmt = $this->pdo->prepare("SELECT DISTINCT m.id_terrain FROM tournois t
-                                            INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
-                                            INNER JOIN equipes e ON e.id_groupe = g.id_groupe
-                                            INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
-                                            INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
-                                            WHERE t.id_tournoi LIKE :id");
-            $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
-            
-            if ($stmt->execute()){
-                $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                if($ids){
-                    $idList ="";
-                    foreach($ids as $id){
-                        $idList .=$id['id_terrain'].","; 
+            try{
+                // Cherche tous les id des terrains du tournois
+                $stmt = $this->pdo->prepare("SELECT DISTINCT m.id_terrain FROM tournois t
+                                                INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                                INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                                INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                                INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                                WHERE t.id_tournoi LIKE :id");
+                $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+
+                if ($stmt->execute()){
+                    $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    if($ids){
+                        $idList ="";
+                        foreach($ids as $id){
+                            $idList .=$id['id_terrain'].","; 
+                        }
+                        $idList = rtrim($idList,',');
+                        $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
+                        // $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+                        if ($stmt->execute()){
+                            return TRUE;
+                        }                    
                     }
-                    $idList = rtrim($idList,',');
-                    $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
-                    // $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
-                    if ($stmt->execute()){
-                        return TRUE;
-                    }
+                    return TRUE;
                 }
+            }catch(EXCEPTION $e){
+                return NULL;
             }
             return NULL;
         }
@@ -358,7 +367,8 @@ class DbHandler {
      * @param String $email
      */
     public function getUserByEmail($email) {
-        $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits FROM users u
+        $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits
+                                        FROM users u
                                         INNER JOIN roles r ON r.id_role = u.id_role
                                         WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
@@ -377,7 +387,7 @@ class DbHandler {
                                         INNER JOIN roles r ON r.id_role = u.id_role");       
         if ($stmt->execute()){
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $users;
         }
         return NULL;
@@ -645,7 +655,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -657,19 +667,31 @@ class DbHandler {
      * @param Integer $id
      */
     public function getTournamentCreatedUserById($id_user) {
+        require 'src/include/config.php';
         $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
-                                            u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
-                                    FROM tournois t
-                                    INNER JOIN users u ON u.id_user=t.id_user
-                                    INNER JOIN roles r ON r.id_role=u.id_role
-                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  
-                                    WHERE u.id_user = :id_user");
+                                        u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
+                                        FROM tournois t
+                                        INNER JOIN users u ON u.id_user=t.id_user
+                                        INNER JOIN roles r ON r.id_role=u.id_role
+                                        INNER JOIN statuts s ON s.id_statut = t.id_statut
+                                        WHERE :ADMIN LIKE (SELECT id_role FROM users WHERE id_user = :id_user)
 
+                                        UNION
+
+                                        SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                        u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
+                                        FROM tournois t
+                                        INNER JOIN users u ON u.id_user=t.id_user
+                                        INNER JOIN roles r ON r.id_role=u.id_role
+                                        INNER JOIN statuts s ON s.id_statut = t.id_statut
+                                        WHERE u.id_user = :id_user");
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        $stmt->bindParam(":ADMIN", $config['role']['ADMIN'], PDO::PARAM_INT);
+
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -693,7 +715,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -723,7 +745,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -742,7 +764,7 @@ class DbHandler {
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         if ($stmt->execute()){
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -766,7 +788,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -796,7 +818,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -824,7 +846,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -853,7 +875,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -879,7 +901,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -948,7 +970,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -977,7 +999,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -1002,7 +1024,7 @@ class DbHandler {
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $response;
         }
         return NULL;
@@ -1066,7 +1088,7 @@ class DbHandler {
         
         if ($stmt->execute()) {
             $role = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $role;
         } else {
             return NULL;
@@ -1081,7 +1103,7 @@ class DbHandler {
         
         if ($stmt->execute()) {
             $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->pdo = NULL;
+            //$this->pdo = NULL;
             return $roles;
         } else {
             return NULL;

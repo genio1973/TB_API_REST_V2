@@ -263,3 +263,55 @@ $app->get('/tournaments/id/{id_user}', function (Request $request, Response $res
 
         });
 
+       /* Modifier les données d'un utilisateur, l'un ou plusieurs champs : 'email', 'mot_de_passe', 'token', 'token_expire', 'id_role', 'nom_user', 'prenom_user', 'satus'
+        * url - /admin/personne/{id}
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"prenom_user":"Nicole","nom_user":"Schnyder","email":"nicole.schnyder@vebb.com","mot_de_passe":"pass","id_role":"2", "status":"1" }
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/user/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+            $id_user = $request->getAttribute('id');
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array('email', 'mot_de_passe', 'prenom_user', 'nom_user', 'id_role', 'status');
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
+            // si le mot de passe est mis à jour, alors le hacher !
+            if(isset($arrayFields['mot_de_passe'])){
+                //Générer un hash de mot de passe
+                $arrayFields['mot_de_passe'] = PassHash::hash($arrayFields['mot_de_passe']);
+            }
+
+            // si le mail est mis à jour, alors le vérifier !
+            if(isset($arrayFields['email'])){
+                $res = validateEmail($arrayFields['email'], $response);
+                if($res !== true){
+                    return $res;
+                }
+            }
+
+            $db = new DbHandler();
+            $res = $db->updateByID('users', $arrayFields, $id_user);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $res);
+        });

@@ -14,10 +14,7 @@ Routes par défauts : vx/public/route
  * method - POST
  * params - email, password
  */
-$app->post('/public/user/login', function(Request $request, Response $response) use ($app){
-                        //function() use ($app) {
-            require 'src/include/config.php';
-
+$app->post('/public/user/login', function(Request $request, Response $response) {
             // lecture des params de post
             $email = $request->getParam('email');
             // valider adresse email
@@ -37,7 +34,8 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                 $user = $db->getUserByEmail($email);
 
                 if ($user != NULL) {
-                    if($user['status']==1){
+                    // vérifier que le compte est tourjours actif !
+                    if($user['status'] == 1){
                         $result['error'] = false;
                         $result['message'] = NULL;
                         $data['id_user'] = $user['id_user'];
@@ -47,6 +45,7 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                         $data['email'] = $user['email'];
                         $data['apiKey'] = $user['token'];
                         $data['valid_until'] = $user['token_expire'];
+                        $data['id_role'] = $user['id_role'];
                         $result['result'] = $data;
                     }
                     else {
