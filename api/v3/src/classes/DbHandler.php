@@ -179,6 +179,7 @@ class DbHandler {
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
 
+                
                 // vérifier qu'il y a eu une mise à jour
                 if($this->pdo->exec($sql) == NULL){
                     $res['id_update'] = NULL;
@@ -705,6 +706,8 @@ class DbHandler {
                                          AND t.id_user = :id_user ");
         $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        
+
         if ($stmt->execute())
         {
             $res = $stmt->fetch(PDO::FETCH_ASSOC);

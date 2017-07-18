@@ -1175,3 +1175,65 @@ Routes par défauts : vx/resp/route
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
+
+        /* Modifier les données d'un groupe, l'un ou plusieurs champs : "nom_groupe", "id_tournoi"
+        * url - /resp/groupe/{id}
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"nom_groupe":"GrA","id_tournoi":"1"}
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/groupe/{id}', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+            $id = $request->getAttribute('id');
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = $db->isGroupOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+                return echoRespnse(200, $response, $resultat);
+            }
+            
+            if(isset($data['id_tournoi'])){
+                // Vérifie que le tournoi auquel on veut affecter le groupe lui appartient
+                $res = $db->isTournamentOwner($id_current_user, $data['id_tournoi']); 
+                if(!$res){
+                    $resultat['error'] = TRUE;
+                    $resultat['message'] = "Veuillez attribuer un tournoi vous appartenant";
+                    return echoRespnse(200, $response, $resultat);
+                }
+            }
+
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array("nom_groupe", "id_tournoi");
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+            $res = $db->updateByID('groupes', $arrayFields, $id);
+            return echoRespnse(200, $response, $res);
+
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
