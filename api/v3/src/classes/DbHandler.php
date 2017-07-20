@@ -197,7 +197,7 @@ class DbHandler {
     }
 
     /**
-     * Obtnenit les détails d'enregistrements d'une table, pement de n'avoir qu'une seule méthode.
+     * Obtnenir les détails d'enregistrements d'une table, pement de n'avoir qu'une seule méthode.
      * @param String : nom de la table pour les nouveaux enregistrements
      * @param Array : tableau des champs $ récupérer
      * @param Integer : id de l'élément à chercher
@@ -250,7 +250,7 @@ class DbHandler {
 
     
     /**
-     * Suppression de tous les terrains pour un id de tournoi
+     * Suppression de tous les terrains utilisés pour un id de tournoi
      * @param Integer : id_tournament
      */
      public function deletePitchByTournamentID($id_tournament) {
@@ -744,7 +744,7 @@ class DbHandler {
 
 
     /**
-     *Obtention des tournois créés par utilisateur (id)
+     * Obtention des tournois créés par utilisateur (id)
      * @param Integer $id
      */
     public function getTournamentCreatedUserById($id_user) {
@@ -850,7 +850,7 @@ class DbHandler {
         }
         return NULL;
     }
-/**
+    /**
      *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
      * @param Int $id_tournoi
      * @param Int $id_groupe
@@ -875,7 +875,7 @@ class DbHandler {
         return NULL;
     }
 
-/**
+    /**
      *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
      * @param Int $id_current_user
      * @param Int $id_tournoi

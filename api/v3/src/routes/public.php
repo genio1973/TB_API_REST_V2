@@ -185,10 +185,6 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
-/* Liste des matchs listés par terrain pour un tounoi spécifique 
- * url - /public/tournament/{id_tournoi}/matchs/terrains
- * methode - GET
- */
 
 /* Liste des groupes pour un tournoi
 * url - /public/tournament/{id_tournoi}/groupes
@@ -216,7 +212,10 @@ $app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request,
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
-
+/* Liste des matchs listés par terrain pour un tounoi spécifique 
+ * url - /public/tournament/{id_tournoi}/matchs/terrains
+ * methode - GET
+ */
 $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 

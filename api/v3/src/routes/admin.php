@@ -268,7 +268,7 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
 
             $db = new DbHandler();
             $res = $db->getTournamentCreatedUserByEmail($email);
-            $res = $db->getTournamentById($id_tournoi);
+            //$res = $db->getTournamentById($id_tournoi);
 
             if ($res != NULL) {
                 $data["error"] = false;
