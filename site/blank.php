@@ -14,7 +14,7 @@
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <body>
-    <div id="wrapper">
+    <div >
         <?php
             include_once "topnav.php"; // <!-- /. NAV TOP  -->
             include_once "sidenav.php"; // <!-- /. NAV SIDE  -->

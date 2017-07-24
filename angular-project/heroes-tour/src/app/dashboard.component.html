@@ -1,0 +1,2 @@
+<h3>Top Heroes</h3>
+<a *ngFor="let hero of heroes"  [routerLink]="['/detail', hero.id]"  class="col-1-4">{{hero.name}}</a>

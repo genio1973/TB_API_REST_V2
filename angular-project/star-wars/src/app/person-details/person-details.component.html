@@ -1,0 +1,59 @@
+<section *ngIf="person">
+  <section>
+    <h2>You selected: {{person.name}}</h2>
+    <h3>Description</h3>
+    <p>
+       {{person.name}} weights {{person.weight}} and is {{person.height}} tall. Profession : {{person.profession}}
+    </p>
+  </section>
+  <section>
+      <form (ngSubmit)="savePersonDetails()" #personForm="ngForm">
+        <div class="form-group has-success">
+          <label class="control-label" for="name">Name: </label>
+          <input class="form-control" type="text" name="name" required [(ngModel)]="person.name" #name="ngModel">
+          <div [hidden]="name.valid || name.pristine" class="alert alert-warning">
+              Le nom est requis !
+          </div>
+        </div>
+        <div class="form-group has-success">
+          <label class="control-label" for="weight">Weight: </label>
+          <input class="form-control" type="number" name="weight" [(ngModel)]="person.weight" min=0 max=350 #weight="ngModel">
+          <div *ngIf="weight.errors && (weight.dirty || weight.touched)" class="alert alert-warning">
+              <p [hidden]="!weight.errors.min">
+                Weight must be higher than a feather's. {{weight.value}} is way too low.
+              </p>
+              <p [hidden]="!name.errors.max">
+                Weight can't be higher than a Rancor's. {{weight.value}} is too high
+              </p>
+          </div>
+        </div>
+        <div class="form-group has-success">
+          <label class="control-label" for="height">Height: </label>
+          <input class="form-control" type="number" name="height" [(ngModel)]="person.height" min=20 max=360 #height="ngModel">
+          <div *ngIf="height.errors && (height.dirty || height.touched)" class="alert alert-warning">
+              <p [hidden]="!height.errors.min">
+                Height must be higher than a feather's. {{height.value}} is way too low.
+              </p>
+              <p [hidden]="!name.errors.max">
+                Height can't be higher than a Rancor's. {{height.value}} is too high
+              </p>
+          </div>
+        </div>
+
+        <div class="form-group has-success">
+            <label for="profession">Professsion:</label>
+            <select class="form-control" name="profession" [(ngModel)]="person.profession">
+                <option *ngFor="let profession of professions" [value]="profession">{{profession}}</option>
+            </select>
+        </div>
+
+
+        <div class="form-group has-warning">
+            <button type="submit" class="form-control" [disabled]="!personForm.form.valid">Save</button>
+        </div>
+      </form>
+    </section>
+
+    <button type="button" class="btn-large btn-info" (click)="gotoPeoplesList()">Back to peoples list</button>
+
+  </section>

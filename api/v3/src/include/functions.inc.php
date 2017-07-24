@@ -70,9 +70,13 @@ function verifyRequiredFields($data, $fieldsToCheck) {
  */
 function echoRespnse($status_code, $response, $data) {
     // Code de réponse HTTP
+/*
     return $response->withStatus($status_code)
                     ->withHeader('Content-Type', 'application/json')
                     ->write(json_encode($data));
+ */                   
+    $newResponse = $response->withJson($data, $status_code);
+    return $newResponse;
 }
 
 

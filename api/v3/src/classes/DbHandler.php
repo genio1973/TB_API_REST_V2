@@ -24,7 +24,7 @@ class DbHandler {
      * @param String $email email de connexion
      * @param String $password mot de passe de connexion
      */
-    public function createUser($email, $password, $id_role, $nom, $prenom) {
+    public function createUser($email, $password, $id_role, $nom, $prenom, $status) {
         require_once 'PassHash.php';
         require 'src/include/config.php';
 
@@ -44,8 +44,8 @@ class DbHandler {
             // requete d'insertion
             $tokenExpiration = date('Y-m-d H:i:s', strtotime('+2 hour'));//the expiration date will be in two hour from the current moment
 
-            $stmt = $this->pdo->prepare("INSERT INTO users(email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user)
-                                         values (:email, :mot_de_passe, :api_key, :tokenExpiration, :id_role, :nom, :prenom)");
+            $stmt = $this->pdo->prepare("INSERT INTO users(email, mot_de_passe, token, token_expire, id_role, nom_user, prenom_user, status)
+                                         values (:email, :mot_de_passe, :api_key, :tokenExpiration, :id_role, :nom, :prenom, :status)");
             
             $stmt->bindParam(":email", $email, PDO::PARAM_STR);   
             $stmt->bindParam(":mot_de_passe", $mot_de_passe, PDO::PARAM_STR);
@@ -54,6 +54,7 @@ class DbHandler {
             $stmt->bindParam(":id_role", $id_role, PDO::PARAM_STR);
             $stmt->bindParam(":nom", $nom, PDO::PARAM_STR);
             $stmt->bindParam(":prenom", $prenom, PDO::PARAM_STR);
+            $stmt->bindParam(":status", $status, PDO::PARAM_STR);
            
             //Vérifiez pour une insertion réussie
             if ($stmt->execute()) {
@@ -178,7 +179,6 @@ class DbHandler {
                     $sql.="'$val',";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-
                 
                 // vérifier qu'il y a eu une mise à jour
                 if($this->pdo->exec($sql) == NULL){
@@ -566,7 +566,7 @@ class DbHandler {
     /**
      * Génération aléatoire unique MD5 String pour utilisateur clé Api
      */
-    private function generateApiKey() {
+    public function generateApiKey() {
         return md5(uniqid(rand(), true));
     }
 
@@ -1057,6 +1057,26 @@ class DbHandler {
         return NULL;
     }
 
+    /**
+     * Obtention des tournois en spécifant le statut
+     * @Pamam - statuts :
+     *              1 : Nouveau
+     *              2 : Ouvert
+     *              3 : Clos
+     */
+    public function getTournamentsStatut($id_statut) {
+        $sql = "SELECT * FROM tournois t
+                INNER JOIN statuts s ON s.id_statut = t.id_statut WHERE t.id_statut LIKE $id_statut";
+
+        $stmt = $this->pdo->prepare($sql);       
+        if ($stmt->execute())
+        {
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            //$this->pdo = NULL;
+            return $response;
+        }
+        return NULL;
+    }
 
     /**
      * Obtention des matchs listés par terrain pour un tounoi spécifique i 

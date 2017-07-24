@@ -14,19 +14,20 @@ $config['addContentLengthHeader'] = false;
 //define('DB_HOST', '80.74.155.203');
 //define('DB_NAME', 'tournoi_romandvolley');
 
-/*
+
 $config['db']['host']   = "80.74.155.203";
 $config['db']['user']   = "admin_tournoi";
 $config['db']['pass']   = "iYm4&m38";
 $config['db']['dbname'] = "tournoi_romandvolley";
-*/
 
+/*
 $config['db']['host']   = "localhost";
 $config['db']['user']   = "root";
 $config['db']['pass']   = "";
 $config['db']['dbname'] = "tournoi";
 $config['db']['charset']   = "utf8";
 $config['db']['collation'] = "utf8_unicode_ci";
+*/
 
 /* utlisateur courant */
 $config['curent_user_id'] = -1;

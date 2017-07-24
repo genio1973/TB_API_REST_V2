@@ -113,9 +113,10 @@ $app->post('/register', function(Request $request, Response $response) {
             // lecture des params de post
             $email = $request->getParam('email');
             $password = $request->getParam('password');
-            $id_role = $request->getParam('role');
-            $nom = $request->getParam('nom');
-            $prenom = $request->getParam('prenom');
+            $id_role = $request->getParam('id_role');
+            $nom = $request->getParam('nom_user');
+            $prenom = $request->getParam('prenom_user');
+            $status = $request->getParam('status');
             
             // valider adresse email
             $res = validateEmail($email, $response);
@@ -124,7 +125,7 @@ $app->post('/register', function(Request $request, Response $response) {
             }
 
             $db = new DbHandler();
-            $res = $db->createUser($email, $password, $id_role, $nom, $prenom);
+            $res = $db->createUser($email, $password, $id_role, $nom, $prenom, $status);
             
             $data = array();
             if ($res == $config['message']['USER_CREATED_SUCCESSFULLY']) {
@@ -164,7 +165,7 @@ $app->get('/users', function (Request $request, Response $response) {
             }
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $users);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Get an user by id
@@ -187,7 +188,7 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
             }
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $user);
+            return echoRespnse(200, $response, $data);
         });
 
 /* Get an user by email
@@ -210,7 +211,7 @@ $app->get('/userbyemail/{email}', function (Request $request, Response $response
             }
 
             // echo de la réponse  JSON
-            return echoRespnse(200, $response, $user);
+            return echoRespnse(200, $response, $data);
         });
 /* Liste des tournois
  * url - /admin/tournaments

@@ -38,15 +38,26 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                     if($user['status'] == 1){
                         $result['error'] = false;
                         $result['message'] = NULL;
+                        /*
                         $data['id_user'] = $user['id_user'];
                         $data['status'] = $user['status'];
                         $data['name'] = $user['nom_user'];
                         $data['prenom_user'] = $user['prenom_user'];
                         $data['email'] = $user['email'];
-                        $data['apiKey'] = $user['token'];
-                        $data['valid_until'] = $user['token_expire'];
+                        $data['token'] = $user['token'];
+                        $data['token_expire'] = $user['token_expire'];
                         $data['id_role'] = $user['id_role'];
-                        $result['result'] = $data;
+                        */
+/*
+                        // Générer API key et mettre à jour avec nouvelle durée de vie
+                        $updata['apiKey'] = $db->generateApiKey();
+                        $updata['valid_until'] = date('Y-m-d H:i:s', strtotime('+2 hour'));//the expiration date will be in two hour from the current moment
+                        $data['token'] =  $updata['apiKey'];
+                        $data['token_expire'] = $updata['valid_until'];
+                        $db->updateByID('users', $updata, $user['id_user']);
+*/
+                        //$result['result'] = $data;
+                         $result['result'] = $user;
                     }
                     else {
                         $result['error'] = true;
@@ -335,5 +346,75 @@ $app->get('/public/terrain/{id}', function (Request $request, Response $response
             return echoRespnse(200, $response, $data);
         });
 
+/* Liste les tournois qui on un statut de type :  (Nouveau, Ouvert et Clos)
+* url - /public/tournaments
+* methode - GET
+* Paramètre spécifant le statut
+     * @Pamam - statuts :
+     *              1 : Nouveau
+     *              2 : Ouvert
+     *              3 : Clos
+*/
+$app->get('/public/tournaments/statut/{id}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id'); 
+            $db = new DbHandler();
+            $res = $db->getTournamentsStatut($id);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
 
+/* Liste les tournois qui on un statut de type au minimum 2:  (Ouvert et Clos)
+* url - /public/tournaments
+* methode - GET
+* Paramètre spécifant le statut
+     * @Pamam - id du tournoi
+*/
+$app->get('/public/tournament/{id}', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id'); 
+            $db = new DbHandler();
+            // Prépartaion de la ruquête sur une seule table
+            $table = 'tournois';
+            $fields = '*';
+            $field_filter = 'id_tournoi';
+            $res = $db->getDetailsByID($table, $fields, $field_filter, $id);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res[0];
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
 
+/* Liste les tournois
+* url - /public/tournaments
+* methode - GET
+*/
+$app->get('/public/tournaments', function (Request $request, Response $response) {
+            $db = new DbHandler();
+            $res = $db->getTournaments();
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(200, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });

@@ -1,0 +1,17 @@
+<hero-detail [hero]="selectedHero"></hero-detail> 
+<h2>My Heroes</h2>
+<div class="list-group">
+    <button type="button" *ngFor="let hero of heroes" (click)="onSelect(hero)"
+       [class.active]="hero === selectedHero"
+       class="list-group-item list-group-item-action">
+       <span class="badge">{{hero.id}}</span>{{hero.name}}
+    </button>
+</div>
+<div *ngIf="selectedHero">
+  <h2>
+    {{selectedHero.name | uppercase}} is my hero
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
+
+
