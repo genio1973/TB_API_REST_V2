@@ -8,8 +8,8 @@ import { ResponsibleService } from "../../shared/services/responsible.service";
 })
 
 export class ResponsiblesComponent implements OnInit {
-    successMessage: string = 'vide';
-    errorMessage: string = 'vide';
+    successMessage: string = '';
+    errorMessage: string = '';
 
 
     constructor( private responsibleService: ResponsibleService ){}
@@ -27,6 +27,7 @@ export class ResponsiblesComponent implements OnInit {
           });
 
       this.responsibleService.responsibleUpdated$.subscribe( data => {
+            this.successMessage = `The user has been updated !`;
             this.clearMessages();
           });  
     }

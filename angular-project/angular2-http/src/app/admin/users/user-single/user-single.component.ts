@@ -34,7 +34,7 @@ export class UserSingleComponent implements OnInit {
           .subscribe(
             data => {
               this.successMessage = 'User was deleted.';
-              this.router.navigate(['/admin/resp']);
+              this.router.navigate(['/admin/users']);
               console.log('user was deleted');
             } ,
             err => {

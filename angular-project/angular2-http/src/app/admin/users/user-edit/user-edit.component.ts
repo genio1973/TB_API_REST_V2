@@ -33,7 +33,7 @@ export class UserEditComponent implements OnInit {
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';
-              this.router.navigate(['/admin/resp']);
+              this.router.navigate(['/admin/users']);
               //console.log('user was updated');
             },
             err => {

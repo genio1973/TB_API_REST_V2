@@ -29,6 +29,11 @@ import { ResponsibleListComponent } from "./admin/responsibles/responsible-list/
 import { ResponsibleSingleComponent } from "./admin/responsibles/responsible-single/responsible-single.component";
 import { ResponsiblesComponent } from "./admin/responsibles/responsibles.component";
 import { ResponsibleService } from "./shared/services/responsible.service";
+import { AdminComponent } from "./admin/admin.component";
+import { RespComponent } from "./resp/resp.component";
+import { PublicComponent } from "./public/public.component";
+import { AccountComponent } from "./resp/account/account.component";
+
 
 @NgModule({
   declarations: [
@@ -46,7 +51,11 @@ import { ResponsibleService } from "./shared/services/responsible.service";
     ResponsibleCreateComponent,
     ResponsibleEditComponent,
     ResponsibleListComponent,
-    ResponsibleSingleComponent
+    ResponsibleSingleComponent,
+    AdminComponent,
+    RespComponent,
+    PublicComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
