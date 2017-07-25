@@ -105,6 +105,7 @@ export class UserService {
         this.userDeletedSource.next();
     }
 
+
     /*
     /* Handle any errors from the api
      */

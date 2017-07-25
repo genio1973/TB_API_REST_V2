@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Responsible } from "../models/responsible";
+import { ApiResponse } from "../models/api-response";
 
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
@@ -15,11 +16,13 @@ export class ResponsibleService {
     private responsibleCreatedSource = new Subject<Responsible>();
     private responsibleDeletedSource = new Subject();
     private responsibleUpdatedSource = new Subject();
+    private responsibleErrorSource = new Subject<string>();
 
     // observable stream : made a subscription to this 
     responsibleCreated$ = this.responsibleCreatedSource.asObservable();
     responsibleDeleted$ = this.responsibleDeletedSource.asObservable();
     responsibleUpdated$ = this.responsibleUpdatedSource.asObservable();
+    responsibleError$ = this.responsibleErrorSource.asObservable();
 
     constructor(private http: Http){}
 
@@ -28,9 +31,33 @@ export class ResponsibleService {
     */
     getResponsibles(): Observable<Responsible[]> {       
         return this.http.get(`${this.responsiblesUrl}/users`, this.headBuilder())
-            .map(res => res.json().result)
+            //.map(res => res.json().result)
+            /*
+            .map(res => {
+                let apiResp: ApiResponse;
+                apiResp = res.json();
+                if(apiResp.error){
+                    this.responsibleErrorSource.next(apiResp.result || 'Server error.');
+                    throw new Error( apiResp.result || 'Server error.');
+                }                
+                return apiResp.result;
+            }) 
+            .map(this.checkError)
+            */
+            .do(this.checkError)
+            .map(res => res.json().result)            
             .map(responsibles => responsibles.map(this.toResponsible))
-            .catch(this.handleError);
+            .catch((e) => this.handleError(e));
+    }
+
+    /*
+    * Convert responsible info from API to our standard
+    */
+    private checkError(res : Response) {
+        let apiResp : ApiResponse = res.json();
+        if(apiResp.error){
+            throw new Error( apiResp.result || 'Server error.');
+        }                
     }
 
     /*
@@ -41,7 +68,7 @@ export class ResponsibleService {
         let headers = new Headers();
         let token   = localStorage.getItem('auth_token');
         
-        token = '4e540c810c2d29228ac179b98be3dc35';
+        token = '18e7e7f8f0fed137b2c94859703048b9-';
 
         headers.append('Content-Type', 'application/json');
         headers.append('userid', '1');
@@ -55,9 +82,10 @@ export class ResponsibleService {
     getResponsible(id: number): Observable<Responsible> {
         return this.http
             .get(`${this.responsiblesUrl}/user/${id}`, this.headBuilder())
+            .do(this.checkError)
             .map(res => res.json().result)
             .map(this.toResponsible)
-            .catch(this.handleError);
+            .catch((e) => this.handleError(e));
     }
 
     /*
@@ -143,6 +171,8 @@ export class ResponsibleService {
         else{
             errMessage = err.message ? err.message : err.toString();
         }
+        //console.log(`My special error msg: ${errMessage}`);        
+        this.responsibleErrorSource.next(errMessage);
         return Observable.throw(errMessage);
         // return Observable.throw(err.json().data || 'Server error.');
     }

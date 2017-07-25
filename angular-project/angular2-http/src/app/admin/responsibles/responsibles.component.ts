@@ -30,7 +30,12 @@ export class ResponsiblesComponent implements OnInit {
             this.successMessage = `The user has been updated !`;
             this.clearMessages();
           });  
-    }
+ 
+      this.responsibleService.responsibleError$.subscribe( err => {
+            this.errorMessage = err;
+            this.clearMessages();
+          });  
+}
 
   /**
    * Clear all messages after 5 sec
