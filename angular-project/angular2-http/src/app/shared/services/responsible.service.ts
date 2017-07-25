@@ -31,33 +31,10 @@ export class ResponsibleService {
     */
     getResponsibles(): Observable<Responsible[]> {       
         return this.http.get(`${this.responsiblesUrl}/users`, this.headBuilder())
-            //.map(res => res.json().result)
-            /*
-            .map(res => {
-                let apiResp: ApiResponse;
-                apiResp = res.json();
-                if(apiResp.error){
-                    this.responsibleErrorSource.next(apiResp.result || 'Server error.');
-                    throw new Error( apiResp.result || 'Server error.');
-                }                
-                return apiResp.result;
-            }) 
-            .map(this.checkError)
-            */
             .do(this.checkError)
             .map(res => res.json().result)            
             .map(responsibles => responsibles.map(this.toResponsible))
             .catch((e) => this.handleError(e));
-    }
-
-    /*
-    * Convert responsible info from API to our standard
-    */
-    private checkError(res : Response) {
-        let apiResp : ApiResponse = res.json();
-        if(apiResp.error){
-            throw new Error( apiResp.result || 'Server error.');
-        }                
     }
 
     /*
@@ -68,7 +45,7 @@ export class ResponsibleService {
         let headers = new Headers();
         let token   = localStorage.getItem('auth_token');
         
-        token = '18e7e7f8f0fed137b2c94859703048b9-';
+        token = '18e7e7f8f0fed137b2c94859703048b9';
 
         headers.append('Content-Type', 'application/json');
         headers.append('userid', '1');
@@ -110,18 +87,22 @@ export class ResponsibleService {
     updateResponsible(responsible: Responsible): Observable<Responsible> {
         // attaching a token
         return this.http.put(`${this.responsiblesUrl}/user/${responsible.id}`, responsible, this.headBuilder())
+        .do(this.checkError)
         .map(res => res.json())
         .do(res => this.responsibleUpdated())
-        .catch(this.handleError);
+        .catch((e) => this.handleError(e));
     }
+                
+           
 
     /**
      * Delete the responsible
      */
     deleteResponsible(id: number) : Observable<any>{
         return this.http.delete(`${this.responsiblesUrl}/user/${id}`, this.headBuilder())
+        .do(this.checkError)
         .do(res => this.responsibleDeleted())
-        .catch(this.handleError);
+        .catch((e) => this.handleError(e));
     }
     
     /**
@@ -129,9 +110,10 @@ export class ResponsibleService {
      */
     createResponsible(responsible: Responsible): Observable<Responsible> {
         return this.http.post(`${this.responsiblesUrl}`, responsible, this.headBuilder())
+        .do(this.checkError)
         .map(res => res.json())
         .do(res => this.responsibleCreated(res))
-        .catch(this.handleError);
+        .catch((e) => this.handleError(e));
     }    
   
     /*
@@ -156,6 +138,15 @@ export class ResponsibleService {
         this.responsibleDeletedSource.next();
     }
 
+    /*
+    * Check if error comes from API
+    */
+    private checkError(res : Response) {
+        let apiResp : ApiResponse = res.json();
+        if(apiResp.error){
+            throw new Error( apiResp.result || 'Server error.');
+        }                
+    }   
 
     // **
     // * Handle any errors from the api
