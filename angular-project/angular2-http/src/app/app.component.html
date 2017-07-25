@@ -12,7 +12,7 @@
           <a routerLink="/" class="navbar-brand" >RomandVolley</a> 
         </div>
         <div style="color: white; padding: 15px 50px 5px 50px; float: right;font-size: 16px;">
-             {{userConnectedEmail}}  
+             {{userConnected.email}}  
         </div>
  
     </nav> 
@@ -23,7 +23,8 @@
           <ul class="nav" id="main-menu">
             
             <li *ngIf="isLoggedIn" class="text-center">                
-                <img src="assets/img/responsible1.png" class="user-image img-responsive"/>
+                    <img src="assets/img/responsible1.png" class="user-image img-responsive"/>
+                    <p style="color:white">{{userConnected.droits}}</p>                   
             </li>
             
             <li>
@@ -34,52 +35,27 @@
                 <a *ngIf="!isLoggedIn" routerLink="/public/login"><i class="fa fa-sign-in  fa-2x" aria-hidden="true"></i> Login</a>
                 <a *ngIf="isLoggedIn" class="linkPointer" (click)="logout()"><i class="fa fa-sign-out  fa-2x" aria-hidden="true"></i> Logout</a>
             </li>
+          </ul>
 
+          <!-- Admin zone navigation -->
+          <ul *ngIf="myRoleEnum.ADMIN >= userConnected.id_role" class="nav" id="main-menu">
             <li>
                 <a routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users</a>
             </li>
+
             <li>
                 <a routerLink="/admin/resp"><i class="fa fa-users fa-2x"></i> Responsables</a>
             </li>
+          </ul>
+
+          <!-- Responsible zone navigation -->
+          <ul *ngIf="myRoleEnum.RESPONSABLE >= userConnected.id_role" class="nav" id="main-menu">
             <li>
                 <a routerLink="/responsible/tournaments"><i class="fa fa-futbol-o fa-2x"></i> Tournois</a>
             </li>
             <li>
                 <a href="index.php"><i class="fa fa-dashboard fa-2x"></i> Dashboard</a>
             </li>
-            <li>
-                <a routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li>
-                  <a routerLink="/admin/users">Liste</a>
-              </li>
-              <li>
-                  <a routerLink="/admin/users/create">Création</a>
-              </li>                
-              <li>
-                  <a href="#">Second Level Link</a>
-              </li>
-              <li>
-                  <a href="#">Second Level Link<span class="fa arrow"></span></a>
-                  <ul class="nav nav-third-level">
-                      <li>
-                          <a href="#">Third Level Link</a>
-                      </li>
-                      <li>
-                          <a href="#">Third Level Link</a>
-                      </li>
-                      <li>
-                          <a href="#">Third Level Link</a>
-                      </li>
-
-                  </ul>
-                  
-              </li>
-            </ul>
-            </li>  
-            <li  >
-                <a class="active-menu"  href="blank.php"><i class="fa fa-square-o fa-3x"></i> Blank Page</a>
-            </li>	
           </ul>
         </div>
     </nav>

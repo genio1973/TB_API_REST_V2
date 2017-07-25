@@ -10,12 +10,13 @@ export class AuthService {
   private authUrl: string = 'http://test.romandvolley.ch/api/v3/public/user';
   private loggedIn: boolean = false;
   private loggedInAsAdmin: boolean = false;
+  private loggedUser = {email: '', droits:'', id_role:''};
   
   // store the URL so we can redirect after logging in
   redirectUrl: string;
   
   //observable src : contains data
-  private authLoginSource = new Subject<string>();
+  private authLoginSource = new Subject<any>();
   private authLogoutSource = new Subject();
 
   // observable stream : made a subscription to this 
@@ -54,7 +55,11 @@ export class AuthService {
           localStorage.setItem('id_user', res.id_user);
           localStorage.setItem('email', res.email);
           localStorage.setItem('droits', res.droits);
-          this.authLoginSource.next(`${email} (${res.droits})`);
+          this.loggedUser.email = email;
+          this.loggedUser.droits = res.droits;
+          this.loggedUser.id_role = res.id_role;
+          // this.authLoginSource.next(`${email} (${res.droits})`);
+          this.authLoginSource.next(this.loggedUser);
           this.loggedIn = true;
           if(res.id_role == 1) { this.loggedInAsAdmin = true }
         }
