@@ -24,7 +24,7 @@ export class ResponsibleService {
     responsibleUpdated$ = this.responsibleUpdatedSource.asObservable();
     responsibleError$ = this.responsibleErrorSource.asObservable();
 
-    constructor(private http: Http){}
+    constructor(private http: Http){ }
 
     /*
     * Get all responsibles
@@ -43,13 +43,12 @@ export class ResponsibleService {
     */
     private headBuilder(): RequestOptions{
         let headers = new Headers();
-        let token   = localStorage.getItem('auth_token');
+        let token   = localStorage.getItem('token');
+        let userid   = localStorage.getItem('id_user');
         
-        token = '18e7e7f8f0fed137b2c94859703048b9';
-
         headers.append('Content-Type', 'application/json');
-        headers.append('userid', '1');
-        headers.append('APIKEY', ` ${token}`);
+        headers.append('userid', `${userid}`);
+        headers.append('APIKEY', `${token}`);
         return new RequestOptions({ headers: headers }); // Create a request option
     }
 
@@ -142,10 +141,14 @@ export class ResponsibleService {
     * Check if error comes from API
     */
     private checkError(res : Response) {
+        
         let apiResp : ApiResponse = res.json();
+        
         if(apiResp.error){
+            localStorage.clear();
             throw new Error( apiResp.result || 'Server error.');
-        }                
+        }    
+                   
     }   
 
     // **

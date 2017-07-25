@@ -14,7 +14,7 @@ Routes par défauts : vx/public/route
  * method - POST
  * params - email, password
  */
-$app->post('/public/user/login', function(Request $request, Response $response) {
+ $app->post('/public/user/login', function(Request $request, Response $response) {
             // lecture des params de post
             $email = $request->getParam('email');
             // valider adresse email
@@ -28,6 +28,7 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
             $data = array();
 
             $db = new DbHandler();
+            $statusCode = 200;
             // vérifier l'Email et le mot de passe sont corrects
             if ($db->checkLogin($email, $password)) {
                 // obtenir l'utilisateur par email
@@ -37,25 +38,33 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                     // vérifier que le compte est tourjours actif !
                     if($user['status'] == 1){
                         $result['error'] = false;
-                        $result['message'] = NULL;
+                        $result['message'] = '401';
                         $result['result'] = $user;
+                        $statusCode = 401;
                     }
                     else {
                         $result['error'] = true;
-                        $result['message'] = "Votre compte a été suspendu";
+                        $result['message'] = '402';
+                        $result['result'] = "Votre compte a été suspendu";
+                        $statusCode = 402;
                     }
                 } else {
                     // erreur inconnue est survenue
                     $result['error'] = true;
-                    $result['message'] = "Une erreur est survenue. S'il vous plaît essayer à nouveau";
+                    $result['message'] = '403';
+                    $result['result'] = "Une erreur est survenue. S'il vous plaît essayer à nouveau";
+                    $statusCode = 403;
                 }
             } else {
                 // identificateurs de l'utilisateur sont erronés
                 $result['error'] = true;
-                $result['message'] = 'Échec de la connexion. identificateurs incorrectes';
+                $result['message'] = '404';
+                $result['result'] = 'Échec de la connexion. identificateurs incorrectes';
+                $statusCode = 404;
+
             }
 
-            return echoRespnse(200, $response, $result);
+            return echoRespnse($statusCode, $response, $result);
         });
 
 /* Liste des matchs d'un groupe
@@ -373,8 +382,9 @@ $app->get('/public/tournament/{id}', function (Request $request, Response $respo
                 $data["result"] = $res[0];
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);

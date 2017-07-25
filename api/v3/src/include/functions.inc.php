@@ -19,7 +19,8 @@ function arrayCopy( array $array ) {
 function validateEmail($email, $response) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $data["error"] = true;
-        $data["message"] = "Adresse e-mail n'est pas valide";
+        $data["message"] = '400';
+        $data['result'] = "Adresse e-mail n'est pas valide";
         return echoRespnse(400, $response, $data);
         //$app->stop();
     }

@@ -33,6 +33,10 @@ import { AdminComponent } from "./admin/admin.component";
 import { RespComponent } from "./resp/resp.component";
 import { PublicComponent } from "./public/public.component";
 import { AccountComponent } from "./resp/account/account.component";
+import { LoginComponent } from "./public/login/login.component";
+import { AuthService } from "./shared/services/auth.service";
+import { AuthGuardService } from "./shared/guards/auth-guard.service";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
 
 @NgModule({
@@ -55,7 +59,9 @@ import { AccountComponent } from "./resp/account/account.component";
     AdminComponent,
     RespComponent,
     PublicComponent,
-    AccountComponent
+    AccountComponent,
+    LoginComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +69,7 @@ import { AccountComponent } from "./resp/account/account.component";
     FormsModule,
     routing
   ],
-  providers: [UserService, TournamentService, ResponsibleService],
+  providers: [UserService, TournamentService, ResponsibleService, AuthService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

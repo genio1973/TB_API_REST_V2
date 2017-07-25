@@ -5,12 +5,21 @@ import { Tournament } from "../models/tournament";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/catch';
 
+import { ApiResponse } from "../models/api-response";
+import { Subject } from "rxjs/Subject";
+
 @Injectable()
 export class TournamentService {
 
     tournaments: Tournament[];
     private tournamentUrl: string = 'http://test.romandvolley.ch/api/v3/public';
-    //private tournamentUrl: string = 'http://localhost/tournoibachelor/api/v3/public';
+
+    // observable src : contains data
+    private tournamentSource = new Subject<string>();
+
+    // observable stream : made a subscription to this 
+    tournament$ = this.tournamentSource.asObservable();
+
 
     constructor(private http: Http){}
 
@@ -19,11 +28,12 @@ export class TournamentService {
     */
     getTournamentsByStatut(id: number): Observable<Tournament[]> {
 
-         return this.http
+         return this.http                    
                     .get(`${this.tournamentUrl}/tournaments/statut/${id}`)
+                    .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
-                    .catch(this.handleError);
+                    .catch((e) => this.handleError(e));
     }
 
     /*
@@ -33,27 +43,22 @@ export class TournamentService {
 
          return this.http
                     .get(`${this.tournamentUrl}/tournaments`)
+                    .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
-                    .catch(this.handleError);
+                    .catch((e) => this.handleError(e));
     }
 
     /*
     * Get a single user
     */
     getTournament(id: number): Observable<Tournament> {
-        /*
-        // attaching a token
-        let headers = new Headers();
-        let token   = localStorage.getItem('auth_token');
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', `Bearer ${token}`);
-        */
         return this.http
             .get(`${this.tournamentUrl}/tournament/${id}`)
+            .do(this.checkError)
             .map(res => res.json().result)
             .map(this.toTournament)
-            .catch(this.handleError);
+            .catch((e) => this.handleError(e));
     }
 
     /*
@@ -68,7 +73,17 @@ export class TournamentService {
             };
     }
 
-    
+    /*
+    * Check if error comes from API
+    */
+    private checkError(res : Response) {
+        let apiResp : ApiResponse = res.json();
+        if(apiResp.error){
+            localStorage.clear();
+            throw new Error( apiResp.result || 'Server error.');
+        }                
+    }    
+
     // **
     // * Handle any errors from the api
     // **
@@ -83,11 +98,9 @@ export class TournamentService {
         else{
             errMessage = err.message ? err.message : err.toString();
         }
-
+        this.tournamentSource.next(errMessage);
         return Observable.throw(errMessage);
         // return Observable.throw(err.json().data || 'Server error.');
     }
-
-
 
 }

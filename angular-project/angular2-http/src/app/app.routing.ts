@@ -16,16 +16,22 @@ import { ResponsibleCreateComponent } from "./admin/responsibles/responsible-cre
 import { AdminComponent } from "./admin/admin.component";
 import { ResponsiblesComponent } from "./admin/responsibles/responsibles.component";
 import { PublicComponent } from "./public/public.component";
+import { LoginComponent } from "./public/login/login.component";
+import { AuthGuardService } from "./shared/guards/auth-guard.service";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
 export const routes: Routes = [
-        { path: '', redirectTo: 'public', pathMatch: 'full' },        
-        { path: 'admin',
+        { path: '', redirectTo: 'public', pathMatch: 'full' },                       
+        { 
+          path: 'admin',
           component: AdminComponent,
+          canActivateChild: [AuthGuardService],          
           children: [
             { path: '', redirectTo: 'resp', pathMatch: 'full' },
             { 
               path: 'resp',
               component: ResponsiblesComponent,
+              canActivateChild: [AuthGuardService],
               children: [
                             { path: '', redirectTo: 'list', pathMatch: 'full' },
                             { path: 'list',     component: ResponsibleListComponent },
@@ -33,10 +39,11 @@ export const routes: Routes = [
                             { path: ':id',      component: ResponsibleSingleComponent },
                             { path: ':id/edit', component: ResponsibleEditComponent }
                         ]
-            },
+            },            
             { 
               path: 'users',
               component: UsersComponent,
+              canActivateChild: [AuthGuardService],
               children: [
                             { path: '', redirectTo: 'list', pathMatch: 'full' },
                             { path: 'list',     component: UserListComponent },
@@ -44,16 +51,17 @@ export const routes: Routes = [
                             { path: ':id',      component: UserSingleComponent },
                             { path: ':id/edit', component: UserEditComponent }
                         ]
-            }
+            },
             ]
         },
         { path: 'public',
           component: PublicComponent,
           children: [
               { path: '', redirectTo: 'tournaments', pathMatch: 'full' },
+              { path: 'login', component: LoginComponent },
               {
                 path: 'tournaments',
-                component: ResponsiblesComponent,
+                component: TournamentsComponent,
                 children:[
                             { path: '', redirectTo: 'list', pathMatch: 'full' },
                             { path: 'list',    component: TournamentListComponent },
@@ -61,7 +69,8 @@ export const routes: Routes = [
 
                       ] }
               ]
-        }
+        },
+        { path: '**', component: NotFoundComponent } 
     ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

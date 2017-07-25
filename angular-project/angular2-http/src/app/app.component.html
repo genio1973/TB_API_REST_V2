@@ -11,34 +11,41 @@
           </button>
           <a routerLink="/" class="navbar-brand" >RomandVolley</a> 
         </div>
-        <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
-          Last access : 30 May 2014 &nbsp; <a href="login.php" class="btn btn-danger square-btn-adjust">Logout</a>
+        <div style="color: white; padding: 15px 50px 5px 50px; float: right;font-size: 16px;">
+             {{userConnectedEmail}}  
         </div>
+ 
     </nav> 
     <!-- /NAV TOP  -->
     <!-- NAV SIDE  -->
     <nav class="navbar-default navbar-side" role="navigation">
         <div class="sidebar-collapse">
           <ul class="nav" id="main-menu">
-            <!--
-            <li class="text-center">
-                <img src="assets/img/find_user.png" class="user-image img-responsive"/>
+            
+            <li *ngIf="isLoggedIn" class="text-center">                
+                <img src="assets/img/responsible1.png" class="user-image img-responsive"/>
             </li>
-              -->
+            
             <li>
-                <a  routerLink="/public/"><i class="fa fa-free-code-camp  fa-2x" aria-hidden="true"></i> Public</a>
+                <a routerLink="/public/"><i class="fa fa-free-code-camp  fa-2x" aria-hidden="true"></i> Public</a>
+            </li>
+
+            <li >
+                <a *ngIf="!isLoggedIn" routerLink="/public/login"><i class="fa fa-sign-in  fa-2x" aria-hidden="true"></i> Login</a>
+                <a *ngIf="isLoggedIn" class="linkPointer" (click)="logout()"><i class="fa fa-sign-out  fa-2x" aria-hidden="true"></i> Logout</a>
+            </li>
+
+            <li>
+                <a routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users</a>
             </li>
             <li>
-                <a  routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users</a>
+                <a routerLink="/admin/resp"><i class="fa fa-users fa-2x"></i> Responsables</a>
             </li>
             <li>
-                <a  routerLink="/admin/resp"><i class="fa fa-users fa-2x"></i> Responsables</a>
+                <a routerLink="/resp/tournois"><i class="fa fa-futbol-o fa-2x"></i> Tournois</a>
             </li>
             <li>
-                <a  routerLink="/resp/tournois"><i class="fa fa-futbol-o fa-2x"></i> Tournois</a>
-            </li>
-            <li>
-                <a  href="index.php"><i class="fa fa-dashboard fa-2x"></i> Dashboard</a>
+                <a href="index.php"><i class="fa fa-dashboard fa-2x"></i> Dashboard</a>
             </li>
             <li>
                 <a routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users<span class="fa arrow"></span></a>
@@ -96,23 +103,6 @@
 <!-- /. WRAPPER  -->
 
 
-<!--
-<div class="container">
-
-  <div class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a routerLink="/" class="navbar-bran">My HTTP App</a>
-      </div>
-
-      <ul class="nav navbar-nav">
-        <li><a routerLink="/users">Users</a></li>
-      </ul>
-    </div>
-  </div>
-  <router-outlet></router-outlet>
-</div>
--->
 
 
 

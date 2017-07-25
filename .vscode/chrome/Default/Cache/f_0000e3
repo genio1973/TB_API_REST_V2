@@ -13,6 +13,183 @@ webpackEmptyContext.id = "../../../../../src async recursive";
 
 /***/ }),
 
+/***/ "../../../../../src/app/admin/admin.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/admin/admin.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "\r\n    <div class=\"container-fluid\">\r\n        ZONE D'ADMINISTRATION : {{userConnectedEmail}}\r\n        <div style=\"padding: 15px 50px 5px 50px; float: right; font-size: 16px;\">\r\n            <a *ngIf=\"!isLoggedIn\" routerLink=\"/admin/login\" class=\"btn btn-success\">Login</a>\r\n            <div  *ngIf=\"!isLoggedIn\"><a (click()=\"logout()\" class=\"btn btn-danger\">Logout</a></div>\r\n        </div>\r\n         \r\n\r\n<router-outlet></router-outlet>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/admin/admin.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AdminComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AdminComponent = (function () {
+    function AdminComponent(authService, router) {
+        this.authService = authService;
+        this.router = router;
+        this.userConnectedEmail = '';
+    }
+    AdminComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.authService.loginConnected$.subscribe(function (email) {
+            _this.userConnectedEmail = email;
+        });
+        this.authService.logout$.subscribe(function (data) {
+            _this.userConnectedEmail = '';
+        });
+    };
+    Object.defineProperty(AdminComponent.prototype, "isLoggedIn", {
+        /**
+         * Is the user logged in?
+         */
+        get: function () {
+            return this.authService.isLoggedIn();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * log ther user out
+     */
+    AdminComponent.prototype.logout = function () {
+        console.log("logoutttttt");
+        this.authService.logout();
+        this.router.navigate(['public']);
+    };
+    return AdminComponent;
+}());
+AdminComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* Component */])({
+        selector: 'my-admin',
+        template: __webpack_require__("../../../../../src/app/admin/admin.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/admin/admin.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__["a" /* AuthService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
+], AdminComponent);
+
+var _a, _b;
+//# sourceMappingURL=admin.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/admin/login/login.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/admin/login/login.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2>Login</h2>\r\n\r\n<form (ngSubmit)=\"login()\">\r\n\r\n  <div class=\"form-group\">\r\n    <label>Email</label>\r\n    <input type=\"text\" class=\"form-control\" name=\"email\" \r\n      [(ngModel)]=\"credentials.email\">\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label>Password</label>\r\n    <input type=\"password\" class=\"form-control\" name=\"password\" \r\n      [(ngModel)]=\"credentials.password\">\r\n  </div>\r\n\r\n  <!-- messages -->\r\n  <div *ngIf=\"successMessage\" class=\"alert alert-success\">{{ successMessage }}</div>\r\n  <div *ngIf=\"errorMessage\" class=\"alert alert-danger\">{{ errorMessage }}</div> \r\n\r\n  <div class=\"form-group\">\r\n    <button type=\"submit\" class=\"btn btn-info\">Login</button>\r\n  </div>\r\n\r\n</form>\r\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/admin/login/login.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var LoginComponent = (function () {
+    function LoginComponent(service, router) {
+        this.service = service;
+        this.router = router;
+        this.credentials = { email: 'plinio.sacchetti@bluewin.ch', password: 'pass' };
+        this.successMessage = '';
+        this.errorMessage = '';
+    }
+    LoginComponent.prototype.ngOnInit = function () {
+    };
+    LoginComponent.prototype.login = function () {
+        var _this = this;
+        this.errorMessage = '';
+        this.service.login(this.credentials.email, this.credentials.password)
+            .subscribe(function (data) {
+            _this.router.navigate(['/admin/login']);
+            console.log(data);
+        }, function (err) {
+            _this.errorMessage = err;
+            console.error(err);
+        });
+    };
+    return LoginComponent;
+}());
+LoginComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* Component */])({
+        selector: 'app-login',
+        template: __webpack_require__("../../../../../src/app/admin/login/login.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/admin/login/login.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__["a" /* AuthService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
+], LoginComponent);
+
+var _a, _b;
+//# sourceMappingURL=login.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/admin/responsibles/responsible-create/responsible-create.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -212,7 +389,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/admin/responsibles/responsible-list/responsible-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<div class=\"panel panel-default\">\r\n\r\n    <div class=\"panel-heading\">\r\n            <h1>Liste des Responsables</h1> <a routerLink=\"/admin/resp/create\" class=\"btn btn-sm btn-info\">Crérer un resposable</a>\r\n            <h3>Messages....</h3>\r\n                <div *ngIf=\"successMessage\" class=\"alert alert-success\">{{successMessage}}</div>\r\n                <div *ngIf=\"errorMessage\" class=\"alert alert-danger\">{{errorMessage}}</div>\r\n    </div>\r\n    <div class=\"panel-body\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>id</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Status</th><th>droits (rôle)</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr class=\"odd gradeX\" *ngFor=\"let responsible of responsibles\" [routerLink]=\"['/admin/resp/', responsible.id] \">\r\n                        <td>{{responsible.id}}</td>\r\n                        <td>{{responsible.nom_user}}</td>\r\n                        <td>{{responsible.prenom_user}}</td>\r\n                        <td>{{responsible.email}}</td>\r\n                        <td>{{responsible.status}}</td>\r\n                        <td>{{responsible.droits}}</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        \r\n    </div>\r\n</div>\r\n\r\n\r\n\r\n"
+module.exports = "\r\n<div class=\"panel panel-default\">\r\n\r\n    <div class=\"panel-heading\">\r\n            <h1>Liste des Responsables</h1> <a routerLink=\"/admin/resp/create\" class=\"btn btn-sm btn-info\">Crérer un resposable</a>\r\n    </div>\r\n    <div class=\"panel-body\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>id</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Status</th><th>droits (rôle)</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr class=\"odd gradeX\" *ngFor=\"let responsible of responsibles\" [routerLink]=\"['/admin/resp/', responsible.id] \">\r\n                        <td>{{responsible.id}}</td>\r\n                        <td>{{responsible.nom_user}}</td>\r\n                        <td>{{responsible.prenom_user}}</td>\r\n                        <td>{{responsible.email}}</td>\r\n                        <td>{{responsible.status}}</td>\r\n                        <td>{{responsible.droits}}</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        \r\n    </div>\r\n</div>\r\n\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -237,35 +414,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ResponsibleListComponent = (function () {
     function ResponsibleListComponent(responsibleService) {
         this.responsibleService = responsibleService;
-        this.successMessage = '';
-        this.errorMessage = '';
     }
     ResponsibleListComponent.prototype.ngOnInit = function () {
         var _this = this;
+        console.log('ResponsibleList OnInit() !');
         this.responsibleService.getResponsibles()
             .subscribe(function (responsibles) { return _this.responsibles = responsibles; });
-        this.responsibleService.responsibleCreated$.subscribe(function (resp) {
-            _this.successMessage = resp.email + " has been created with id " + resp.id + " !";
-            _this.clearMessages();
-        });
-        this.responsibleService.responsibleDeleted$.subscribe(function (res) {
-            _this.successMessage = "The user has been deleted !";
-            _this.clearMessages();
-        });
-        this.responsibleService.responsibleUpdated$.subscribe(function (id) {
-            _this.successMessage = "The user " + id + " has been updated !";
-            _this.clearMessages();
-        });
-    };
-    /**
-     * Clear all messages after 5 sec
-     */
-    ResponsibleListComponent.prototype.clearMessages = function () {
-        var _this = this;
-        setTimeout(function () {
-            _this.errorMessage = '';
-            _this.successMessage = '';
-        }, 5000);
     };
     return ResponsibleListComponent;
 }());
@@ -395,7 +549,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/admin/responsibles/responsibles.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<router-outlet></router-outlet>"
+module.exports = "<div *ngIf=\"successMessage\" class=\"alert alert-success\">{{successMessage}}</div>\r\n<div *ngIf=\"errorMessage\" class=\"alert alert-danger\">{{errorMessage}}</div>\r\n<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -404,6 +558,7 @@ module.exports = "<router-outlet></router-outlet>"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_services_responsible_service__ = __webpack_require__("../../../../../src/app/shared/services/responsible.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ResponsiblesComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -415,10 +570,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var ResponsiblesComponent = (function () {
-    function ResponsiblesComponent() {
+    function ResponsiblesComponent(responsibleService) {
+        this.responsibleService = responsibleService;
+        this.successMessage = '';
+        this.errorMessage = '';
     }
     ResponsiblesComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.responsibleService.responsibleCreated$.subscribe(function (resp) {
+            _this.successMessage = resp.email + " has been created with id " + resp.id + " !";
+            _this.clearMessages();
+        });
+        this.responsibleService.responsibleDeleted$.subscribe(function (res) {
+            _this.successMessage = "The user has been deleted !";
+            _this.clearMessages();
+        });
+        this.responsibleService.responsibleUpdated$.subscribe(function (data) {
+            _this.successMessage = "The user has been updated !";
+            _this.clearMessages();
+        });
+        this.responsibleService.responsibleError$.subscribe(function (err) {
+            _this.errorMessage = err;
+            _this.clearMessages();
+        });
+    };
+    /**
+     * Clear all messages after 5 sec
+     */
+    ResponsiblesComponent.prototype.clearMessages = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.errorMessage = '';
+            _this.successMessage = '';
+        }, 5000);
     };
     return ResponsiblesComponent;
 }());
@@ -428,9 +614,10 @@ ResponsiblesComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/admin/responsibles/responsibles.component.html"),
         styles: [__webpack_require__("../../../../../src/app/admin/responsibles/responsibles.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__shared_services_responsible_service__["a" /* ResponsibleService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__shared_services_responsible_service__["a" /* ResponsibleService */]) === "function" && _a || Object])
 ], ResponsiblesComponent);
 
+var _a;
 //# sourceMappingURL=responsibles.component.js.map
 
 /***/ }),
@@ -500,7 +687,7 @@ var UserCreateComponent = (function () {
         this.userService.createUser(this.user)
             .subscribe(function (user) {
             _this.successMessage = 'User was created.';
-            _this.router.navigate(['/admin/users']);
+            _this.router.navigate(['/admin/users/list']);
             //console.log('user was created');
         }, function (err) {
             _this.errorMessage = err;
@@ -591,7 +778,7 @@ var UserEditComponent = (function () {
         this.userService.updateUser(this.user)
             .subscribe(function (user) {
             _this.successMessage = 'User was updated.';
-            _this.router.navigate(['/admin/resp']);
+            _this.router.navigate(['/admin/users']);
             //console.log('user was updated');
         }, function (err) {
             _this.errorMessage = err;
@@ -757,11 +944,11 @@ var UserSingleComponent = (function () {
         this.userService.deleteUser(this.user.id)
             .subscribe(function (data) {
             _this.successMessage = 'User was deleted.';
-            _this.router.navigate(['/admin/resp']);
-            console.log('user was deleted');
+            _this.router.navigate(['/admin/users']);
+            //console.log('user was deleted');
         }, function (err) {
             _this.errorMessage = err;
-            console.log(err);
+            //console.log(err);
         });
     };
     return UserSingleComponent;
@@ -801,7 +988,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/admin/users/users.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<div *ngIf=\"successMessage\" class=\"alert alert-success\">{{successMessage}}</div>\r\n<div *ngIf=\"errorMessage\" class=\"alert alert-danger\">{{errorMessage}}</div>\r\n<router-outlet></router-outlet>\r\n\r\n  "
+module.exports = "\r\n<div *ngIf=\"successMessage\" class=\"alert alert-success\">{{successMessage}}</div>\r\n<div *ngIf=\"errorMessage\" class=\"alert alert-danger\">{{errorMessage}}</div>\r\n\r\n<router-outlet></router-outlet>\r\n\r\n  "
 
 /***/ }),
 
@@ -889,7 +1076,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div id=\"wrapper\" class=\"container-fluid\">\n    <!-- NAV TOP  -->\n    <nav class=\"navbar navbar-default navbar-cls-top \" role=\"navigation\" style=\"margin-bottom: 0\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".sidebar-collapse\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a routerLink=\"/\" class=\"navbar-brand\" >RomandVolley</a> \n        </div>\n        <div style=\"color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;\"> \n          Last access : 30 May 2014 &nbsp; <a href=\"login.php\" class=\"btn btn-danger square-btn-adjust\">Logout</a>\n        </div>\n    </nav> \n    <!-- /NAV TOP  -->\n    <!-- NAV SIDE  -->\n    <nav class=\"navbar-default navbar-side\" role=\"navigation\">\n        <div class=\"sidebar-collapse\">\n          <ul class=\"nav\" id=\"main-menu\">\n            <!--\n            <li class=\"text-center\">\n                <img src=\"assets/img/find_user.png\" class=\"user-image img-responsive\"/>\n            </li>\n              -->\n            <li>\n                <a  routerLink=\"/public/\"><i class=\"fa fa-free-code-camp  fa-2x\" aria-hidden=\"true\"></i> Public</a>\n            </li>\n            <li>\n                <a  routerLink=\"/admin/users\"><i class=\"fa fa-users fa-2x\"></i> Users</a>\n            </li>\n            <li>\n                <a  routerLink=\"/admin/resp\"><i class=\"fa fa-users fa-2x\"></i> Responsables</a>\n            </li>\n            <li>\n                <a  routerLink=\"/resp/tournois\"><i class=\"fa fa-futbol-o fa-2x\"></i> Tournois</a>\n            </li>\n            <li>\n                <a  href=\"index.php\"><i class=\"fa fa-dashboard fa-2x\"></i> Dashboard</a>\n            </li>\n            <li>\n                <a routerLink=\"/admin/users\"><i class=\"fa fa-users fa-2x\"></i> Users<span class=\"fa arrow\"></span></a>\n            <ul class=\"nav nav-second-level\">\n              <li>\n                  <a routerLink=\"/admin/users\">Liste</a>\n              </li>\n              <li>\n                  <a routerLink=\"/admin/users/create\">Création</a>\n              </li>                \n              <li>\n                  <a href=\"#\">Second Level Link</a>\n              </li>\n              <li>\n                  <a href=\"#\">Second Level Link<span class=\"fa arrow\"></span></a>\n                  <ul class=\"nav nav-third-level\">\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n\n                  </ul>\n                  \n              </li>\n            </ul>\n            </li>  \n            <li  >\n                <a class=\"active-menu\"  href=\"blank.php\"><i class=\"fa fa-square-o fa-3x\"></i> Blank Page</a>\n            </li>\t\n          </ul>\n        </div>\n    </nav>\n    <!-- /NAV SIDE  -->   \n\n    <div id=\"page-wrapper\" >\n      <div id=\"page-inner\">\n        <div class=\"row\">\n          <div class=\"col-md-12\">\n            <router-outlet></router-outlet>\n          </div>\n        </div>\n      <!-- /. ROW  -->\n      <hr />\n\n    </div>\n    <!-- /. PAGE INNER  -->\n    </div>\n<!-- /. PAGE WRAPPER  -->\n</div>\n<!-- /. WRAPPER  -->\n\n\n<!--\n<div class=\"container\">\n\n  <div class=\"navbar navbar-default\">\n    <div class=\"container-fluid\">\n      <div class=\"navbar-header\">\n        <a routerLink=\"/\" class=\"navbar-bran\">My HTTP App</a>\n      </div>\n\n      <ul class=\"nav navbar-nav\">\n        <li><a routerLink=\"/users\">Users</a></li>\n      </ul>\n    </div>\n  </div>\n  <router-outlet></router-outlet>\n</div>\n-->\n\n\n\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div id=\"wrapper\" class=\"container-fluid\">\n    <!-- NAV TOP  -->\n    <nav class=\"navbar navbar-default navbar-cls-top \" role=\"navigation\" style=\"margin-bottom: 0\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".sidebar-collapse\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a routerLink=\"/\" class=\"navbar-brand\" >RomandVolley</a> \n        </div>\n    </nav> \n    <!-- /NAV TOP  -->\n    <!-- NAV SIDE  -->\n    <nav class=\"navbar-default navbar-side\" role=\"navigation\">\n        <div class=\"sidebar-collapse\">\n          <ul class=\"nav\" id=\"main-menu\">\n            <!--\n            <li class=\"text-center\">\n                <img src=\"assets/img/find_user.png\" class=\"user-image img-responsive\"/>\n            </li>\n              -->\n            <li>\n                <a routerLink=\"/public/\"><i class=\"fa fa-free-code-camp  fa-2x\" aria-hidden=\"true\"></i> Public</a>\n            </li>\n            <li>\n                <a routerLink=\"/admin/users\"><i class=\"fa fa-users fa-2x\"></i> Users</a>\n            </li>\n            <li>\n                <a routerLink=\"/admin/resp\"><i class=\"fa fa-users fa-2x\"></i> Responsables</a>\n            </li>\n            <li>\n                <a routerLink=\"/resp/tournois\"><i class=\"fa fa-futbol-o fa-2x\"></i> Tournois</a>\n            </li>\n            <li>\n                <a href=\"index.php\"><i class=\"fa fa-dashboard fa-2x\"></i> Dashboard</a>\n            </li>\n            <li>\n                <a routerLink=\"/admin/users\"><i class=\"fa fa-users fa-2x\"></i> Users<span class=\"fa arrow\"></span></a>\n            <ul class=\"nav nav-second-level\">\n              <li>\n                  <a routerLink=\"/admin/users\">Liste</a>\n              </li>\n              <li>\n                  <a routerLink=\"/admin/users/create\">Création</a>\n              </li>                \n              <li>\n                  <a href=\"#\">Second Level Link</a>\n              </li>\n              <li>\n                  <a href=\"#\">Second Level Link<span class=\"fa arrow\"></span></a>\n                  <ul class=\"nav nav-third-level\">\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n                      <li>\n                          <a href=\"#\">Third Level Link</a>\n                      </li>\n\n                  </ul>\n                  \n              </li>\n            </ul>\n            </li>  \n            <li  >\n                <a class=\"active-menu\"  href=\"blank.php\"><i class=\"fa fa-square-o fa-3x\"></i> Blank Page</a>\n            </li>\t\n          </ul>\n        </div>\n    </nav>\n    <!-- /NAV SIDE  -->   \n\n    <div id=\"page-wrapper\" >\n      <div id=\"page-inner\">\n        <div class=\"row\">\n          <div class=\"col-md-12\">\n            <router-outlet></router-outlet>\n          </div>\n        </div>\n      <!-- /. ROW  -->\n      <hr />\n\n    </div>\n    <!-- /. PAGE INNER  -->\n    </div>\n<!-- /. PAGE WRAPPER  -->\n</div>\n<!-- /. WRAPPER  -->\n\n\n<!--\n<div class=\"container\">\n\n  <div class=\"navbar navbar-default\">\n    <div class=\"container-fluid\">\n      <div class=\"navbar-header\">\n        <a routerLink=\"/\" class=\"navbar-bran\">My HTTP App</a>\n      </div>\n\n      <ul class=\"nav navbar-nav\">\n        <li><a routerLink=\"/users\">Users</a></li>\n      </ul>\n    </div>\n  </div>\n  <router-outlet></router-outlet>\n</div>\n-->\n\n\n\n\n"
 
 /***/ }),
 
@@ -962,6 +1149,12 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__admin_responsibles_responsible_single_responsible_single_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-single/responsible-single.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__admin_responsibles_responsibles_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsibles.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__shared_services_responsible_service__ = __webpack_require__("../../../../../src/app/shared/services/responsible.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__admin_admin_component__ = __webpack_require__("../../../../../src/app/admin/admin.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__resp_resp_component__ = __webpack_require__("../../../../../src/app/resp/resp.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__public_public_component__ = __webpack_require__("../../../../../src/app/public/public.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__resp_account_account_component__ = __webpack_require__("../../../../../src/app/resp/account/account.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__admin_login_login_component__ = __webpack_require__("../../../../../src/app/admin/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -969,6 +1162,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
+
+
 
 
 
@@ -1019,7 +1218,12 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_22__admin_responsibles_responsible_create_responsible_create_component__["a" /* ResponsibleCreateComponent */],
             __WEBPACK_IMPORTED_MODULE_23__admin_responsibles_responsible_edit_responsible_edit_component__["a" /* ResponsibleEditComponent */],
             __WEBPACK_IMPORTED_MODULE_24__admin_responsibles_responsible_list_responsible_list_component__["a" /* ResponsibleListComponent */],
-            __WEBPACK_IMPORTED_MODULE_25__admin_responsibles_responsible_single_responsible_single_component__["a" /* ResponsibleSingleComponent */]
+            __WEBPACK_IMPORTED_MODULE_25__admin_responsibles_responsible_single_responsible_single_component__["a" /* ResponsibleSingleComponent */],
+            __WEBPACK_IMPORTED_MODULE_28__admin_admin_component__["a" /* AdminComponent */],
+            __WEBPACK_IMPORTED_MODULE_29__resp_resp_component__["a" /* RespComponent */],
+            __WEBPACK_IMPORTED_MODULE_30__public_public_component__["a" /* PublicComponent */],
+            __WEBPACK_IMPORTED_MODULE_31__resp_account_account_component__["a" /* AccountComponent */],
+            __WEBPACK_IMPORTED_MODULE_32__admin_login_login_component__["a" /* LoginComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -1027,7 +1231,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_4__app_routing__["a" /* routing */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_12__shared_services_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_18__shared_services_tournament_service__["a" /* TournamentService */], __WEBPACK_IMPORTED_MODULE_27__shared_services_responsible_service__["a" /* ResponsibleService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_12__shared_services_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_18__shared_services_tournament_service__["a" /* TournamentService */], __WEBPACK_IMPORTED_MODULE_27__shared_services_responsible_service__["a" /* ResponsibleService */], __WEBPACK_IMPORTED_MODULE_33__shared_services_auth_service__["a" /* AuthService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -1047,12 +1251,15 @@ AppModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_users_user_single_user_single_component__ = __webpack_require__("../../../../../src/app/admin/users/user-single/user-single.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_users_user_edit_user_edit_component__ = __webpack_require__("../../../../../src/app/admin/users/user-edit/user-edit.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__public_tournaments_tournament_list_tournament_list_component__ = __webpack_require__("../../../../../src/app/public/tournaments/tournament-list/tournament-list.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__public_tournaments_tournaments_component__ = __webpack_require__("../../../../../src/app/public/tournaments/tournaments.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__public_tournaments_tournament_single_tournament_single_component__ = __webpack_require__("../../../../../src/app/public/tournaments/tournament-single/tournament-single.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__admin_responsibles_responsible_list_responsible_list_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-list/responsible-list.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__admin_responsibles_responsible_edit_responsible_edit_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-edit/responsible-edit.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__admin_responsibles_responsible_single_responsible_single_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-single/responsible-single.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__admin_responsibles_responsible_create_responsible_create_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-create/responsible-create.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__public_tournaments_tournament_single_tournament_single_component__ = __webpack_require__("../../../../../src/app/public/tournaments/tournament-single/tournament-single.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__admin_responsibles_responsible_list_responsible_list_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-list/responsible-list.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__admin_responsibles_responsible_edit_responsible_edit_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-edit/responsible-edit.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__admin_responsibles_responsible_single_responsible_single_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-single/responsible-single.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__admin_responsibles_responsible_create_responsible_create_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsible-create/responsible-create.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__admin_admin_component__ = __webpack_require__("../../../../../src/app/admin/admin.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__admin_responsibles_responsibles_component__ = __webpack_require__("../../../../../src/app/admin/responsibles/responsibles.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__public_public_component__ = __webpack_require__("../../../../../src/app/public/public.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__admin_login_login_component__ = __webpack_require__("../../../../../src/app/admin/login/login.component.ts");
 /* unused harmony export routes */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return routing; });
 
@@ -1068,149 +1275,112 @@ AppModule = __decorate([
 
 
 
-/*
-export const routes: Routes = [
-        { path: '', redirectTo: 'admin', pathMatch: 'full' },
-        { path: 'admin', component: UserListComponent,
-            children: [
-                        { path: 'users', component: UserListComponent,
-                            children: [
-                                        { path: '', redirectTo: 'users', pathMatch: 'full' },
-                                        { path: 'users',    component: UserListComponent },
-                                        { path: 'create',   component: UserCreateComponent },
-                                        { path: ':id',      component: UserSingleComponent },
-                                        { path: ':id/edit', component: UserEditComponent }
-                                    ] }
-                    ]
-        }
-    ];
-*/
+
+
+
 var routes = [
-    {
-        path: '',
-        redirectTo: '/public',
-        pathMatch: 'full'
-    },
-    {
-        path: 'public',
-        component: __WEBPACK_IMPORTED_MODULE_7__public_tournaments_tournaments_component__["a" /* TournamentsComponent */],
+    { path: '', redirectTo: 'public', pathMatch: 'full' },
+    { path: 'admin',
+        component: __WEBPACK_IMPORTED_MODULE_12__admin_admin_component__["a" /* AdminComponent */],
         children: [
-            {
-                path: '',
-                component: __WEBPACK_IMPORTED_MODULE_6__public_tournaments_tournament_list_tournament_list_component__["a" /* TournamentListComponent */]
-            },
-            {
-                path: 'tournois',
-                component: __WEBPACK_IMPORTED_MODULE_6__public_tournaments_tournament_list_tournament_list_component__["a" /* TournamentListComponent */]
-            },
-            {
-                path: 'tournois/:id',
-                component: __WEBPACK_IMPORTED_MODULE_8__public_tournaments_tournament_single_tournament_single_component__["a" /* TournamentSingleComponent */]
-            },
-        ]
-    },
-    {
-        path: 'admin',
-        component: __WEBPACK_IMPORTED_MODULE_1__admin_users_users_component__["a" /* UsersComponent */],
-        children: [
-            {
-                path: '',
-                component: __WEBPACK_IMPORTED_MODULE_2__admin_users_user_list_user_list_component__["a" /* UserListComponent */]
-            },
+            { path: '', redirectTo: 'resp', pathMatch: 'full' },
             {
                 path: 'resp',
-                component: __WEBPACK_IMPORTED_MODULE_9__admin_responsibles_responsible_list_responsible_list_component__["a" /* ResponsibleListComponent */]
+                component: __WEBPACK_IMPORTED_MODULE_13__admin_responsibles_responsibles_component__["a" /* ResponsiblesComponent */],
+                children: [
+                    { path: '', redirectTo: 'list', pathMatch: 'full' },
+                    { path: 'list', component: __WEBPACK_IMPORTED_MODULE_8__admin_responsibles_responsible_list_responsible_list_component__["a" /* ResponsibleListComponent */] },
+                    { path: 'create', component: __WEBPACK_IMPORTED_MODULE_11__admin_responsibles_responsible_create_responsible_create_component__["a" /* ResponsibleCreateComponent */] },
+                    { path: ':id', component: __WEBPACK_IMPORTED_MODULE_10__admin_responsibles_responsible_single_responsible_single_component__["a" /* ResponsibleSingleComponent */] },
+                    { path: ':id/edit', component: __WEBPACK_IMPORTED_MODULE_9__admin_responsibles_responsible_edit_responsible_edit_component__["a" /* ResponsibleEditComponent */] }
+                ]
             },
-            {
-                path: 'resp/create',
-                component: __WEBPACK_IMPORTED_MODULE_12__admin_responsibles_responsible_create_responsible_create_component__["a" /* ResponsibleCreateComponent */]
-            },
-            {
-                path: 'resp/:id',
-                component: __WEBPACK_IMPORTED_MODULE_11__admin_responsibles_responsible_single_responsible_single_component__["a" /* ResponsibleSingleComponent */]
-            },
-            {
-                path: 'resp/:id/edit',
-                component: __WEBPACK_IMPORTED_MODULE_10__admin_responsibles_responsible_edit_responsible_edit_component__["a" /* ResponsibleEditComponent */]
-            },
+            { path: 'login', component: __WEBPACK_IMPORTED_MODULE_15__admin_login_login_component__["a" /* LoginComponent */] },
             {
                 path: 'users',
-                component: __WEBPACK_IMPORTED_MODULE_2__admin_users_user_list_user_list_component__["a" /* UserListComponent */]
-            },
-            {
-                path: 'users/create',
-                component: __WEBPACK_IMPORTED_MODULE_3__admin_users_user_create_user_create_component__["a" /* UserCreateComponent */]
-            },
-            {
-                path: 'users/:id',
-                component: __WEBPACK_IMPORTED_MODULE_4__admin_users_user_single_user_single_component__["a" /* UserSingleComponent */]
-            },
-            {
-                path: 'users/:id/edit',
-                component: __WEBPACK_IMPORTED_MODULE_5__admin_users_user_edit_user_edit_component__["a" /* UserEditComponent */]
+                component: __WEBPACK_IMPORTED_MODULE_1__admin_users_users_component__["a" /* UsersComponent */],
+                children: [
+                    { path: '', redirectTo: 'list', pathMatch: 'full' },
+                    { path: 'list', component: __WEBPACK_IMPORTED_MODULE_2__admin_users_user_list_user_list_component__["a" /* UserListComponent */] },
+                    { path: 'create', component: __WEBPACK_IMPORTED_MODULE_3__admin_users_user_create_user_create_component__["a" /* UserCreateComponent */] },
+                    { path: ':id', component: __WEBPACK_IMPORTED_MODULE_4__admin_users_user_single_user_single_component__["a" /* UserSingleComponent */] },
+                    { path: ':id/edit', component: __WEBPACK_IMPORTED_MODULE_5__admin_users_user_edit_user_edit_component__["a" /* UserEditComponent */] }
+                ]
             }
         ]
     },
-    {
-        path: 'resp',
-        component: __WEBPACK_IMPORTED_MODULE_1__admin_users_users_component__["a" /* UsersComponent */],
+    { path: 'public',
+        component: __WEBPACK_IMPORTED_MODULE_14__public_public_component__["a" /* PublicComponent */],
         children: [
+            { path: '', redirectTo: 'tournaments', pathMatch: 'full' },
             {
-                path: '',
-                component: __WEBPACK_IMPORTED_MODULE_2__admin_users_user_list_user_list_component__["a" /* UserListComponent */]
-            },
-            {
-                path: 'tournois',
-                component: __WEBPACK_IMPORTED_MODULE_2__admin_users_user_list_user_list_component__["a" /* UserListComponent */]
-            },
-            {
-                path: 'tournois/create',
-                component: __WEBPACK_IMPORTED_MODULE_3__admin_users_user_create_user_create_component__["a" /* UserCreateComponent */]
-            },
-            {
-                path: 'tournois/:id',
-                component: __WEBPACK_IMPORTED_MODULE_4__admin_users_user_single_user_single_component__["a" /* UserSingleComponent */]
-            },
-            {
-                path: 'tournois/:id/edit',
-                component: __WEBPACK_IMPORTED_MODULE_5__admin_users_user_edit_user_edit_component__["a" /* UserEditComponent */]
+                path: 'tournaments',
+                component: __WEBPACK_IMPORTED_MODULE_13__admin_responsibles_responsibles_component__["a" /* ResponsiblesComponent */],
+                children: [
+                    { path: '', redirectTo: 'list', pathMatch: 'full' },
+                    { path: 'list', component: __WEBPACK_IMPORTED_MODULE_6__public_tournaments_tournament_list_tournament_list_component__["a" /* TournamentListComponent */] },
+                    { path: ':id', component: __WEBPACK_IMPORTED_MODULE_7__public_tournaments_tournament_single_tournament_single_component__["a" /* TournamentSingleComponent */] },
+                ]
             }
         ]
     }
 ];
-/*
-export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/users',
-    pathMatch: 'full'
-  },
-  {
-    path: 'users',
-    component: UsersComponent,
-    children: [
-      {
-        path: '',
-        component: UserListComponent
-      },
-      {
-        path: 'create',
-        component: UserCreateComponent
-      },
-      {
-        path: ':id',
-        component: UserSingleComponent
-      },
-      {
-        path: ':id/edit',
-        component: UserEditComponent
-      }
-    ]
-  }
-];
-*/
 var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forRoot(routes);
 //# sourceMappingURL=app.routing.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/public/public.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/public/public.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PublicComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PublicComponent = (function () {
+    function PublicComponent() {
+    }
+    PublicComponent.prototype.ngOnInit = function () {
+    };
+    return PublicComponent;
+}());
+PublicComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* Component */])({
+        selector: 'my-public',
+        template: "\n    <h2>ZONE PUBLIC</h2>\n    <router-outlet></router-outlet>\n  ",
+        styles: [__webpack_require__("../../../../../src/app/public/public.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], PublicComponent);
+
+//# sourceMappingURL=public.component.js.map
 
 /***/ }),
 
@@ -1235,7 +1405,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/public/tournaments/tournament-list/tournament-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"panel panel-default\">\r\n    <div class=\"panel-heading\">\r\n            Liste des tournois:<small> Ouverts (statut=2) et clos(=3)</small>\r\n    </div>\r\n    <div class=\"panel-body\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>id</th><th>Nom</th><th>Statut</th><th>ID-creator</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n\r\n                    <ng-container *ngFor=\"let tournament of tournaments\" >\r\n                        <tr *ngIf=\"tournament.id_statut > 1\" class=\"odd gradeX\" [routerLink]=\"['/public/tournoi/', tournament.id] \">\r\n                                <td>{{tournament.id}}</td>\r\n                                <td>{{tournament.name}}</td>\r\n                                <td>{{tournament.id_statut}}</td>\r\n                                <td>{{tournament.id_user}}</td>\r\n                        </tr>\r\n                    </ng-container>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        \r\n    </div>\r\n</div>"
+module.exports = "<div class=\"panel panel-default\">\r\n    <div class=\"panel-heading\">\r\n            Liste des tournois:<small> Ouverts (statut=2) et clos(=3)</small>\r\n    </div>\r\n    <div class=\"panel-body\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>id</th><th>Nom</th><th>Statut</th><th>ID-creator</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n\r\n                    <ng-container *ngFor=\"let tournament of tournaments\" >\r\n                        <tr *ngIf=\"tournament.id_statut > 1\" class=\"odd gradeX\" [routerLink]=\"['/public/tournaments/', tournament.id] \">\r\n                                <td>{{tournament.id}}</td>\r\n                                <td>{{tournament.name}}</td>\r\n                                <td>{{tournament.id_statut}}</td>\r\n                                <td>{{tournament.id_user}}</td>\r\n                        </tr>\r\n                    </ng-container>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        \r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -1418,6 +1588,114 @@ TournamentsComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../src/app/resp/account/account.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/resp/account/account.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AccountComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var AccountComponent = (function () {
+    function AccountComponent() {
+    }
+    AccountComponent.prototype.ngOnInit = function () {
+    };
+    return AccountComponent;
+}());
+AccountComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* Component */])({
+        selector: 'my-account',
+        template: "\n    <p>\n      account Works!\n    </p>\n  ",
+        styles: [__webpack_require__("../../../../../src/app/resp/account/account.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], AccountComponent);
+
+//# sourceMappingURL=account.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/resp/resp.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/resp/resp.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RespComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var RespComponent = (function () {
+    function RespComponent() {
+    }
+    RespComponent.prototype.ngOnInit = function () {
+    };
+    return RespComponent;
+}());
+RespComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* Component */])({
+        selector: 'my-resp',
+        template: "\n      <h2>ZONE RESPONSABLES TOURNOIS</h2>\n    <router-outlet></router-outlet>\n  ",
+        styles: [__webpack_require__("../../../../../src/app/resp/resp.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], RespComponent);
+
+//# sourceMappingURL=resp.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/shared/models/responsible.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1445,6 +1723,126 @@ var User = (function () {
 }());
 
 //# sourceMappingURL=user.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/shared/services/auth.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var AuthService = (function () {
+    function AuthService(http) {
+        this.http = http;
+        this.authUrl = 'http://test.romandvolley.ch/api/v3/public/user';
+        this.loggedIn = false;
+        this.loggedInAsAdmin = false;
+        //observable src : contains data
+        this.authLoginSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
+        this.authLogoutSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
+        // observable stream : made a subscription to this 
+        this.loginConnected$ = this.authLoginSource.asObservable();
+        this.logout$ = this.authLogoutSource.asObservable();
+        // look at localStorage to check if the user is logged in
+        this.loggedIn = !!localStorage.getItem('token');
+    }
+    /**
+     * Check if the user is logged in
+     */
+    AuthService.prototype.isLoggedIn = function () {
+        return this.loggedIn;
+    };
+    /**
+   * Check if the user is logged in as super-administrator
+   */
+    AuthService.prototype.isLoggedInAsAdmin = function () {
+        return this.loggedInAsAdmin;
+    };
+    /**
+     * Log the user in
+     */
+    AuthService.prototype.login = function (email, password) {
+        var _this = this;
+        return this.http.post(this.authUrl + "/login", { 'email': email, 'password': password }, this.headBuilder)
+            .map(function (res) { return res.json().result; })
+            .do(function (res) {
+            if (!res.error) {
+                localStorage.setItem('token', res.token);
+                localStorage.setItem('id_user', res.id_user);
+                localStorage.setItem('email', res.email);
+                localStorage.setItem('droits', res.droits);
+                _this.authLoginSource.next(email + " (" + res.droits + ")");
+                _this.loggedIn = true;
+                if (res.id_role == 1) {
+                    _this.loggedInAsAdmin = true;
+                }
+            }
+        })
+            .catch(this.handleError);
+    };
+    /**
+     * Header preparation, contentType
+     **/
+    AuthService.prototype.headBuilder = function () {
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
+        headers.append('Content-Type', 'application/json');
+        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* RequestOptions */]({ headers: headers }); // Create a request option
+    };
+    /**
+     * Log the user out
+     */
+    AuthService.prototype.logout = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('id_user');
+        localStorage.removeItem('email');
+        localStorage.removeItem('droits');
+        this.authLogoutSource.next();
+        this.loggedIn = false;
+        this.loggedInAsAdmin = false;
+    };
+    /**
+     * Handle any errors from the API
+     */
+    AuthService.prototype.handleError = function (err) {
+        var errMessage;
+        if (err instanceof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Response */]) {
+            var body = err.json() || '';
+            var error = body.error || JSON.stringify(body);
+            errMessage = err.status + " - " + (err.statusText || '') + " " + error;
+        }
+        else {
+            errMessage = err.message ? err.message : err.toString();
+        }
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(errMessage);
+    };
+    return AuthService;
+}());
+AuthService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* Http */]) === "function" && _a || Object])
+], AuthService);
+
+var _a;
+//# sourceMappingURL=auth.service.js.map
 
 /***/ }),
 
@@ -1480,10 +1878,12 @@ var ResponsibleService = (function () {
         this.responsibleCreatedSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
         this.responsibleDeletedSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
         this.responsibleUpdatedSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
+        this.responsibleErrorSource = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]();
         // observable stream : made a subscription to this 
         this.responsibleCreated$ = this.responsibleCreatedSource.asObservable();
         this.responsibleDeleted$ = this.responsibleDeletedSource.asObservable();
         this.responsibleUpdated$ = this.responsibleUpdatedSource.asObservable();
+        this.responsibleError$ = this.responsibleErrorSource.asObservable();
     }
     /*
     * Get all responsibles
@@ -1491,9 +1891,10 @@ var ResponsibleService = (function () {
     ResponsibleService.prototype.getResponsibles = function () {
         var _this = this;
         return this.http.get(this.responsiblesUrl + "/users", this.headBuilder())
+            .do(this.checkError)
             .map(function (res) { return res.json().result; })
             .map(function (responsibles) { return responsibles.map(_this.toResponsible); })
-            .catch(this.handleError);
+            .catch(function (e) { return _this.handleError(e); });
     };
     /*
     * Header preparation, contentType
@@ -1501,22 +1902,24 @@ var ResponsibleService = (function () {
     */
     ResponsibleService.prototype.headBuilder = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
-        var token = localStorage.getItem('auth_token');
-        token = '00be39a894adb7899e502aa490e33ff1';
+        var token = localStorage.getItem('token');
+        var userid = localStorage.getItem('id_user');
         headers.append('Content-Type', 'application/json');
-        headers.append('userid', '1');
-        headers.append('APIKEY', " " + token);
+        headers.append('userid', "" + userid);
+        headers.append('APIKEY', "" + token);
         return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* RequestOptions */]({ headers: headers }); // Create a request option
     };
     /*
     * Get a single responsible
     */
     ResponsibleService.prototype.getResponsible = function (id) {
+        var _this = this;
         return this.http
             .get(this.responsiblesUrl + "/user/" + id, this.headBuilder())
+            .do(this.checkError)
             .map(function (res) { return res.json().result; })
             .map(this.toResponsible)
-            .catch(this.handleError);
+            .catch(function (e) { return _this.handleError(e); });
     };
     /*
     * Convert responsible info from API to our standard
@@ -1540,9 +1943,10 @@ var ResponsibleService = (function () {
         var _this = this;
         // attaching a token
         return this.http.put(this.responsiblesUrl + "/user/" + responsible.id, responsible, this.headBuilder())
+            .do(this.checkError)
             .map(function (res) { return res.json(); })
-            .do(function (res) { return _this.responsibleUpdated(responsible.id); })
-            .catch(this.handleError);
+            .do(function (res) { return _this.responsibleUpdated(); })
+            .catch(function (e) { return _this.handleError(e); });
     };
     /**
      * Delete the responsible
@@ -1550,8 +1954,9 @@ var ResponsibleService = (function () {
     ResponsibleService.prototype.deleteResponsible = function (id) {
         var _this = this;
         return this.http.delete(this.responsiblesUrl + "/user/" + id, this.headBuilder())
+            .do(this.checkError)
             .do(function (res) { return _this.responsibleDeleted(); })
-            .catch(this.handleError);
+            .catch(function (e) { return _this.handleError(e); });
     };
     /**
      * Create the responsible
@@ -1559,9 +1964,10 @@ var ResponsibleService = (function () {
     ResponsibleService.prototype.createResponsible = function (responsible) {
         var _this = this;
         return this.http.post("" + this.responsiblesUrl, responsible, this.headBuilder())
+            .do(this.checkError)
             .map(function (res) { return res.json(); })
             .do(function (res) { return _this.responsibleCreated(res); })
-            .catch(this.handleError);
+            .catch(function (e) { return _this.handleError(e); });
     };
     /*
     /* The responsible was created. Add this info to our stream
@@ -1572,14 +1978,24 @@ var ResponsibleService = (function () {
     /**
     /* The responsible was updated. Add this info to our stream
     **/
-    ResponsibleService.prototype.responsibleUpdated = function (id) {
-        this.responsibleUpdatedSource.next(id);
+    ResponsibleService.prototype.responsibleUpdated = function () {
+        this.responsibleUpdatedSource.next();
     };
     /*
     /* The responsible was deleted. Add this info to our stream
      */
     ResponsibleService.prototype.responsibleDeleted = function () {
         this.responsibleDeletedSource.next();
+    };
+    /*
+    * Check if error comes from API
+    */
+    ResponsibleService.prototype.checkError = function (res) {
+        var apiResp = res.json();
+        if (apiResp.error) {
+            localStorage.clear();
+            throw new Error(apiResp.result || 'Server error.');
+        }
     };
     // **
     // * Handle any errors from the api
@@ -1594,6 +2010,8 @@ var ResponsibleService = (function () {
         else {
             errMessage = err.message ? err.message : err.toString();
         }
+        //console.log(`My special error msg: ${errMessage}`);        
+        this.responsibleErrorSource.next(errMessage);
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(errMessage);
         // return Observable.throw(err.json().data || 'Server error.');
     };
