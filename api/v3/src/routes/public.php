@@ -38,26 +38,7 @@ $app->post('/public/user/login', function(Request $request, Response $response) 
                     if($user['status'] == 1){
                         $result['error'] = false;
                         $result['message'] = NULL;
-                        /*
-                        $data['id_user'] = $user['id_user'];
-                        $data['status'] = $user['status'];
-                        $data['name'] = $user['nom_user'];
-                        $data['prenom_user'] = $user['prenom_user'];
-                        $data['email'] = $user['email'];
-                        $data['token'] = $user['token'];
-                        $data['token_expire'] = $user['token_expire'];
-                        $data['id_role'] = $user['id_role'];
-                        */
-/*
-                        // Générer API key et mettre à jour avec nouvelle durée de vie
-                        $updata['apiKey'] = $db->generateApiKey();
-                        $updata['valid_until'] = date('Y-m-d H:i:s', strtotime('+2 hour'));//the expiration date will be in two hour from the current moment
-                        $data['token'] =  $updata['apiKey'];
-                        $data['token_expire'] = $updata['valid_until'];
-                        $db->updateByID('users', $updata, $user['id_user']);
-*/
-                        //$result['result'] = $data;
-                         $result['result'] = $user;
+                        $result['result'] = $user;
                     }
                     else {
                         $result['error'] = true;

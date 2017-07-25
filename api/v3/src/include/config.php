@@ -30,6 +30,7 @@ $config['db']['collation'] = "utf8_unicode_ci";
 */
 
 /* utlisateur courant */
+/*
 $config['curent_user_id'] = -1;
 $config['curent_user']['id_user'] = NULL;
 $config['curent_user']['nom_user'] = NULL;
@@ -38,7 +39,7 @@ $config['curent_user']['prenom_user'] = NULL;
 $config['curent_user']['email'] = NULL;
 $config['curent_user']['id_role'] = NULL;
 $config['curent_user']['token'] = NULL;
-
+*/
 
 /**
  *  configuration des constantes

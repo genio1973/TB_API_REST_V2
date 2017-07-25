@@ -35,11 +35,11 @@ export class UserSingleComponent implements OnInit {
             data => {
               this.successMessage = 'User was deleted.';
               this.router.navigate(['/admin/users']);
-              console.log('user was deleted');
+              //console.log('user was deleted');
             } ,
             err => {
               this.errorMessage = err;
-              console.log(err);
+              //console.log(err);
             });
     }
 }
