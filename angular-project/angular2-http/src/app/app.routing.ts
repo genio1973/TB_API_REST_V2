@@ -19,19 +19,22 @@ import { PublicComponent } from "./public/public.component";
 import { LoginComponent } from "./public/login/login.component";
 import { AuthGuardService } from "./shared/guards/auth-guard.service";
 import { NotFoundComponent } from "./not-found/not-found.component";
+import { AuthAdminGuardService } from "./shared/guards/auth-admin-guard.service";
+import { RespComponent } from "./resp/resp.component";
+import { AccountComponent } from "./resp/account/account.component";
 
 export const routes: Routes = [
         { path: '', redirectTo: 'public', pathMatch: 'full' },                       
         { 
           path: 'admin',
           component: AdminComponent,
-          canActivateChild: [AuthGuardService],          
+          canActivateChild: [AuthAdminGuardService],          
           children: [
             { path: '', redirectTo: 'resp', pathMatch: 'full' },
             { 
               path: 'resp',
               component: ResponsiblesComponent,
-              canActivateChild: [AuthGuardService],
+              canActivateChild: [AuthAdminGuardService],
               children: [
                             { path: '', redirectTo: 'list', pathMatch: 'full' },
                             { path: 'list',     component: ResponsibleListComponent },
@@ -43,7 +46,7 @@ export const routes: Routes = [
             { 
               path: 'users',
               component: UsersComponent,
-              canActivateChild: [AuthGuardService],
+              canActivateChild: [AuthAdminGuardService],
               children: [
                             { path: '', redirectTo: 'list', pathMatch: 'full' },
                             { path: 'list',     component: UserListComponent },
@@ -54,6 +57,15 @@ export const routes: Routes = [
             },
             ]
         },
+        { path: 'responsible',
+          component: RespComponent,
+          canActivateChild: [AuthGuardService],
+          children: [
+                        { path: '', redirectTo: 'account', pathMatch: 'full' },
+                        { path: 'account',        component: AccountComponent },
+                        { path: 'tournaments',    component: TournamentListComponent },
+                    ]
+            },
         { path: 'public',
           component: PublicComponent,
           children: [
