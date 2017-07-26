@@ -179,7 +179,7 @@ class DbHandler {
                     $sql.="'$val',";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-                
+
                 // vérifier qu'il y a eu une mise à jour
                 if($this->pdo->exec($sql) == NULL){
                     $res['id_update'] = NULL;

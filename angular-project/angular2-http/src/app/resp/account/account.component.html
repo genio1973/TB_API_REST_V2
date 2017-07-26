@@ -14,17 +14,22 @@
 
     <div class="form-group">
       <label>Email</label>
-      <input type="email" class="form-control" name="email" [(ngModel)]="responsible.email">
+      <input (keypress)="showEmailConfirm()" type="email" class="form-control" name="email" [(ngModel)]="responsible.email">
+    </div>
+    
+    <div *ngIf="needEmailConfirm" class="form-group">
+      <label>Email</label>
+      <input type="email (confirmation)" class="form-control" name="email_confirm" [(ngModel)]="email_confirm">
     </div>
 
     <div class="form-group">
       <label>Statut (1: Actif, 0: Désact.)</label>
-      <input type="text" class="form-control" name="status" [(ngModel)]="responsible.status">
+      <input type="text" class="form-control" readonly name="status" [(ngModel)]="responsible.status">
     </div>
     
     <div class="form-group">
       <label>Droits (1: Admin, 2: Resp)</label>
-      <input type="text" class="form-control" name="id_role" [(ngModel)]="responsible.id_role">
+      <input type="text" class="form-control" readonly name="id_role" [(ngModel)]="responsible.id_role">
     </div>
 
     <div *ngIf="!needPasswordChange" class="form-group"> 
@@ -37,6 +42,11 @@
     <div *ngIf="needPasswordChange" class="form-group">
       <label>Password</label>
       <input type="password" class="form-control" required name="mot_de_passe" [(ngModel)]="responsible.mot_de_passe">
+    </div>
+
+    <div *ngIf="needPasswordChange" class="form-group">
+      <label>Password (confirmation)</label>
+      <input type="password" class="form-control" required name="mot_de_passe_confirm" [(ngModel)]="mot_de_passe_confirm">
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>

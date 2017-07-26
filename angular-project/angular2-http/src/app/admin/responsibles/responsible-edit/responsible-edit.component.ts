@@ -36,18 +36,15 @@ export class ResponsibleEditComponent implements OnInit {
         
         if(!this.needPasswordChange){ userEdit = userNoPwd = this.responsible; }
         else { userEdit = this.responsible; }
-        console.log("TTTTTTTTEEEESSSSTTTT : " + userEdit.mot_de_passe);
 
         this.responsibleService.updateResponsible(userEdit)
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';
               this.router.navigate(['/admin/resp']);
-              //console.log('user was updated');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 

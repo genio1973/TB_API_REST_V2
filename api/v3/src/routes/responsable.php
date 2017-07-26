@@ -7,6 +7,35 @@ require 'src/include/config.php';
 API responsable
 Routes par défauts : vx/resp/route
 *************************************************************************************/
+        /** Récuère les infos de l'utilisateur en cours
+        * url - /resp/account
+        * headears - content id_user and API_KEY
+        * methode - GET
+        **/
+        $app->get('/account', function (Request $request, Response $response)  {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getUserById($id_current_user);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
 
         /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
         * url - /resp/tournaments
@@ -1272,6 +1301,64 @@ Routes par défauts : vx/resp/route
                 $data["error"] = true;
                 $data["message"] = "400";
                 $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+        /* Modifier les données de son account personnel
+        * url - /resp/account
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"nom_groupe":"GrA","id_tournoi":"1"}
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/account', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array('email', 'mot_de_passe', 'prenom_user', 'nom_user', 'id_role', 'status');
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
+            // si le mot de passe est mis à jour, alors le hacher !
+            if(isset($arrayFields['mot_de_passe'])){
+                //Générer un hash de mot de passe
+                $arrayFields['mot_de_passe'] = PassHash::hash($arrayFields['mot_de_passe']);
+            }
+
+            // si le mail est mis à jour, alors le vérifier !
+            if(isset($arrayFields['email'])){
+                $res = validateEmail($arrayFields['email'], $response);
+                if($res !== true){
+                    return $res;
+                }
+            }
+
+            $db = new DbHandler();
+            $res = $db->updateByID('users', $arrayFields, $id_current_user);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau !";
                 return echoRespnse(400, $response, $data);
             }  
 
