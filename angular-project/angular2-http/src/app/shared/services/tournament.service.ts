@@ -67,6 +67,7 @@ export class TournamentService {
     private toTournament(tournament): Tournament {
         return {
                 id: tournament.id_tournoi,
+                date_debut: tournament.date_debut,
                 name: tournament.nom_tournoi,
                 id_statut: tournament.id_statut,
                 id_user: tournament.id_user,

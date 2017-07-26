@@ -720,11 +720,11 @@ class DbHandler {
 
 
     /**
-     *Obtention des tournois créés par utilisateur
+     * Obtention des tournois créés par utilisateur
      * @param String $email
      */
     public function getTournamentCreatedUserByEmail($email) {
-        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                             u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                     FROM tournois t
                                     INNER JOIN users u ON u.id_user=t.id_user
@@ -749,7 +749,7 @@ class DbHandler {
      */
     public function getTournamentCreatedUserById($id_user) {
         require 'src/include/config.php';
-        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                         u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                         FROM tournois t
                                         INNER JOIN users u ON u.id_user=t.id_user
@@ -759,7 +759,7 @@ class DbHandler {
 
                                         UNION
 
-                                        SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                        SELECT t.id_tournoi, t._date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                         u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                         FROM tournois t
                                         INNER JOIN users u ON u.id_user=t.id_user
@@ -784,7 +784,7 @@ class DbHandler {
     * @param Int $id_tournoi
     */
     public function getTournamentById($id_tournoi) {
-        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                             u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                     FROM tournois t
                                     INNER JOIN users u ON u.id_user=t.id_user
@@ -808,7 +808,7 @@ class DbHandler {
      * @param Int $id_tournoi
      */
     public function getTeamsTournamentByIdAndUserId($id_user, $id_tournoi) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
                                         p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays
                                         FROM users u
                                         INNER JOIN tournois t ON t.id_user = u.id_user
@@ -836,7 +836,7 @@ class DbHandler {
      * @param Int $id_tournoi
      */
     public function getTeamsTournamentById($id_tournoi) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe
                                         FROM tournois t
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
@@ -856,7 +856,7 @@ class DbHandler {
      * @param Int $id_groupe
      */
     public function getTeamsByGroupById($id_groupe) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi,u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
                                         p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
                                         FROM users u
                                         INNER JOIN tournois t ON t.id_user = u.id_user
@@ -882,7 +882,7 @@ class DbHandler {
      * @param Int $id_groupe
      */
     public function getTeamsByGroupTournamentByIdAndUserId($id_user, $id_tournoi, $id_groupe) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, u.id_user, u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, u.id_user, u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
                                         p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
                                         FROM users u
                                         INNER JOIN tournois t ON t.id_user = u.id_user
@@ -905,10 +905,10 @@ class DbHandler {
         return NULL;
     }
     
-/**
-     *Obtention des matchs pour un tournoi selon son id du tournoi 
+    /**
+     * Obtention des matchs pour un tournoi selon son id du tournoi 
      * @param Int $id_tournoi
-     */
+     **/
     public function getMatchsByTournamentId( $id_tournoi) {
         $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match,
                                         e.id_equipe as 'id_equipe_home', e.nom_equipe as 'equipe_home',
@@ -933,11 +933,11 @@ class DbHandler {
         return NULL;
     }
 
-/**
-     *Obtention des matchs pour une équipe selon son id du tournoi et de l'utilisateur
+    /**
+     * Obtention des matchs pour une équipe selon son id du tournoi et de l'utilisateur
      * @param Int $id_current_user
      * @param Int $id_tournoi
-     */
+     **/
     public function getTeamMatchsById($id_equipe) {
         $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match,
                                         e.id_equipe as 'id_equipe_home', e.nom_equipe as 'equipe_home',
@@ -963,9 +963,9 @@ class DbHandler {
     }
 
     /**
-     *Obtention des matchs d'un groupe d'un tournoi selon son id du tournoi 
+     * Obtention des matchs d'un groupe d'un tournoi selon son id du tournoi 
      * @param Int $id_groupe
-     */
+     **/
     public function getMatchsByGroup($id_groupe) {
         $stmt = $this->pdo->prepare("SELECT g.nom_groupe, m.id_match,
                                         e.id_equipe as 'id_equipe_home', e.nom_equipe as 'equipe_home',
@@ -1045,7 +1045,7 @@ class DbHandler {
 
     /**
      * Obtention des tournois
-     */
+     **/
     public function getTournaments() {
         $stmt = $this->pdo->prepare("SELECT * FROM tournois");       
         if ($stmt->execute())
@@ -1063,7 +1063,7 @@ class DbHandler {
      *              1 : Nouveau
      *              2 : Ouvert
      *              3 : Clos
-     */
+     **/
     public function getTournamentsStatut($id_statut) {
         $sql = "SELECT * FROM tournois t
                 INNER JOIN statuts s ON s.id_statut = t.id_statut WHERE t.id_statut LIKE $id_statut";
@@ -1081,7 +1081,7 @@ class DbHandler {
     /**
      * Obtention des matchs listés par terrain pour un tounoi spécifique i 
      * @param Int $id_tournoi
-     */
+     **/
     public function getMatchsPitchesByTournamentId($id_tournoi) {
         $stmt = $this->pdo->prepare("SELECT ter.id_terrain, ter.nom_terrain, g.nom_groupe, m.id_match, e.nom_equipe, e2.nom_equipe, arbitre.id_equipe, arbitre.nom_equipe, dirige.id_user, dirige.nom_user, dirige.prenom_user
                                         FROM tournois t

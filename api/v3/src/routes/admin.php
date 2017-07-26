@@ -35,8 +35,9 @@ $app->post('/role/{id}/{droits}', function(Request $request, Response $response)
                 return echoRespnse(201, $response, $data);
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de créer le rôle. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de créer le rôle. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
         });
 
@@ -65,8 +66,9 @@ $app->get('/roles', function(Request $request, Response $response) {
                 return echoRespnse(200, $response, $data);
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les rôles. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les rôles. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
         });
 
@@ -97,8 +99,9 @@ $app->get('/role/{id}', function(Request $request, Response $response) {
                 return echoRespnse(200, $response, $data);
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer le rôle. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer le rôle. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
         });
 
@@ -130,16 +133,22 @@ $app->post('/register', function(Request $request, Response $response) {
             $data = array();
             if ($res == $config['message']['USER_CREATED_SUCCESSFULLY']) {
                 $data["error"] = false;
-                $data["message"] = "Nouvel utilisateur inscrit avec succès";
+                $data["message"] = "201";
+                $data["result"] = "Nouvel utilisateur inscrit avec succès";
+                $code_status = 201;
             } else if ($res == $config['message']['USER_CREATE_FAILED']) {
                 $data["error"] = true;
-                $data["message"] = "Oops! Une erreur est survenue lors de l'inscription";
+                $data["message"] = "401";
+                $data["result"] = "Oops! Une erreur est survenue lors de l'inscription";
+                $code_status = 401;
             } else if ($res == $config['message']['USER_ALREADY_EXISTED']) {
                 $data["error"] = true;
-                $data["message"] = "Désolé, cet E-mail éxiste déja";
+                $data["message"] = "401";
+                $data["result"] = "Désolé, cet E-mail éxiste déja";
+                $code_status = 401;
             }
             // echo de la réponse  JSON
-            return echoRespnse(201, $response, $data);
+            return echoRespnse($code_status, $response, $data);
 
         });
 
@@ -160,8 +169,9 @@ $app->get('/users', function (Request $request, Response $response) {
                 $data["result"] = $users;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
 
             // echo de la réponse  JSON
@@ -183,8 +193,9 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
                 $data["result"] = $user;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
 
             // echo de la réponse  JSON
@@ -206,8 +217,9 @@ $app->get('/userbyemail/{email}', function (Request $request, Response $response
                 $data["result"] = $user;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+               $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les utilisateurs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
 
             // echo de la réponse  JSON
@@ -227,8 +239,9 @@ $app->get('/tournaments', function (Request $request, Response $response) {
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer les tournois. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les tournois. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -252,8 +265,9 @@ $app->get('/tournament/{id}', function (Request $request, Response $response) {
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -277,8 +291,9 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+               $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer le tournoi. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -302,8 +317,9 @@ $app->get('/tournaments/id/{id_user}', function (Request $request, Response $res
             $data["result"] = $res;
         } else {
             $data["error"] = true;
-            $data["message"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
-            return echoRespnse(200, $response, $data);
+            $data["message"] = "400";
+                $data["result"] = "Impossible de réucupérer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(400, $response, $data);
         }
         // echo de la réponse  JSON
         return echoRespnse(200, $response, $data);
@@ -331,8 +347,9 @@ $app->delete('/user/{id}', function(Request $request, Response $response) use ($
 
         if($id_current_user == $id){
             $resultat['error'] = TRUE;
-            $resultat['message'] = "Permission refusée. Vous ne pouvez pas supprimer votre compte !";
-            return echoRespnse(200, $response, $resultat);
+            $data["message"] = "400";
+            $data["result"] = "Permission refusée. Vous ne pouvez pas supprimer votre compte !";
+            return echoRespnse(400, $response, $resultat);
         }
 
         $db = new DbHandler();
@@ -345,8 +362,9 @@ $app->delete('/user/{id}', function(Request $request, Response $response) use ($
             $data["result"] = $res;
         } else {
             $data["error"] = true;
-            $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-            return echoRespnse(200, $response, $data);
+            $data["message"] = "400";
+            $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(400, $response, $data);
         }     
 
         // echo de la réponse  JSON
@@ -385,8 +403,9 @@ $app->delete('/tournoi/{id}', function(Request $request, Response $response) use
             $data["result"] = $res;
         } else {
             $data["error"] = true;
-            $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-            return echoRespnse(200, $response, $data);
+            $data["message"] = "400";
+            $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+            return echoRespnse(400, $response, $data);
         }
 
         // echo de la réponse  JSON
@@ -439,8 +458,9 @@ $app->put('/user/{id}', function(Request $request, Response $response) use ($app
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }  
 
             // echo de la réponse  JSON

@@ -84,8 +84,9 @@ $app->get('/public/matchs/groupe/{id_groupe}', function (Request $request, Respo
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -108,8 +109,9 @@ $app->get('/public/resultats/groupe/{id_groupe}', function (Request $request, Re
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -131,8 +133,9 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -155,8 +158,9 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -179,8 +183,9 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -207,8 +212,9 @@ $app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request,
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -229,8 +235,9 @@ $app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -253,8 +260,9 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -280,8 +288,9 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -306,8 +315,9 @@ $app->get('/public/equipes/groupe/{id_groupe}', function (Request $request, Resp
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -329,8 +339,9 @@ $app->get('/public/terrain/{id}', function (Request $request, Response $response
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -355,8 +366,9 @@ $app->get('/public/tournaments/statut/{id}', function (Request $request, Respons
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -403,8 +415,9 @@ $app->get('/public/tournaments', function (Request $request, Response $response)
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);

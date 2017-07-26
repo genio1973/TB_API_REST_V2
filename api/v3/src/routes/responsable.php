@@ -29,8 +29,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -60,8 +61,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -86,8 +88,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -111,8 +114,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -144,8 +148,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -178,8 +183,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array('nom_tournoi');
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -191,8 +197,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'exécuter la requête. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'exécuter la requête. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
 
             // echo de la réponse  JSON
@@ -228,8 +235,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays", "id_equipe");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -237,8 +245,9 @@ Routes par défauts : vx/resp/route
             foreach($data as $personne){
                 if( !$db->isTeamOwner($id_current_user, $personne['id_equipe']) ){
                     $resultat['error'] = TRUE;
-                    $resultat['message'] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
-                    return echoRespnse(200, $response, $resultat);
+                    $resultat['message'] = "400";
+                    $resultat["result"] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
+                    return echoRespnse(400, $response, $resultat);
                 }
             }
 
@@ -251,8 +260,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
@@ -288,8 +298,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("niveau","nom_equipe","id_groupe");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] =  "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -299,7 +310,8 @@ Routes par défauts : vx/resp/route
                 $res = $db->isGroupOwner($id_current_user, $equipe['id_groupe']);
                 if(!$res){
                     $resultat['error'] = TRUE;
-                    $resultat['message'] = "Permission refusée pour votre identitifant pour au moins une équipe mentionnées dans le mauvais numéro de groupe !";
+                    $resultat['message'] = "201";
+                    $resultat["result"] =  "Permission refusée pour votre identitifant pour au moins une équipe mentionnées dans le mauvais numéro de groupe !";
                     return echoRespnse(201, $response, $resultat);
                 }
             }
@@ -313,8 +325,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] =  "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
@@ -350,8 +363,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("nom_groupe","id_tournoi");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -360,7 +374,8 @@ Routes par défauts : vx/resp/route
                 $res = $db->isTournamentOwner($id_current_user, $groupe['id_tournoi']);
                 if(!$res){
                     $resultat['error'] = TRUE;
-                    $resultat['message'] = "Permission refusée pour votre identifiant dans au moins un groupe mentionnés dans le mauvais numéro de tournoi !";
+                    $resultat['message'] = "201";
+                    $resultat["result"] = "Permission refusée pour votre identifiant dans au moins un groupe mentionnés dans le mauvais numéro de tournoi !";
                     return echoRespnse(201, $response, $resultat);
                 }
             }
@@ -374,7 +389,8 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(200, $response, $data);
             }
             // echo de la réponse  JSON
@@ -412,8 +428,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("nom_terrain");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             // Ajouter l'appartenance des terrains créés
@@ -432,8 +449,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);   
@@ -476,8 +494,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("date_match","heure","id_user_dirige","id_terrain","id_equipe_home","id_equipe_visiteur","id_equipe_arbitre");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -487,7 +506,8 @@ Routes par défauts : vx/resp/route
                     || !$db->isTeamOwner($id_current_user, $match['id_equipe_visiteur'])
                     || (isset($match['id_equipe_arbitre']) && !$db->isTeamOwner($id_current_user, $match['id_equipe_arbitre']))){
                         $resultat['error'] = TRUE;
-                        $resultat['message'] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
+                        $resultat['message'] = "201";
+                        $resultat["result"] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
                         return echoRespnse(201, $response, $resultat);
                 }
             }
@@ -501,8 +521,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
@@ -539,8 +560,9 @@ Routes par défauts : vx/resp/route
             $fieldsToCheck = array("score_home","score_visiteur","id_match");
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $resultat);
             }
 
             $db = new DbHandler();
@@ -548,8 +570,9 @@ Routes par défauts : vx/resp/route
             foreach($data as $match){
                 if( !$db->isMatchOwner($id_current_user, $match['id_match']) ){
                         $resultat['error'] = TRUE;
-                        $resultat['message'] = "Permission refusée pour votre identitifant. Au moins un sets pour un match mentionnés ne correspond pas au numéro de groupe vous appartenant !";
-                        return echoRespnse(201, $response, $resultat);
+                        $resultat['message'] = "400";
+                        $resultat["result"] = "Permission refusée pour votre identitifant. Au moins un sets pour un match mentionnés ne correspond pas au numéro de groupe vous appartenant !";
+                        return echoRespnse(400, $response, $resultat);
                 }
             }
             
@@ -562,8 +585,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'insérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(201, $response, $data);
@@ -598,9 +622,9 @@ Routes par défauts : vx/resp/route
             $role = $db->getRoleById($id_current_user); // ou alors on est admin
             if(!$res && $role['id_role'] != $config['role']['ADMIN']){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
             /*            
             // supprime les terrains du tournoi manuellement
@@ -620,8 +644,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
 
             // echo de la réponse  JSON
@@ -654,9 +679,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -668,8 +693,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(401, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -702,9 +728,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isTeamOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -716,8 +742,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
@@ -749,8 +776,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isGroupOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -762,8 +790,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
 
             // echo de la réponse  JSON
@@ -794,9 +823,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isTeamOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -808,8 +837,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -842,9 +872,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isPeopleOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -856,8 +886,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -892,9 +923,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isTournamentOwner($id_current_user, $id_tournament); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -906,8 +937,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $resultat["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -937,9 +969,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isMatchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
                        
             // suppression de l'équipe en cascade avec ses enfants
@@ -951,8 +983,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
             // echo de la réponse  JSON
@@ -985,9 +1018,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
 
             // filtre les champs qu'il faut mettre à jour
@@ -1003,11 +1036,11 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }     
              
-
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
@@ -1038,9 +1071,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant ou id non trouvé !";
-
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
 
             // filtre les champs qu'il faut mettre à jour
@@ -1056,8 +1089,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }  
 
             // echo de la réponse  JSON
@@ -1104,8 +1138,9 @@ Routes par défauts : vx/resp/route
                 $res = $db->isTeamOwner($id_current_user, $data['id_equipe']); // Vérifie que l'utilisateur courant est le propriétaire
                 if(!$res){
                     $resultat['error'] = TRUE;
-                    $resultat['message'] = "Permission refusée pour l'id_equipe ne correspond pas à une de vos équipes !";
-                    return echoRespnse(200, $response, $resultat);
+                    $resultat['message'] = "400";
+                    $resultat["result"] = "Permission refusée pour l'id_equipe ne correspond pas à une de vos équipes !";
+                    return echoRespnse(400, $response, $resultat);
                 }
             }
 
@@ -1118,8 +1153,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }  
 
             // echo de la réponse  JSON
@@ -1152,8 +1188,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant, ou id non trouvé !";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
 
             // filtre les champs qu'il faut mettre à jour
@@ -1168,8 +1205,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }  
 
             // echo de la réponse  JSON
@@ -1202,8 +1240,9 @@ Routes par défauts : vx/resp/route
             $res = $db->isGroupOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "Permission refusée pour votre identifiant, ou id non trouvé !";
-                return echoRespnse(200, $response, $resultat);
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
             }
             
             if(isset($data['id_tournoi'])){
@@ -1211,8 +1250,9 @@ Routes par défauts : vx/resp/route
                 $res = $db->isTournamentOwner($id_current_user, $data['id_tournoi']); 
                 if(!$res){
                     $resultat['error'] = TRUE;
-                    $resultat['message'] = "Veuillez attribuer un tournoi vous appartenant";
-                    return echoRespnse(200, $response, $resultat);
+                    $resultat['message'] = "400";
+                    $resultat["result"] = "Veuillez attribuer un tournoi vous appartenant";
+                    return echoRespnse(400, $response, $resultat);
                 }
             }
 
@@ -1230,8 +1270,9 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
-                return echoRespnse(200, $response, $data);
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
             }  
 
             // echo de la réponse  JSON
