@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
         data => {
           // Get the redirect URL from our auth service
           // If no redirect has been set, use the default
-          let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/admin';
+          let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/responsible/tournaments';
 
           this.router.navigate([redirect]);
           console.log(data); 

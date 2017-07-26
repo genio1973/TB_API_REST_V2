@@ -13,6 +13,7 @@ export class ResponsibleEditComponent implements OnInit {
     responsible: Responsible;
     successMessage: string = '';
     errorMessage: string = '';
+    needPasswordChange: boolean = false;
 
     constructor(private responsibleService: ResponsibleService,
                 private route: ActivatedRoute,
@@ -28,9 +29,16 @@ export class ResponsibleEditComponent implements OnInit {
     }
 
     updateResponsible(){
+        let userEdit;
+        let userNoPwd : ResponsibleTemp;
         this.errorMessage = '';
         this.successMessage = '';
-        this.responsibleService.updateResponsible(this.responsible)
+        
+        if(!this.needPasswordChange){ userEdit = userNoPwd = this.responsible; }
+        else { userEdit = this.responsible; }
+        console.log("TTTTTTTTEEEESSSSTTTT : " + userEdit.mot_de_passe);
+
+        this.responsibleService.updateResponsible(userEdit)
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';
@@ -43,6 +51,19 @@ export class ResponsibleEditComponent implements OnInit {
             });
     }
 
+    togglePasswordChangeButton(){
+      this.needPasswordChange = !this.needPasswordChange;
+    }
 
 }
 
+class ResponsibleTemp{
+    id: number;
+    email: string;
+    token_expire?: Date;
+    nom_user: string;
+    prenom_user: string;
+    status: number;
+    id_role: number;
+    droits?: string;
+}

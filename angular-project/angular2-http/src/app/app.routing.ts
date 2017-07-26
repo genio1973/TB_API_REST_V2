@@ -24,7 +24,7 @@ import { RespComponent } from "./resp/resp.component";
 import { AccountComponent } from "./resp/account/account.component";
 
 export const routes: Routes = [
-        { path: '', redirectTo: 'public', pathMatch: 'full' },                       
+        { path: '', redirectTo: 'public/tournaments', pathMatch: 'full' },                       
         { 
           path: 'admin',
           component: AdminComponent,

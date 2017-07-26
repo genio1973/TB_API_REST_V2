@@ -13,18 +13,30 @@
     </div>
 
     <div class="form-group">
-      <label>email</label>
+      <label>Email</label>
       <input type="text" class="form-control" name="email" [(ngModel)]="responsible.email">
     </div>
 
     <div class="form-group">
-      <label>statut (1: Actif, 0: Désact.)</label>
+      <label>Statut (1: Actif, 0: Désact.)</label>
       <input type="text" class="form-control" name="status" [(ngModel)]="responsible.status">
     </div>
     
     <div class="form-group">
-      <label>droits (1: Admin, 2: Resp)</label>
+      <label>Droits (1: Admin, 2: Resp)</label>
       <input type="text" class="form-control" name="id_role" [(ngModel)]="responsible.id_role">
+    </div>
+
+    <div *ngIf="!needPasswordChange" class="form-group"> 
+      <a (click)="togglePasswordChangeButton()" class="btn btn-danger btn-sm">Modifier le mot de passe ?</a>
+    </div>
+    <div *ngIf="needPasswordChange" class="form-group"> 
+      <a (click)="togglePasswordChangeButton()" class="btn btn-info btn-sm">Ne pas modifier le mot de passe ?</a>
+    </div>
+
+    <div *ngIf="needPasswordChange" class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" required name="mot_de_passe" [(ngModel)]="responsible.mot_de_passe">
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
