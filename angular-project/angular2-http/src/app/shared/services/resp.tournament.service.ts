@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 
 import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
+import { TournamentSimple } from "../models/tournament-simple";
 
 @Injectable()
 export class RespTournamentService {
@@ -51,6 +52,17 @@ export class RespTournamentService {
                     .catch((e) => this.handleError(e));
     }
 
+    /**
+     * Get all statuts
+     */
+    getAllTounamentStatuts(){
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournaments/statuts`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .catch((e) => this.handleError(e));
+    }
+
     /*
     * Get all Tournament by statut
     */
@@ -90,13 +102,47 @@ export class RespTournamentService {
     }
 
     /**
-     * The responsible was created. Add this info to our stream
+     * The tournament was created. Add this info to our stream
      * @param tournament 
      */
     private tournamentCreated(tournament:Tournament){
         this.tournamentSource.next("Tournoi a été créé.");
     }
 
+    updateTournament(tournament: Tournament): Observable<Tournament> {
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/tournoi/${tournament.id}`, tournament, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
+
+    /**
+    /* The tournament was updated. Add this info to our stream
+    **/
+    private tournamentUpdated(){        
+        this.tournamentSource.next("Le tournoi a été mis à jour.");      
+    }
+
+
+    /**
+     * Delete a tournament
+     * @param id 
+     */
+    deleteTournament(id: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/tournoi/${id}`, this.headBuilder())
+        .do(this.checkError)
+        .do(res => this.tournamentDeleted())
+        .catch((e) => this.handleError(e));
+    }
+
+    /*
+    /* The tournament was deleted. Add this info to our stream
+     */
+    private tournamentDeleted(){
+        this.tournamentSource.next("Le tournoi a été supprimé.");
+    }
     /**
     * Convert tournament info from API to our standard
     * @param tournament 
@@ -105,11 +151,13 @@ export class RespTournamentService {
         return {
                 id: tournament.id_tournoi,
                 date_debut: tournament.date_debut,
-                nom_tournoi: tournament.nom_tournoi,
-                id_statut: tournament.id_statut,
+                nom_tournoi: tournament.nom_tournoi,               
                 id_user: tournament.id_user,
-                id_statut_tournoi: tournament.id_statut_tournoi,
+                id_statut: tournament.id_statut_tournoi,
                 statut_tournoi: tournament.statut_tournoi,
+                email: tournament.email,
+                nom_user: tournament.nom_user,
+                prenom_user: tournament.prenom_user,
             };
     }
 

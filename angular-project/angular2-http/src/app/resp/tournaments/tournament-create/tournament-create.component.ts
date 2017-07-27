@@ -28,13 +28,10 @@ export class TournamentCreateComponent implements OnInit {
         this.tournamentService.createTournament(this.tournament)
           .subscribe(
             tournament => {
-              this.successMessage = 'User was created.';
-              this.router.navigate(['/admin/resp']);
-              //console.log('user was created');
+              this.router.navigate(['/responsible/tournaments']);
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 

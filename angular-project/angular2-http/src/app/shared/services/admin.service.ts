@@ -101,8 +101,9 @@ export class AdminService {
     
     /**
      * Update the responsible
+     * @param : responsible: Responsible
      */
-    updateResponsible(responsible: Responsible): Observable<Responsible> {
+        updateResponsible(responsible: Responsible): Observable<Responsible> {
         // attaching a token
         return this.http.put(`${this.adminUrl}/user/${responsible.id}`, responsible, this.headBuilder())
         .do(this.checkError)

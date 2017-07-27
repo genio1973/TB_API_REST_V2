@@ -13,7 +13,6 @@ import { RolesEnum } from "./shared/models/rolesEnum";
 
 export class AppComponent  {
 
-  //userConnectedEmail: string ='';
   userConnected = {email: '', droits:'', id_role:RolesEnum.NONE};
   myRoleEnum = RolesEnum; 
   
@@ -35,13 +34,19 @@ export class AppComponent  {
             this.userConnected.id_role = RolesEnum.NONE;
           }); 
   }
-    /**
+  /**
    * Is the user logged in?
    */
   get isLoggedIn() {
     return this.authService.isLoggedIn();
   }
 
+ /**
+ * Is the user logged in as administrator ?
+ */
+  get isLoggedInAsAdmin() {
+    return this.authService.isLoggedInAsAdmin();
+  }
   /**
    * log ther user out
    */

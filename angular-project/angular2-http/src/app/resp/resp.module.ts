@@ -7,6 +7,8 @@ import { TournamentsComponent } from "./tournaments/tournaments.component";
 import { TournamentSingleComponent } from "./tournaments/tournament-single/tournament-single.component";
 import { TournamentListComponent } from "./tournaments/tournament-list/tournament-list.component";
 import { TournamentCreateComponent } from "./tournaments/tournament-create/tournament-create.component";
+import { TournamentEditComponent } from "./tournaments/tournament-edit/tournament-edit.component";
+import { TournamentDeleteComponent } from "./tournaments/tournament-delete/tournament-delete.component";
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { TournamentCreateComponent } from "./tournaments/tournament-create/tourn
     TournamentSingleComponent,
     TournamentListComponent,
     TournamentCreateComponent,
+    TournamentDeleteComponent,
+    TournamentEditComponent,
   ],
   providers: [
   ]

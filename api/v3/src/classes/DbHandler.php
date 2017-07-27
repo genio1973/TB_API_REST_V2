@@ -437,7 +437,7 @@ class DbHandler {
 
 
     /**
-     *Obtention des utilisateurs
+     * Obtention des utilisateurs
      */
     public function getUsers() {
         $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits FROM users u
@@ -450,6 +450,20 @@ class DbHandler {
         return NULL;
     }
 
+
+
+    /**
+    * Obtenir tous les statuts des tournois
+    */
+    public function getAllStatuts() {
+        $stmt = $this->pdo->prepare("SELECT s.id_statut, s.nom_statut FROM statuts s");       
+        if ($stmt->execute()){
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            //$this->pdo = NULL;
+            return $users;
+        }
+        return NULL;
+    }
 
     /**
      * Obtention de la clé API de l'utilisateur
