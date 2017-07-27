@@ -1,5 +1,7 @@
 <div *ngIf="responsible">
-
+  <div>
+  <a [routerLink]="['/admin/resp']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+  </div>
   <form (ngSubmit)="updateResponsible()">
 
     <div class="form-group">

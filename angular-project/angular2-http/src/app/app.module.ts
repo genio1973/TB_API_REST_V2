@@ -29,45 +29,31 @@ import { ResponsibleListComponent } from "./admin/responsibles/responsible-list/
 import { ResponsibleSingleComponent } from "./admin/responsibles/responsible-single/responsible-single.component";
 import { ResponsiblesComponent } from "./admin/responsibles/responsibles.component";
 import { ResponsibleService } from "./shared/services/responsible.service";
-import { AdminComponent } from "./admin/admin.component";
 import { RespComponent } from "./resp/resp.component";
-import { PublicComponent } from "./public/public.component";
 import { LoginComponent } from "./public/login/login.component";
 import { AuthService } from "./shared/services/auth.service";
 import { AuthGuardService } from "./shared/guards/auth-guard.service";
 import { NotFoundComponent } from "./not-found/not-found.component";
 import { AuthAdminGuardService } from "./shared/guards/auth-admin-guard.service";
 import { AccountComponent } from "./resp/account/account.component";
+import { PublicModule } from "./public/public.module";
+import { AdminModule } from "./admin/admin.module";
+import { RespModule } from "./resp/resp.module";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersComponent,
-    UsersComponent,
-    UserListComponent,
-    UserCreateComponent,
-    UserEditComponent,
-    UserSingleComponent,
-    TournamentsComponent,
-    TournamentListComponent,
-    TournamentSingleComponent,
-    ResponsiblesComponent,
-    ResponsibleCreateComponent,
-    ResponsibleEditComponent,
-    ResponsibleListComponent,
-    ResponsibleSingleComponent,
-    AdminComponent,
-    RespComponent,
-    PublicComponent,
     AccountComponent,
-    LoginComponent,
     NotFoundComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
+    PublicModule,
+    RespModule,
+    AdminModule,
     routing
   ],
   providers: [UserService, TournamentService, ResponsibleService, AuthService, AuthGuardService, AuthAdminGuardService],
