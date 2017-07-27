@@ -9,7 +9,7 @@
 
     <div class="form-group">
       <label>Date de référence (date de début)</label>
-      <input type="text" class="form-control" name="date_tournoi" [(ngModel)]="tournament.date_debut">
+      <input type="date" class="form-control" name="date_tournoi" [(ngModel)]="tournament.date_debut">
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>

@@ -28,7 +28,7 @@ export class TournamentCreateComponent implements OnInit {
         this.tournamentService.createTournament(this.tournament)
           .subscribe(
             tournament => {
-              this.router.navigate(['/responsible/tournaments']);
+              this.router.navigate(['/responsible/tournaments/list']);
             },
             err => {
               this.errorMessage = err;

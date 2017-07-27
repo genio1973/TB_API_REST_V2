@@ -69,9 +69,9 @@ export class PublicTournamentService {
                 id: tournament.id_tournoi,
                 date_debut: tournament.date_debut,
                 nom_tournoi: tournament.nom_tournoi,
-                id_statut: tournament.id_statut,
+
                 id_user: tournament.id_user,
-                id_statut_tournoi: tournament.id_statut_tournoi,
+                id_statut: tournament.id_statut_tournoi,
                 statut_tournoi: tournament.statut_tournoi,
             };
     }

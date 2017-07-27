@@ -25,12 +25,11 @@ export const respRoutes: Routes = [
                                     { path: 'list',     component: TournamentListComponent },
                                     { path: 'create',   component: TournamentCreateComponent },
                                     { path: ':id',      component: TournamentSingleComponent },
-                                    { path: ':id/edit', component: TournamentEditComponent }
+                                    { path: ':id/edit', component: TournamentEditComponent},                         
                                 ]
                                 
-                    },            
-                    
-                   ]
+                    },     
+                  ]
     },
 ];
 
