@@ -1,7 +1,7 @@
 export class Responsible{
     id: number;
     email: string;
-    password?: string;
+    mot_de_passe?: string;
     token_expire?: Date;
     nom_user: string;
     prenom_user: string;

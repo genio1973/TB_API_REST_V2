@@ -1,8 +1,12 @@
 export class Tournament{
-    id?: number;
+    id: number;
     date_debut?: Date;
-    name: string;
-    id_user: number;
-    id_statut: number;
+    nom_tournoi: string;
+    id_user?: number;
+    id_statut?: number;
     nom_statut?: string;
+    statut_tournoi?: string;
+    email?: string;
+    nom_user?: string;
+    prenom_user?: string;
 }

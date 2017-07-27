@@ -7,6 +7,59 @@ require 'src/include/config.php';
 API responsable
 Routes par défauts : vx/resp/route
 *************************************************************************************/
+        /** Récuère les infos de l'utilisateur en cours
+        * url - /resp/account
+        * headears - content id_user and API_KEY
+        * methode - GET
+        **/
+        $app->get('/account', function (Request $request, Response $response)  {
+            // Obtenir les en-têtes de requêtes
+            // Nullement besoin de test la présence, car cela est fait précédement
+            // en vérifiant l'authentifcation sur la route du group responsable
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getUserById($id_current_user);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+        /** Récuère tous les status à dispo
+        * url - /resp/tournaments/statuts
+        * headears - content id_user and API_KEY
+        * methode - GET
+        **/
+        $app->get('/tournaments/statuts', function (Request $request, Response $response)  {
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getAllStatuts();
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
 
         /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
         * url - /resp/tournaments
@@ -24,6 +77,46 @@ Routes par défauts : vx/resp/route
             $res = array();
             $res = $db->getTournamentCreatedUserById($id_current_user);
             if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+        /* Liste les info d'un tournoi
+        * url - /public/tournaments
+        * headears - content id_user and API_KEY
+        * methode - GET
+        * Paramètre spécifant le statut
+            * @Pamam - id du tournoi
+        */
+        $app->get('/tournament/{id}', function (Request $request, Response $response) {
+            require 'src/include/config.php';
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $id = $request->getAttribute('id'); 
+            $db = new DbHandler();
+
+            $res = $db->getTournamentById($id);
+            if ($res != NULL) {
+                //est-il le propriéataire de ce tournoi ?
+                $prop = $db->isTournamentOwner($id_current_user, $res['id_tournoi']);
+                $role = $db->getRoleById($id_current_user); // ou alors on est admin
+                if(!$prop && $role['id_role'] != $config['role']['ADMIN']){
+                    $resultat['error'] = TRUE;
+                    $resultat['message'] = "401";
+                    $resultat["result"] = "Permission refusée pour votre identifiant, mauvais numéro de tournoi !";
+                    return echoRespnse(401, $response, $resultat);
+                }
                 $data["error"] = false;
                 $data["message"] = "200";
                 $data["result"] = $res;
@@ -161,7 +254,7 @@ Routes par défauts : vx/resp/route
         * url - /resp/tournoi
         * methode - POST
         * headears - content id_user and API_KEY
-        * body - Json : {"nom_tournoi":"2017-09-15 SVRN""}
+        * body - Json : {"nom_tournoi":"2017-09-15 SVRN", "date_Debut"}
         * return - {
         *            "error": false,
         *            "message": null,
@@ -180,7 +273,9 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             // filtre les champs qu'il faut mettre à jour
-            $fieldsToCheck = array('nom_tournoi');
+            $fieldsToCheck = array("nom_tournoi","date_debut");
+            //return echoRespnse(400, $response, verifyRequiredFields($data, $fieldsToCheck));
+            
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -189,7 +284,7 @@ Routes par défauts : vx/resp/route
             }
 
             $db = new DbHandler();
-            $res = $db->createTournament($data['nom_tournoi'], $id_current_user);
+            $res = $db->createTournament($data['nom_tournoi'], $id_current_user, $data['date_debut']);
             $data = NULL;
             if ($res != NULL) {
                 $data["error"] = false;
@@ -1005,6 +1100,7 @@ Routes par défauts : vx/resp/route
         *           }
         */
         $app->put('/tournoi/{id}', function(Request $request, Response $response) use ($app) {
+            require 'src/include/config.php';
             // récupère les données passée aux forma json
             $json = $request->getBody();
             $data = json_decode($json, true); // transofme en tableau associatif
@@ -1016,7 +1112,8 @@ Routes par défauts : vx/resp/route
 
             $db = new DbHandler();
             $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
-            if(!$res){
+            $role = $db->getRoleById($id_current_user); // ou alors on est admin
+            if(!$res && $role['id_role'] != $config['role']['ADMIN']){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
@@ -1024,11 +1121,14 @@ Routes par défauts : vx/resp/route
             }
 
             // filtre les champs qu'il faut mettre à jour
-            $fieldsToCheck = array('nom_tournoi', 'id_statut');
+            $fieldsToCheck = array('nom_tournoi', 'id_statut', 'date_debut');
             $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
 
             //$res = $fieldsToCheck;
             $res = $db->updateByID('tournois', $arrayFields, $id);
+            //return echoRespnse(400, $response, $arrayFields);
+
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;
@@ -1272,6 +1372,64 @@ Routes par défauts : vx/resp/route
                 $data["error"] = true;
                 $data["message"] = "400";
                 $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }  
+
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+        /* Modifier les données de son account personnel
+        * url - /resp/account
+        * methode - PUT
+        * headears - content id_user and API_KEY
+        * body - Json : Ne mettre que les champ que l'en veut modifier
+        *               {"nom_groupe":"GrA","id_tournoi":"1"}
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "id": 1,
+        *           }
+        */
+        $app->put('/account', function(Request $request, Response $response) use ($app) {
+            // récupère les données passée aux forma json
+            $json = $request->getBody();
+            $data = json_decode($json, true); // transofme en tableau associatif
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            // filtre les champs qu'il faut mettre à jour
+            $fieldsToCheck = array('email', 'mot_de_passe', 'prenom_user', 'nom_user', 'id_role', 'status');
+            $arrayFields = filterRequiredFields($data, $fieldsToCheck);
+
+            // si le mot de passe est mis à jour, alors le hacher !
+            if(isset($arrayFields['mot_de_passe'])){
+                //Générer un hash de mot de passe
+                $arrayFields['mot_de_passe'] = PassHash::hash($arrayFields['mot_de_passe']);
+            }
+
+            // si le mail est mis à jour, alors le vérifier !
+            if(isset($arrayFields['email'])){
+                $res = validateEmail($arrayFields['email'], $response);
+                if($res !== true){
+                    return $res;
+                }
+            }
+
+            $db = new DbHandler();
+            $res = $db->updateByID('users', $arrayFields, $id_current_user);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de mettre à jour les données. S'il vous plaît essayer à nouveau !";
                 return echoRespnse(400, $response, $data);
             }  
 

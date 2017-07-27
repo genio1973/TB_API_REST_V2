@@ -54,12 +54,12 @@ function filterRequiredFields($data, $fieldsToCheck) {
  * @return Array avec les clé et valeurs acceptées 
  */
 function verifyRequiredFields($data, $fieldsToCheck) {
-    foreach($data as $p){
-        foreach($p as $key => $val){
-            if(!in_array($key, $fieldsToCheck) ){
+    foreach($data as $p => $v){
+        //foreach($p as $key => $val){
+            if(!in_array($p, $fieldsToCheck) ){
                return false;
             }
-        }
+        //}
     }
     return true;
 }

@@ -24,63 +24,18 @@ import { RespComponent } from "./resp/resp.component";
 import { AccountComponent } from "./resp/account/account.component";
 
 export const routes: Routes = [
-        { path: '', redirectTo: 'public', pathMatch: 'full' },                       
+        { path: '', redirectTo: 'public/tournaments', pathMatch: 'full' },   
+        { path: 'account', component: AccountComponent, canActivate: [AuthGuardService] },                    
         { 
           path: 'admin',
-          component: AdminComponent,
-          canActivateChild: [AuthAdminGuardService],          
-          children: [
-            { path: '', redirectTo: 'resp', pathMatch: 'full' },
-            { 
-              path: 'resp',
-              component: ResponsiblesComponent,
-              canActivateChild: [AuthAdminGuardService],
-              children: [
-                            { path: '', redirectTo: 'list', pathMatch: 'full' },
-                            { path: 'list',     component: ResponsibleListComponent },
-                            { path: 'create',   component: ResponsibleCreateComponent },
-                            { path: ':id',      component: ResponsibleSingleComponent },
-                            { path: ':id/edit', component: ResponsibleEditComponent }
-                        ]
-            },            
-            { 
-              path: 'users',
-              component: UsersComponent,
-              canActivateChild: [AuthAdminGuardService],
-              children: [
-                            { path: '', redirectTo: 'list', pathMatch: 'full' },
-                            { path: 'list',     component: UserListComponent },
-                            { path: 'create',   component: UserCreateComponent },
-                            { path: ':id',      component: UserSingleComponent },
-                            { path: ':id/edit', component: UserEditComponent }
-                        ]
-            },
-            ]
+          loadChildren: 'app/admin/admin.module#adminModule'
         },
         { path: 'responsible',
-          component: RespComponent,
-          canActivateChild: [AuthGuardService],
-          children: [
-                        { path: '', redirectTo: 'account', pathMatch: 'full' },
-                        { path: 'account',        component: AccountComponent },
-                        { path: 'tournaments',    component: TournamentListComponent },
-                    ]
-            },
+          loadChildren: 'app/resp/resp.module#respModule'
+        },
         { path: 'public',
-          component: PublicComponent,
-          children: [
-              { path: '', redirectTo: 'tournaments', pathMatch: 'full' },
-              { path: 'login', component: LoginComponent },
-              {
-                path: 'tournaments',
-                component: TournamentsComponent,
-                children:[
-                            { path: '', redirectTo: 'list', pathMatch: 'full' },
-                            { path: 'list',    component: TournamentListComponent },
-                            { path: ':id',     component: TournamentSingleComponent },
-
-                      ] }
-              ]
+          loadChildren: 'app/public/public.module#PublicModule'
+          //component: PublicComponent,          
         },
         { path: '**', component: NotFoundComponent } 
     ];

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ResponsibleService } from "../../shared/services/responsible.service";
+import { AdminService } from "../../shared/services/admin.service";
 
 @Component({
   selector: 'my-responsibles',
@@ -12,26 +12,26 @@ export class ResponsiblesComponent implements OnInit {
     errorMessage: string = '';
 
 
-    constructor( private responsibleService: ResponsibleService ){}
+    constructor( private adminService: AdminService ){}
 
     ngOnInit(): void {
 
-      this.responsibleService.responsibleCreated$.subscribe( resp => {
+      this.adminService.responsibleCreated$.subscribe( resp => {
             this.successMessage = `${resp.email} has been created with id ${resp.id} !`;
             this.clearMessages();
           });
       
-      this.responsibleService.responsibleDeleted$.subscribe( res => {
+      this.adminService.responsibleDeleted$.subscribe( res => {
             this.successMessage = `The user has been deleted !`;
             this.clearMessages();
           });
 
-      this.responsibleService.responsibleUpdated$.subscribe( data => {
+      this.adminService.responsibleUpdated$.subscribe( data => {
             this.successMessage = `The user has been updated !`;
             this.clearMessages();
           });  
  
-      this.responsibleService.responsibleError$.subscribe( err => {
+      this.adminService.responsibleError$.subscribe( err => {
             this.errorMessage = err;
             this.clearMessages();
           });  

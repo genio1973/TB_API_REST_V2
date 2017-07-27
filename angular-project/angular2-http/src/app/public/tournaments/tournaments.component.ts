@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TournamentService } from "../../shared/services/tournament.service";
+import { PublicTournamentService } from "../../shared/services/public-tournament.service";
 
 @Component({
   selector: 'my-tournaments',
@@ -11,7 +11,7 @@ export class TournamentsComponent implements OnInit {
     errorMessage: string = '';
 
 
-    constructor( private tournamentService: TournamentService ){}
+    constructor( private tournamentService: PublicTournamentService ){}
 
     ngOnInit(): void {
       this.tournamentService.tournament$.subscribe( errMsg => {

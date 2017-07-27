@@ -12,7 +12,7 @@
           <a routerLink="/" class="navbar-brand" >RomandVolley</a> 
         </div>
         <div style="color: white; padding: 15px 50px 5px 50px; float: right;font-size: 16px;">
-             {{userConnected.email}}  
+             <a style="color: white" routerLink="/account">{{userConnected.email}}</a>
         </div>
  
     </nav> 
@@ -22,9 +22,11 @@
         <div class="sidebar-collapse">
           <ul class="nav" id="main-menu">
             
-            <li *ngIf="isLoggedIn" class="text-center">                
+            <li *ngIf="isLoggedIn"  class="text-center">    
+                <a routerLink="/account">            
                     <img src="assets/img/responsible1.png" class="user-image img-responsive"/>
-                    <p style="color:white">{{userConnected.droits}}</p>                   
+                    <p style="color:white">{{userConnected.droits}}</p>
+                </a>
             </li>
             
             <li>
@@ -33,7 +35,7 @@
 
             <li >
                 <a *ngIf="!isLoggedIn" routerLink="/public/login"><i class="fa fa-sign-in  fa-2x" aria-hidden="true"></i> Login</a>
-                <a *ngIf="isLoggedIn" class="linkPointer" (click)="logout()"><i class="fa fa-sign-out  fa-2x" aria-hidden="true"></i> Logout</a>
+                <a *ngIf="isLoggedIn" class="linkPointer" (click)="logout()"><i class="fa fa-sign-out  fa-2x" aria-hidden="true"></i> Log in out</a>
             </li>
           </ul>
 

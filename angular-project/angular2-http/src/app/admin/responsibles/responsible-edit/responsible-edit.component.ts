@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Responsible } from "../../../shared/models/responsible";
-import { ResponsibleService } from "../../../shared/services/responsible.service";
+import { AdminService } from "../../../shared/services/admin.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
@@ -13,8 +13,9 @@ export class ResponsibleEditComponent implements OnInit {
     responsible: Responsible;
     successMessage: string = '';
     errorMessage: string = '';
+    needPasswordChange: boolean = false;
 
-    constructor(private responsibleService: ResponsibleService,
+    constructor(private adminService: AdminService,
                 private route: ActivatedRoute,
                 private router: Router) { }
 
@@ -22,27 +23,44 @@ export class ResponsibleEditComponent implements OnInit {
       // get the id from the url
       let id = this.route.snapshot.params['id'];
 
-      this.responsibleService
+      this.adminService
           .getResponsible(id)
           .subscribe(responsible=> this.responsible = responsible);
     }
 
     updateResponsible(){
+        let userEdit;
+        let userNoPwd : ResponsibleTemp;
         this.errorMessage = '';
         this.successMessage = '';
-        this.responsibleService.updateResponsible(this.responsible)
+        
+        if(!this.needPasswordChange){ userEdit = userNoPwd = this.responsible; }
+        else { userEdit = this.responsible; }
+
+        this.adminService.updateResponsible(userEdit)
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';
               this.router.navigate(['/admin/resp']);
-              //console.log('user was updated');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 
+    togglePasswordChangeButton(){
+      this.needPasswordChange = !this.needPasswordChange;
+    }
 
 }
 
+class ResponsibleTemp{
+    id: number;
+    email: string;
+    token_expire?: Date;
+    nom_user: string;
+    prenom_user: string;
+    status: number;
+    id_role: number;
+    droits?: string;
+}

@@ -7,18 +7,18 @@
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                     <tr>
-                        <th>id</th><th>Date (réf)</th><th>Nom</th><th>Statut</th><th>ID-creator</th>
+                        <th>id</th><th>Date (réf)</th><th>Nom</th><th>Statut</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     <ng-container *ngFor="let tournament of tournaments" >
-                        <tr *ngIf="tournament.id_statut > 1" class="odd gradeX" [routerLink]="['/public/tournaments/', tournament.id] ">
+                        <!--<tr *ngIf="tournament.id_statut > 1" class="odd gradeX" [routerLink]="['/public/tournaments/', tournament.id] "> -->
+                        <tr class="odd gradeX" [routerLink]="['/public/tournaments/', tournament.id] ">
                                 <td>{{tournament.id}}</td>
                                 <td>{{tournament.date_debut}}</td>
-                                <td>{{tournament.name}}</td>
-                                <td>{{tournament.id_statut}}</td>
-                                <td>{{tournament.id_user}}</td>
+                                <td>{{tournament.nom_tournoi}}</td>
+                                <td>{{tournament.statut_tournoi}}</td>
                         </tr>
                     </ng-container>
                 </tbody>

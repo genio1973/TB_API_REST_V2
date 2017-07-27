@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Responsible } from "../../../shared/models/responsible";
-import { ResponsibleService } from "../../../shared/services/responsible.service";
+import { AdminService } from "../../../shared/services/admin.service";
 
 @Component({
   selector: 'my-responsible-list',
@@ -11,11 +11,11 @@ export class ResponsibleListComponent implements OnInit {
 
     responsibles: Responsible[];  
 
-    constructor( private responsibleService: ResponsibleService ){}
+    constructor( private adminService: AdminService ){}
 
     ngOnInit(): void {
       console.log('ResponsibleList OnInit() !');
-      this.responsibleService.getResponsibles()
+      this.adminService.getResponsibles()
           .subscribe(responsibles => this.responsibles = responsibles);
     }
 }

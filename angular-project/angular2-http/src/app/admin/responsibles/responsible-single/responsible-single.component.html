@@ -1,7 +1,8 @@
 
   <div *ngIf="responsible">  
-  <a [routerLink]="['/admin/resp', responsible.id, 'edit']" class="btn btn-primary btn-sm">Edit</a>
-  <a (click)="deleteResponsible()" class="btn btn-danger btn-sm">Delete</a>
+  <a [routerLink]="['/admin/resp']" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Lite des responsables</i></a>
+  <a [routerLink]="['/admin/resp', responsible.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
+  <a (click)="deleteResponsible()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
 
   <form>
 

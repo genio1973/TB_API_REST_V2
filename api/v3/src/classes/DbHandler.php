@@ -84,17 +84,17 @@ class DbHandler {
      *                          "id_premier_insert": 33
      *                          }
      */
-     public function createTournament($nom_tournoi, $id_user) {       
+     public function createTournament($nom_tournoi, $id_user, $date_debut) {       
          try {  
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->pdo->beginTransaction();
 
                 // préparation des la requêtes multiple
-                $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
-                                                    VALUES (NULL, :nom, :user)");
-
+                $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`, `date_debut`)
+                                                    VALUES (NULL, :nom, :user, :date_debut)");
                 $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
                 $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
+                $stmt->bindParam(":date_debut", $date_debut, PDO::PARAM_STR);
                 
                 $stmt->execute();
                 
@@ -179,7 +179,7 @@ class DbHandler {
                     $sql.="'$val',";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-                
+
                 // vérifier qu'il y a eu une mise à jour
                 if($this->pdo->exec($sql) == NULL){
                     $res['id_update'] = NULL;
@@ -437,7 +437,7 @@ class DbHandler {
 
 
     /**
-     *Obtention des utilisateurs
+     * Obtention des utilisateurs
      */
     public function getUsers() {
         $stmt = $this->pdo->prepare("SELECT u.id_user, u.email, u.token_expire, u.nom_user, u.prenom_user, u.status, u.id_role, r.droits FROM users u
@@ -450,6 +450,20 @@ class DbHandler {
         return NULL;
     }
 
+
+
+    /**
+    * Obtenir tous les statuts des tournois
+    */
+    public function getAllStatuts() {
+        $stmt = $this->pdo->prepare("SELECT s.id_statut, s.nom_statut FROM statuts s");       
+        if ($stmt->execute()){
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            //$this->pdo = NULL;
+            return $users;
+        }
+        return NULL;
+    }
 
     /**
      * Obtention de la clé API de l'utilisateur
@@ -759,7 +773,7 @@ class DbHandler {
 
                                         UNION
 
-                                        SELECT t.id_tournoi, t._date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                        SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                         u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                         FROM tournois t
                                         INNER JOIN users u ON u.id_user=t.id_user
@@ -1047,7 +1061,10 @@ class DbHandler {
      * Obtention des tournois
      **/
     public function getTournaments() {
-        $stmt = $this->pdo->prepare("SELECT * FROM tournois");       
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi'                                            
+                                    FROM tournois t
+                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  ");
+
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);

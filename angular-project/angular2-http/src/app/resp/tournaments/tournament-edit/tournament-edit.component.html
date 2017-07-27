@@ -1,0 +1,37 @@
+<div *ngIf="tournament">
+  <div>
+  <a [routerLink]="['/responsible/tournaments']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+  </div>
+  <form (ngSubmit)="updateTournament()">
+
+  <div class="form-group">
+      <label>ID</label>
+      <input type="text" class="form-control" name="id" readonly [(ngModel)]="tournament.id">
+  </div>
+
+  <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_tournoi" [(ngModel)]="tournament.nom_tournoi">
+    </div>
+
+    <div class="form-group">
+      <label>Date de référence (date de début)</label>
+      <input type="date" class="form-control" name="date_tournoi" [(ngModel)]="tournament.date_debut">
+    </div>
+
+    <div class="form-group">
+      <label>Statut du tournoi</label>
+      <select class="form-control" name="statut_tournoi" [(ngModel)]="tournament.id_statut">
+          <option *ngFor="let statut of statuts" [value]="statut.id_statut">{{statut.nom_statut}}</option>
+      </select>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <button type="submit" class="btn btn-success">Mettre à jour</button>
+
+  </form>
+
+</div>
+<router-outlet></router-outlet>

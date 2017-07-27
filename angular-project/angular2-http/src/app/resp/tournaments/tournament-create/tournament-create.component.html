@@ -1,0 +1,22 @@
+<div *ngIf="tournament">
+
+  <form (ngSubmit)="createTournament()">
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_tournoi" [(ngModel)]="tournament.nom_tournoi">
+    </div>
+
+    <div class="form-group">
+      <label>Date de référence (date de début)</label>
+      <input type="date" class="form-control" name="date_tournoi" [(ngModel)]="tournament.date_debut">
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <button type="submit" class="btn btn-success">Créer le tournoi</button>
+
+  </form>
+
+</div>
