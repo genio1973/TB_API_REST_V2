@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-            Liste des tournois:<small> Ouverts (statut=2) et clos(=3)</small>
+            <h1>Liste des tournois</h1> <a routerLink="/responsible/tournaments/create" class="btn btn-sm btn-info"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un responsable</i> </a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -13,8 +13,7 @@
                 <tbody>
 
                     <ng-container *ngFor="let tournament of tournaments" >
-                        <!--<tr *ngIf="tournament.id_statut > 1" class="odd gradeX" [routerLink]="['/public/tournaments/', tournament.id] "> -->
-                        <tr class="odd gradeX" [routerLink]="['/public/tournaments/', tournament.id] ">
+                        <tr class="odd gradeX" [routerLink]="['/responsible/tournaments/', tournament.id] ">
                                 <td>{{tournament.id}}</td>
                                 <td>{{tournament.date_debut}}</td>
                                 <td>{{tournament.nom_tournoi}}</td>

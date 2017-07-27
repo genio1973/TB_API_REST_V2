@@ -6,6 +6,7 @@ import { RespComponent } from "./resp.component";
 import { TournamentsComponent } from "./tournaments/tournaments.component";
 import { TournamentSingleComponent } from "./tournaments/tournament-single/tournament-single.component";
 import { TournamentListComponent } from "./tournaments/tournament-list/tournament-list.component";
+import { TournamentCreateComponent } from "./tournaments/tournament-create/tournament-create.component";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { TournamentListComponent } from "./tournaments/tournament-list/tournamen
     TournamentsComponent,
     TournamentSingleComponent,
     TournamentListComponent,
+    TournamentCreateComponent,
   ],
   providers: [
   ]

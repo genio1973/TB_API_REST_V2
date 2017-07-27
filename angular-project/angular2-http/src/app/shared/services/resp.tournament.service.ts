@@ -30,7 +30,7 @@ export class RespTournamentService {
     private headBuilder(): RequestOptions{
         let headers = new Headers();
         let token   = localStorage.getItem('token');
-        let userid   = localStorage.getItem('id_user');
+        let userid   = localStorage.getItem('id_user');        
         
         headers.append('Content-Type', 'application/json');
         headers.append('userid', `${userid}`);
@@ -76,8 +76,30 @@ export class RespTournamentService {
             .catch((e) => this.handleError(e));
     }
 
-    /*
+    /**
+     * Create a new tournament
+     * @param tournament 
+     */
+    createTournament(tournament: Tournament): Observable<Tournament> {
+        console.log(`${this.tournamentUrl}/tournois`, tournament, this.headBuilder());
+        return this.http.post(`${this.tournamentUrl}/tournoi`, tournament, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentCreated(res))
+        .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * The responsible was created. Add this info to our stream
+     * @param tournament 
+     */
+    private tournamentCreated(tournament:Tournament){
+        this.tournamentSource.next("Tournoi a été créé.");
+    }
+
+    /**
     * Convert tournament info from API to our standard
+    * @param tournament 
     */
     private toTournament(tournament): Tournament {
         return {

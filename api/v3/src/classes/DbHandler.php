@@ -84,17 +84,17 @@ class DbHandler {
      *                          "id_premier_insert": 33
      *                          }
      */
-     public function createTournament($nom_tournoi, $id_user) {       
+     public function createTournament($nom_tournoi, $id_user, $date_debut) {       
          try {  
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->pdo->beginTransaction();
 
                 // préparation des la requêtes multiple
-                $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`)
-                                                    VALUES (NULL, :nom, :user)");
-
+                $stmt = $this->pdo->prepare("INSERT INTO `tournois` (`id_tournoi`, `nom_tournoi`, `id_user`, `date_debut`)
+                                                    VALUES (NULL, :nom, :user, :date_debut)");
                 $stmt->bindParam(":nom", $nom_tournoi, PDO::PARAM_STR);   
                 $stmt->bindParam(":user", $id_user, PDO::PARAM_INT);
+                $stmt->bindParam(":date_debut", $date_debut, PDO::PARAM_STR);
                 
                 $stmt->execute();
                 

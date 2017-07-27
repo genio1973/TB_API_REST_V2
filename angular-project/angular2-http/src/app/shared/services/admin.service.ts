@@ -135,6 +135,7 @@ export class AdminService {
     
     /**
      * Create the responsible
+     * @param responsible 
      */
     createResponsible(responsible: Responsible): Observable<Responsible> {
         return this.http.post(`${this.adminUrl}/register`, responsible, this.headBuilder())

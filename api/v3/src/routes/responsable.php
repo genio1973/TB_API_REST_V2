@@ -209,7 +209,9 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             // filtre les champs qu'il faut mettre à jour
-            $fieldsToCheck = array('nom_tournoi');
+            $fieldsToCheck = array("nom_tournoi","date_debut");
+            //return echoRespnse(400, $response, verifyRequiredFields($data, $fieldsToCheck));
+            
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -218,7 +220,7 @@ Routes par défauts : vx/resp/route
             }
 
             $db = new DbHandler();
-            $res = $db->createTournament($data['nom_tournoi'], $id_current_user);
+            $res = $db->createTournament($data['nom_tournoi'], $id_current_user, $data['date_debut']);
             $data = NULL;
             if ($res != NULL) {
                 $data["error"] = false;
