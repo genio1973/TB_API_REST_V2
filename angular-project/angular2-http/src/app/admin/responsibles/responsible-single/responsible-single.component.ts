@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Responsible } from "../../../shared/models/responsible";
-import { ResponsibleService } from "../../../shared/services/responsible.service";
+import { AdminService } from "../../../shared/services/admin.service";
 import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -14,7 +14,7 @@ export class ResponsibleSingleComponent implements OnInit {
     errorMessage = '';
     successMessage = '';
 
-    constructor(private responsibleService:ResponsibleService,
+    constructor(private adminService:AdminService,
                 private router: Router,
                 private route: ActivatedRoute) { }
 
@@ -22,7 +22,7 @@ export class ResponsibleSingleComponent implements OnInit {
       // get the id from the url
       let id = this.route.snapshot.params['id'];
 
-      this.responsibleService
+      this.adminService
         .getResponsible(id)
         .subscribe(responsible => this.responsible = responsible);
     }
@@ -30,7 +30,7 @@ export class ResponsibleSingleComponent implements OnInit {
     deleteResponsible(){
         this.errorMessage = '';
         this.successMessage = '';
-        this.responsibleService.deleteResponsible(this.responsible.id)
+        this.adminService.deleteResponsible(this.responsible.id)
           .subscribe(
             data => {
               this.successMessage = 'User was deleted.';

@@ -759,7 +759,7 @@ class DbHandler {
 
                                         UNION
 
-                                        SELECT t.id_tournoi, t._date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
+                                        SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi',
                                         u.email, u.nom_user, u.prenom_user, u.id_user, u.id_role, r.droits, u.status as 'statut_utilisateur'
                                         FROM tournois t
                                         INNER JOIN users u ON u.id_user=t.id_user
@@ -1047,7 +1047,10 @@ class DbHandler {
      * Obtention des tournois
      **/
     public function getTournaments() {
-        $stmt = $this->pdo->prepare("SELECT * FROM tournois");       
+        $stmt = $this->pdo->prepare("SELECT t.id_tournoi, t.date_debut, t.nom_tournoi, t.id_statut as 'id_statut_tournoi', s.nom_statut as 'statut_tournoi'                                            
+                                    FROM tournois t
+                                    INNER JOIN statuts s ON s.id_statut = t.id_statut  ");
+
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Responsible } from "../../../shared/models/responsible";
-import { ResponsibleService } from "../../../shared/services/responsible.service";
+import { AdminService } from "../../../shared/services/admin.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
@@ -15,7 +15,7 @@ export class ResponsibleEditComponent implements OnInit {
     errorMessage: string = '';
     needPasswordChange: boolean = false;
 
-    constructor(private responsibleService: ResponsibleService,
+    constructor(private adminService: AdminService,
                 private route: ActivatedRoute,
                 private router: Router) { }
 
@@ -23,7 +23,7 @@ export class ResponsibleEditComponent implements OnInit {
       // get the id from the url
       let id = this.route.snapshot.params['id'];
 
-      this.responsibleService
+      this.adminService
           .getResponsible(id)
           .subscribe(responsible=> this.responsible = responsible);
     }
@@ -37,7 +37,7 @@ export class ResponsibleEditComponent implements OnInit {
         if(!this.needPasswordChange){ userEdit = userNoPwd = this.responsible; }
         else { userEdit = this.responsible; }
 
-        this.responsibleService.updateResponsible(userEdit)
+        this.adminService.updateResponsible(userEdit)
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';

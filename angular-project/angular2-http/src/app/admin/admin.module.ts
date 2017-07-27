@@ -35,9 +35,6 @@ import { UserCreateComponent } from "./users/user-create/user-create.component";
     ResponsibleSingleComponent,
     ResponsibleEditComponent
 
-  ],
-  providers: [
-
   ]
 })
 export class AdminModule {}

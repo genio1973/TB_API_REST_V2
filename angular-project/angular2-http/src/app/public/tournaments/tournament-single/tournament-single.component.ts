@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Tournament } from "../../../shared/models/tournament";
-import { TournamentService } from "../../../shared/services/tournament.service";
+import { PublicTournamentService } from "../../../shared/services/public-tournament.service";
 
 @Component({
   selector: 'my-tournament-single',
@@ -12,7 +12,7 @@ export class TournamentSingleComponent implements OnInit {
 
     tournament: Tournament;
 
-    constructor(private tournamentService: TournamentService,
+    constructor(private tournamentService: PublicTournamentService,
                 private router: Router,
                 private route: ActivatedRoute) { }
 

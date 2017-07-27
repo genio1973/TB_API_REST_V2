@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { respRouting } from "./resp.routing";
 import { RespComponent } from "./resp.component";
+import { TournamentsComponent } from "./tournaments/tournaments.component";
+import { TournamentSingleComponent } from "./tournaments/tournament-single/tournament-single.component";
+import { TournamentListComponent } from "./tournaments/tournament-list/tournament-list.component";
 
 
 @NgModule({
@@ -13,6 +16,9 @@ import { RespComponent } from "./resp.component";
   ],
   declarations: [
     RespComponent,
+    TournamentsComponent,
+    TournamentSingleComponent,
+    TournamentListComponent,
   ],
   providers: [
   ]

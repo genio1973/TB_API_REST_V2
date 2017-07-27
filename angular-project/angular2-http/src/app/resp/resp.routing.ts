@@ -2,7 +2,9 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from "../shared/guards/auth-guard.service";
 import { RespComponent } from "./resp.component";
-import { TournamentListComponent } from "../public/tournaments/tournament-list/tournament-list.component";
+import { TournamentsComponent } from "./tournaments/tournaments.component";
+import { TournamentSingleComponent } from "./tournaments/tournament-single/tournament-single.component";
+import { TournamentListComponent } from "./tournaments/tournament-list/tournament-list.component";
 
 
 export const respRoutes: Routes = [
@@ -13,17 +15,17 @@ export const respRoutes: Routes = [
                     { path: '', redirectTo: '/account', pathMatch: 'full' },
                     { 
                         path: 'tournaments',
-                        component: TournamentListComponent,
+                        component: TournamentsComponent,
                         canActivateChild: [AuthGuardService]
-            /*            ,
+                        ,
                         children: [
                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
-                                    { path: 'list',     component: ResponsibleListComponent },
-                                    { path: 'create',   component: ResponsibleCreateComponent },
-                                    { path: ':id',      component: ResponsibleSingleComponent },
-                                    { path: ':id/edit', component: ResponsibleEditComponent }
+                                    { path: 'list',     component: TournamentListComponent },
+                                    //{ path: 'create',   component: TournamentCreateComponent },
+                                    { path: ':id',      component: TournamentSingleComponent },
+                                    //{ path: ':id/edit', component: TournamentEditComponent }
                                 ]
-                                */
+                                
                     },            
                     
                    ]

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Responsible } from "../../shared/models/responsible";
-import { ResponsibleService } from "../../shared/services/responsible.service";
+import { AdminService } from "../../shared/services/admin.service";
 
 @Component({
   selector: 'my-account',
@@ -19,12 +19,12 @@ export class AccountComponent implements OnInit {
     mot_de_passe_confirm: string = '';
     needEmailConfirm: boolean = false;
 
-    constructor(private responsibleService: ResponsibleService,
+    constructor(private adminService: AdminService,
                 private route: ActivatedRoute,
                 private router: Router) { }
 
     ngOnInit() {
-      this.responsibleService
+      this.adminService
           .getAccountInfo()
           .subscribe(responsible => this.responsible = responsible);
     }
@@ -48,7 +48,7 @@ export class AccountComponent implements OnInit {
         if(!this.needPasswordChange){ userEdit = userNoPwd = this.responsible; }
         else { userEdit = this.responsible; }
 
-        this.responsibleService.updatePersonnalAccount(userEdit)
+        this.adminService.updatePersonnalAccount(userEdit)
           .subscribe(
             user => {
               this.successMessage = 'User was updated.';              
