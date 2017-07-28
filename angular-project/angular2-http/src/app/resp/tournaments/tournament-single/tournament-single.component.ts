@@ -9,7 +9,7 @@ import { RespTournamentService } from "../../../shared/services/resp.tournament.
   styleUrls: ['./tournament-single.component.css']
 })
 export class TournamentSingleComponent implements OnInit {
-   tournament: Tournament;
+    tournament: Tournament;
     errorMessage = '';
     successMessage = '';
 

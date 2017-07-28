@@ -1,28 +1,32 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-            <h1>Liste des tournois</h1> <a routerLink="/responsible/tournaments/create" class="btn btn-sm btn-info"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un tournoi</i> </a>
+            <h1>Liste des tournois</h1> <a routerLink="/responsible/tournaments/create" class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un tournoi</i> </a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                     <tr>
-                        <th>id</th><th>Date (réf)</th><th>Nom</th><th>Statut</th><th *ngIf="isLoggedInAsAdmin">Propriétaire</th>
+                        <!--<th>id</th>--><th>Date (réf)</th><th>Nom</th><th>Statut</th><th>Opérations</th><th *ngIf="isLoggedInAsAdmin">Propriétaire</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     <ng-container *ngFor="let tournament of tournaments" >
-                          <tr class="odd gradeX" [routerLink]="['/responsible/tournaments/', tournament.id] ">
-                                <td>{{tournament.id}}</td>
+                          <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournament.id, 'groups'] ">
+                                <!--<td>{{tournament.id}}</td>-->
                                 <td>{{tournament.date_debut}}</td>
                                 <td>{{tournament.nom_tournoi}}</td>
+                                
                                 <ng-container [ngSwitch]="tournament.id_statut">
                                     <td *ngSwitchCase="'1'" class="info">{{tournament.statut_tournoi}}</td>
                                     <td *ngSwitchCase="'2'" class="success">{{tournament.statut_tournoi}}</td>
                                     <td *ngSwitchCase="'3'" class="danger">{{tournament.statut_tournoi}}</td>
                                     <td *ngSwitchDefault  class="warning">{{tournament.statut_tournoi}}</td>
                                 </ng-container>
+                                <td>
+                                    <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm"><i class="fa fa-gears" aria-hidden="true"></i></a>
+                                </td>
                                 <td *ngIf="isLoggedInAsAdmin" [routerLink]="['/admin/resp/', tournament.id_user] "> {{tournament.nom_user}} {{tournament.prenom_user}}</td>
                         </tr>
                     </ng-container>

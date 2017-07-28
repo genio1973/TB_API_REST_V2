@@ -1,8 +1,10 @@
 
   <div *ngIf="tournament">  
-  <a [routerLink]="['/responsible/tournaments']" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Liste des tournois</i></a>
+    <div>
+  <a [routerLink]="['/responsible/tournaments']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Liste des tournois</i></a>
   <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
   <a (click)="deleteTournament()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
+    </div>
 
   <form>
 
@@ -29,5 +31,8 @@
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
+    <div class="form-group full-width">
+      <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm"><i class="fa fa-gears" aria-hidden="true"> Gestion du tournoi</i></a>
+    </div>
   </form>
 </div>
