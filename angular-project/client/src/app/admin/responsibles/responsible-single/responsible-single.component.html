@@ -1,0 +1,43 @@
+
+  <div *ngIf="responsible">  
+  <a [routerLink]="['/admin/resp']" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Lite des responsables</i></a>
+  <a [routerLink]="['/admin/resp', responsible.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
+  <a (click)="deleteResponsible()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
+
+  <form>
+
+    <div class="form-group">
+      <label>ID</label>
+      <input type="text" class="form-control" name="id" readonly [(ngModel)]="responsible.id">
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_user" readonly [(ngModel)]="responsible.nom_user">
+    </div>
+
+    <div class="form-group">
+      <label>Prénom</label>
+      <input type="text" class="form-control" name="prenom_user" readonly [(ngModel)]="responsible.prenom_user">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="texte" class="form-control" name="email" readonly [(ngModel)]="responsible.email">
+    </div>
+
+    <div class="form-group">
+      <label>statut (1: Actif, 0: Désact.)</label>
+      <input type="text" class="form-control" name="status" readonly [(ngModel)]="responsible.status">
+    </div>
+    
+    <div class="form-group">
+      <label>droits (1: Admin, 2: Resp)</label>
+      <input type="text" class="form-control" name="id_role" readonly [(ngModel)]="responsible.id_role">
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  </form>
+</div>

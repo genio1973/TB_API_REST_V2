@@ -1,0 +1,51 @@
+<div *ngIf="responsible">
+  <div>
+  <a [routerLink]="['/admin/resp']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+  </div>
+  <form (ngSubmit)="updateResponsible()">
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_user" [(ngModel)]="responsible.nom_user">
+    </div>
+
+    <div class="form-group">
+      <label>Prénom</label>
+      <input type="text" class="form-control" name="prenom_user" [(ngModel)]="responsible.prenom_user">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" [(ngModel)]="responsible.email">
+    </div>
+
+    <div class="form-group">
+      <label>Statut (1: Actif, 0: Désact.)</label>
+      <input type="text" class="form-control" name="status" [(ngModel)]="responsible.status">
+    </div>
+    
+    <div class="form-group">
+      <label>Droits (1: Admin, 2: Resp)</label>
+      <input type="text" class="form-control" name="id_role" [(ngModel)]="responsible.id_role">
+    </div>
+
+    <div *ngIf="!needPasswordChange" class="form-group"> 
+      <a (click)="togglePasswordChangeButton()" class="btn btn-danger btn-sm">Modifier le mot de passe ?</a>
+    </div>
+    <div *ngIf="needPasswordChange" class="form-group"> 
+      <a (click)="togglePasswordChangeButton()" class="btn btn-info btn-sm">Ne pas modifier le mot de passe ?</a>
+    </div>
+
+    <div *ngIf="needPasswordChange" class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" required name="mot_de_passe" [(ngModel)]="responsible.mot_de_passe">
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <button type="submit" class="btn btn-success">Mettre à jour</button>
+
+  </form>
+
+</div>
