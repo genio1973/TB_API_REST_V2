@@ -59,7 +59,7 @@ export const respRoutes: Routes = [
                                  
                   ]
     },
-    { path: '**', component: NotFoundComponent } 
+   // { path: '**', component: NotFoundComponent } 
 ];
 
 export const respRouting: ModuleWithProviders = RouterModule.forChild(respRoutes);

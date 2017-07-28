@@ -1,0 +1,15 @@
+<div *ngIf="group">  
+    <form (ngSubmit)="updateGroup()">
+
+        <div class="form-group">
+        <label>Nouveau nom du groupe</label>
+        <input type="text" class="form-control" readonly name="nom_groupe" [(ngModel)]="group.nom_groupe">
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        
+        <button type="submit" class="btn btn-success">Vadlider la modification</button>
+
+    </form>
+</div>

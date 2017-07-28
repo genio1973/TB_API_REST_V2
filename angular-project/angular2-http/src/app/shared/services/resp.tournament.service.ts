@@ -205,5 +205,18 @@ export class RespTournamentService {
         .do(res => this.tournamentCreated(res))
         .catch((e) => this.handleError(e));
     }
+    
+
+
+
+    updateGroup(group: Group): Observable<Tournament> {
+        console.log(group);
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/groupe/${group.id_groupe}`, group, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
 
 }

@@ -18,6 +18,8 @@ export class UserListComponent implements OnInit {
       this.userService.getUsers()
           .subscribe(
             users => this.users = users);
+
+           // console.log(`GROUPS OBJECT : ${this.users}`);
             /*
           .subscribe(
             users => {

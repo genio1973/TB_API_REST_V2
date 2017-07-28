@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 
 import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
+import { Group } from "../models/group";
 
 @Injectable()
 export class PublicTournamentService {
@@ -90,13 +91,14 @@ export class PublicTournamentService {
      * Get groups from a tournament
      * @param id identifiant du tournoi 
      */
-    getGroupsTournament(id: number){
+    getGroupsTournament(id: number): Observable<Group[]>{
          return this.http                    
             .get(`${this.tournamentUrl}/tournament/${id}/groupes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));
     }
+
 
     /*
     * Check if error comes from API
