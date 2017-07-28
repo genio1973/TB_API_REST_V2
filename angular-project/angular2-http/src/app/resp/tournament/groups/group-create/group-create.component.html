@@ -1,0 +1,15 @@
+<div *ngIf="groups">  
+    <form (ngSubmit)="createGroup()">
+
+        <div class="form-group">
+        <label>Nom du groupe</label>
+        <input type="text" class="form-control" required name="nom_groupe" [(ngModel)]="groups[0].nom_groupe">
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        
+        <button type="submit" class="btn btn-success">Créer le groupe</button>
+
+    </form>
+</div>

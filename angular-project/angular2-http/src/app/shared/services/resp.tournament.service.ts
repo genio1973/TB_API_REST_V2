@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
 import { TournamentSimple } from "../models/tournament-simple";
+import { Group } from "../models/group";
 
 @Injectable()
 export class RespTournamentService {
@@ -31,7 +32,7 @@ export class RespTournamentService {
     private headBuilder(): RequestOptions{
         let headers = new Headers();
         let token   = localStorage.getItem('token');
-        let userid   = localStorage.getItem('id_user');        
+        let userid   = localStorage.getItem('id_user');
         
         headers.append('Content-Type', 'application/json');
         headers.append('userid', `${userid}`);
@@ -63,6 +64,7 @@ export class RespTournamentService {
             .catch((e) => this.handleError(e));
     }
 
+
     /*
     * Get all Tournament by statut
     */
@@ -93,13 +95,13 @@ export class RespTournamentService {
      * @param tournament 
      */
     createTournament(tournament: Tournament): Observable<Tournament> {
-        console.log(`${this.tournamentUrl}/tournois`, tournament, this.headBuilder());
         return this.http.post(`${this.tournamentUrl}/tournoi`, tournament, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())
         .do(res => this.tournamentCreated(res))
         .catch((e) => this.handleError(e));
     }
+
 
     /**
      * The tournament was created. Add this info to our stream
@@ -189,6 +191,19 @@ export class RespTournamentService {
         this.tournamentSource.next(errMessage);
         return Observable.throw(errMessage);
         // return Observable.throw(err.json().data || 'Server error.');
+    }
+
+    
+    /**
+     * Création de groupes dans un tournoi
+     * @param groups
+     */
+    createGroups(groups: Group[]): Observable<Group> {
+        return this.http.post(`${this.tournamentUrl}/groupes`, groups, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentCreated(res))
+        .catch((e) => this.handleError(e));
     }
 
 }

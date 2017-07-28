@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Tournament } from "../models/tournament";
 
 import { Observable } from "rxjs/Observable";
@@ -22,6 +22,15 @@ export class PublicTournamentService {
 
 
     constructor(private http: Http){}
+
+   /** 
+    * Header preparation, contentType
+    */
+    private headBuilder(): RequestOptions{
+        let headers = new Headers();        
+        headers.append('Content-Type', 'application/json');
+        return new RequestOptions({ headers: headers }); // Create a request option
+    }
 
     /*
     * Get all Tournament by statut
@@ -74,6 +83,19 @@ export class PublicTournamentService {
                 id_statut: tournament.id_statut_tournoi,
                 statut_tournoi: tournament.statut_tournoi,
             };
+    }
+
+
+    /**
+     * Get groups from a tournament
+     * @param id identifiant du tournoi 
+     */
+    getGroupsTournament(id: number){
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournament/${id}/groupes`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .catch((e) => this.handleError(e));
     }
 
     /*
