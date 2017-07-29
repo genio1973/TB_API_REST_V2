@@ -2,7 +2,6 @@
   <div *ngIf="team">  
   
   <a [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
-  <a (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
 
   <form>
 

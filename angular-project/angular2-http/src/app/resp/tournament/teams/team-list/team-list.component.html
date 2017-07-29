@@ -1,17 +1,23 @@
+<div *ngIf="successMessage" class="alert alert-success">{{successMessage}}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 
 <div *ngIf="teams" class="table-responsive">
     <table class="table table-striped table-bordered table-hover">
         <thead>
-            <tr><th>Nom de l'équipe </th><th>niveau</th></tr>
+            <tr><th>Nom</th><th>Niveau</th><ng-container *ngIf="!group"><th>Groupe</th></ng-container></tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let team of teams" >
-              
                 <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe] ">
-                        <td>{{team.nom_equipe}}</td>   <td>{{team.niveau}}</td>                                                           
+                        <td>{{team.nom_equipe}}</td> <td>{{team.niveau}}</td> 
+                        <ng-container *ngIf="!group"><td>{{team.nom_groupe}}</td></ng-container>                                                         
                 </tr>
             </ng-container>
         </tbody>
     </table>
 </div>
+
+
+<a *ngIf="group" [routerLink]="['/responsible/tournament', tournamentId, 'teams', 'create', 'in-group', group.id_groupe]" class="btn btn-success btn-sm"><i class="fa fa-plus-square-o" aria-hidden="true"> Créer une nouvelle équipe</i></a>
+
 

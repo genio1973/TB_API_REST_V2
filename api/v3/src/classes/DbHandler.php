@@ -850,7 +850,7 @@ class DbHandler {
      * @param Int $id_tournoi
      */
     public function getTeamsTournamentById($id_tournoi) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, e.id_equipe, e.nom_equipe, e.niveau, e.nb_pts, g.id_groupe, g.nom_groupe
                                         FROM tournois t
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe

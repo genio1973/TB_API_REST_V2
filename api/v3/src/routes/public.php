@@ -433,6 +433,7 @@ $app->get('/public/tournament/{id}', function (Request $request, Response $respo
             return echoRespnse(200, $response, $data);
         });
 
+
 /* Liste les tournois
 * url - /public/tournaments
 * methode - GET

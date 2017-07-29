@@ -1,8 +1,10 @@
+<div *ngIf="successMessage" class="alert alert-success">{{successMessage}}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 
   <div *ngIf="team">  
   <a (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
 
-  <form (ngSubmit)="updateGroup()">
+  <form (ngSubmit)="updateTeam()">
 
     <div class="form-group">
       <label>ID</label>

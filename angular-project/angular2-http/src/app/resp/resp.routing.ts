@@ -50,7 +50,7 @@ export const respRoutes: Routes = [
                                     {
                                         path: 'groups',
                                         component: GroupsComponent,
-                                        canActivateChild: [AuthGuardService],
+                                        //canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
                                                     { path: 'list',          component: GroupListComponent },
@@ -62,14 +62,15 @@ export const respRoutes: Routes = [
                                     {
                                         path: 'teams',
                                         component: TeamsComponent,
-                                        canActivateChild: [AuthGuardService],
+                                        //canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
-                                                    { path: 'list',          component: TeamListComponent },
-                                                    { path: 'create',        component: TeamCreateComponent },
-                                                    { path: ':idteam',      component: TeamSingleComponent},
-                                                    { path: ':idteam/edit', component: TeamEditComponent},   
-                                                    { path: ':idteam/coachs', component: CoachsComponent},                      
+                                                    { path: 'list',                     component: TeamListComponent },
+                                                    { path: 'create/in-group/:idgroup', component: TeamCreateComponent },
+                                                    { path: 'create',                   component: TeamCreateComponent },
+                                                    { path: ':idteam',                  component: TeamSingleComponent},
+                                                    { path: ':idteam/edit',             component: TeamEditComponent},   
+                                                    { path: ':idteam/coachs',           component: CoachsComponent},                      
                                         ]
                                     }   
                         ]

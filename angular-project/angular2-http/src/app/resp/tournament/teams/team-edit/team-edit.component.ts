@@ -39,12 +39,24 @@ export class TeamEditComponent implements OnInit {
           .subscribe(team => this.team = team);
     }
 
-    deleteTeam(){
 
+    deleteTeam(){
+        this.errorMessage = '';
+        this.successMessage = '';
+        this.respService.deleteTeam(this.team.id_equipe)
+          .subscribe(
+            data => {
+              this.successMessage = 'Equipe supprimée.';
+               this.router.navigate([`/responsible/tournament/${this.tournamentId}/groups/list`]);
+              //console.log('user was deleted');
+            } ,
+            err => {
+              this.errorMessage = err;
+              //console.log(err);
+            });
     }
 
-
-    updateteam(){
+    updateTeam(){
         this.errorMessage = '';
         this.successMessage = '';
         console.log(this.team);
@@ -52,13 +64,11 @@ export class TeamEditComponent implements OnInit {
         this.respService.updateTeam(this.team)
           .subscribe(
             user => {
-              this.successMessage = 'Tournoi a été mis à jour.';
+              this.successMessage = 'Equipe a été mise à jour.';
               this.router.navigate([`/responsible/tournament/${this.tournamentId}/teams/${this.team.id_equipe}`]);
-              //console.log('user was created');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 

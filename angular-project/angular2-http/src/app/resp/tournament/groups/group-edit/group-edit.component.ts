@@ -52,12 +52,9 @@ export class GroupEditComponent implements OnInit {
             user => {
               this.successMessage = 'Tournoi a été mis à jour.';
               this.router.navigate(['/responsible/tournament',  this.tournamentId, 'groups']);
-              //[routerLink]="['/responsible/tournament',  this.tournamentId, 'groups','create'] "
-              //console.log('user was created');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 

@@ -140,6 +140,18 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }
 
+
+    /**
+     * Delete a team
+     * @param id 
+     */
+    deleteTeam(id: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/equipe/${id}`, this.headBuilder())
+        .do(this.checkError)
+        .catch((e) => this.handleError(e));
+    }
+
+
     /*
     /* The tournament was deleted. Add this info to our stream
      */
@@ -170,7 +182,7 @@ export class RespTournamentService {
     private checkError(res : Response) {
         let apiResp : ApiResponse = res.json();
         if(apiResp.error){
-            localStorage.clear();
+            //localStorage.clear();
             throw new Error( apiResp.result || 'Server error.');
         }                
     }    
@@ -206,9 +218,19 @@ export class RespTournamentService {
         .do(res => this.tournamentCreated(res))
         .catch((e) => this.handleError(e));
     }
-    
 
 
+     /**
+     * Création d''équipes
+     * @param teams
+     */
+    createTeams(teams: Team[]): Observable<Team> {
+        return this.http.post(`${this.tournamentUrl}/equipes`, teams, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentCreated(res))
+        .catch((e) => this.handleError(e));
+    }   
 
     /**
      * Mise à jour du groupe
@@ -231,7 +253,7 @@ export class RespTournamentService {
         updateTeam(team: Team): Observable<Tournament> {
         console.log(team);
         // attaching a token
-        return this.http.put(`${this.tournamentUrl}/equipe/${team.id_groupe}`, team, this.headBuilder())
+        return this.http.put(`${this.tournamentUrl}/equipe/${team.id_equipe}`, team, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())
         .do(res => this.tournamentUpdated())
