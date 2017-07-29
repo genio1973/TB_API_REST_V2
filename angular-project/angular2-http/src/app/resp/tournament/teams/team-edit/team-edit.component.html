@@ -1,0 +1,38 @@
+
+  <div *ngIf="team">  
+  <a (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
+
+  <form (ngSubmit)="updateGroup()">
+
+    <div class="form-group">
+      <label>ID</label>
+      <input type="text" class="form-control" name="id" readonly [(ngModel)]="team.id_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_equipe" required [(ngModel)]="team.nom_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Niveau/Catégorie (M15, M16...)</label>
+      <input type="text" class="form-control" name="niveau" [(ngModel)]="team.niveau">
+    </div>
+<!--
+    <div class="form-group">
+      <label>Nbombre de points</label>
+      <input type="texte" class="form-control" name="nb_pts" [(ngModel)]="team.nb_pts">
+    </div>
+-->
+    <div class="form-group">
+      <label>id groupe</label>
+      <input type="text" class="form-control" name="id_groupe" [(ngModel)]="team.id_groupe">
+    </div>
+    
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <button type="submit" class="btn btn-success">Vadlider la modification</button>
+  </form>
+</div>
+

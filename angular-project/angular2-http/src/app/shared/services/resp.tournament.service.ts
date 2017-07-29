@@ -9,6 +9,7 @@ import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
 import { TournamentSimple } from "../models/tournament-simple";
 import { Group } from "../models/group";
+import { Team } from "../models/team";
 
 @Injectable()
 export class RespTournamentService {
@@ -209,10 +210,28 @@ export class RespTournamentService {
 
 
 
-    updateGroup(group: Group): Observable<Tournament> {
-        console.log(group);
+    /**
+     * Mise à jour du groupe
+     * @param group 
+     */
+        updateGroup(group: Group): Observable<Tournament> {
+        //console.log(group);
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/groupe/${group.id_groupe}`, group, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * Mise à jour d'une équipe
+     * @param team 
+     */
+        updateTeam(team: Team): Observable<Tournament> {
+        console.log(team);
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/equipe/${team.id_groupe}`, team, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())
         .do(res => this.tournamentUpdated())

@@ -1,0 +1,39 @@
+
+  <div *ngIf="team">  
+  
+  <a [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
+  <a (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
+
+  <form>
+
+    <div class="form-group">
+      <label>ID</label>
+      <input type="text" class="form-control" name="id" readonly [(ngModel)]="team.id_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_equipe" readonly [(ngModel)]="team.nom_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Niveau/Catégorie (M15, M16...)</label>
+      <input type="text" class="form-control" name="niveau" readonly [(ngModel)]="team.niveau">
+    </div>
+<!--
+    <div class="form-group">
+      <label>Nbombre de points</label>
+      <input type="texte" class="form-control" name="nb_pts" readonly [(ngModel)]="team.nb_pts">
+    </div>
+-->
+    <div class="form-group">
+      <label>id groupe</label>
+      <input type="text" class="form-control" name="id_groupe" readonly [(ngModel)]="team.id_groupe">
+    </div>
+    
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  </form>
+</div>

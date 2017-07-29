@@ -8,8 +8,8 @@ import { Router, ActivatedRoute } from "@angular/router";
   templateUrl: './group-create.component.html',
   styleUrls: ['./group-create.component.css']
 })
-export class GroupCreateComponent implements OnInit {
 
+export class GroupCreateComponent implements OnInit {
 
     groups: Group[] =  [{ id_groupe: null, nom_groupe:'', id_tournoi: 0}];
     tournamentId: number;

@@ -14,6 +14,12 @@ import { NotFoundComponent } from "../not-found/not-found.component";
 import { GroupSingleComponent } from "./tournament/groups/group-single/group-single.component";
 import { GroupEditComponent } from "./tournament/groups/group-edit/group-edit.component";
 import { GroupCreateComponent } from "./tournament/groups/group-create/group-create.component";
+import { CoachsComponent } from "./tournament/teams/coachs/coachs.component";
+import { TeamEditComponent } from "./tournament/teams/team-edit/team-edit.component";
+import { TeamSingleComponent } from "./tournament/teams/team-single/team-single.component";
+import { TeamCreateComponent } from "./tournament/teams/team-create/team-create.component";
+import { TeamListComponent } from "./tournament/teams/team-list/team-list.component";
+import { TeamsComponent } from "./tournament/teams/teams.component";
 
 
 export const respRoutes: Routes = [
@@ -52,7 +58,20 @@ export const respRoutes: Routes = [
                                                     { path: ':idgroup',      component: GroupSingleComponent},
                                                     { path: ':idgroup/edit', component: GroupEditComponent},                         
                                         ]
-                                    }                        
+                                    },                     
+                                    {
+                                        path: 'teams',
+                                        component: TeamsComponent,
+                                        canActivateChild: [AuthGuardService],
+                                        children: [
+                                                    { path: '', redirectTo: 'list', pathMatch: 'full' },
+                                                    { path: 'list',          component: TeamListComponent },
+                                                    { path: 'create',        component: TeamCreateComponent },
+                                                    { path: ':idteam',      component: TeamSingleComponent},
+                                                    { path: ':idteam/edit', component: TeamEditComponent},   
+                                                    { path: ':idteam/coachs', component: CoachsComponent},                      
+                                        ]
+                                    }   
                         ]
                                 
                     },     
