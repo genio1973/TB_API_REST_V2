@@ -42,7 +42,7 @@
           <!-- Admin zone navigation -->
           <ul *ngIf="myRoleEnum.ADMIN >= userConnected.id_role" class="nav" id="main-menu">
             <li>
-                <a routerLink="/admin/users"><i class="fa fa-users fa-2x"></i> Users</a>
+                <a routerLink="/admin/users"><i class="fa fa-user-circle-o fa-2x"></i> Users</a>
             </li>
 
             <li>
@@ -56,7 +56,7 @@
                 <a routerLink="/responsible/tournaments"><i class="fa fa-futbol-o fa-2x"></i> Tournois</a>
             </li>
             <li>
-                <a href="index.php"><i class="fa fa-dashboard fa-2x"></i> Dashboard</a>
+                <a routerLink="/responsible/coachs"><i class="fa fa-users fa-2x"></i> Coachs</a>
             </li>
           </ul>
         </div>

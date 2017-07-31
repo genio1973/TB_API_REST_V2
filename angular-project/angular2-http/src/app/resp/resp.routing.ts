@@ -14,12 +14,16 @@ import { NotFoundComponent } from "../not-found/not-found.component";
 import { GroupSingleComponent } from "./tournament/groups/group-single/group-single.component";
 import { GroupEditComponent } from "./tournament/groups/group-edit/group-edit.component";
 import { GroupCreateComponent } from "./tournament/groups/group-create/group-create.component";
-import { CoachsComponent } from "./tournament/teams/coachs/coachs.component";
 import { TeamEditComponent } from "./tournament/teams/team-edit/team-edit.component";
 import { TeamSingleComponent } from "./tournament/teams/team-single/team-single.component";
 import { TeamCreateComponent } from "./tournament/teams/team-create/team-create.component";
 import { TeamListComponent } from "./tournament/teams/team-list/team-list.component";
 import { TeamsComponent } from "./tournament/teams/teams.component";
+import { CoachEditComponent } from "./coachs/coach-edit/coach-edit.component";
+import { CoachSingleComponent } from "./coachs/coach-single/coach-single.component";
+import { CoachCreateComponent } from "./coachs/coach-create/coach-create.component";
+import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
+import { CoachsComponent } from "./coachs/coachs.component";
 
 
 export const respRoutes: Routes = [
@@ -29,6 +33,18 @@ export const respRoutes: Routes = [
         children: [
                     { path: '', redirectTo: '/account', pathMatch: 'full' },
                     { 
+                        path: 'coachs',
+                        component: CoachsComponent,
+                        canActivateChild: [AuthGuardService],
+                        children: [
+                                    { path: '', redirectTo: 'list', pathMatch: 'full' },
+                                    { path: 'list',     component: CoachListComponent },
+                                    { path: 'create',   component: CoachCreateComponent },
+                                    { path: ':id',      component: CoachSingleComponent},
+                                    { path: ':id/edit', component: CoachEditComponent},                         
+                        ]
+                                
+                    },                    { 
                         path: 'tournaments',
                         component: TournamentsComponent,
                         canActivateChild: [AuthGuardService],

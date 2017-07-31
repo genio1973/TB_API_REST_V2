@@ -12,10 +12,12 @@ class AuthenticateApiKey
     */
 
     private $role;
+    private $role_admin;
 
-    public function __construct($role)
+    public function __construct($role, $role_admin)
     {
         $this->role = $role;
+        $this->role_admin = $role_admin;
     }
 
     public function __invoke($request, $response, $next)
@@ -34,20 +36,17 @@ class AuthenticateApiKey
             //Obtenir l'id
             $id = $headers['HTTP_USERID'][0];
 
-            // Valider la clé API
+            // Valider la clé API pour un responsable
             $res = $db->isValidRoleApiKeyWithID($api_key, $id, $this->role);
-            //$data["error_msg"] = $res;
-            //return echoRespnse(401, $response, $data);
-            if (!$res) {
-                //  Clé API n'est pas présente dans la table des utilisateurs
-                $data['error'] = true;
-                $data['message'] = "401";
-                $data['result'] = "Accès Refusé. Clé APIKEY ($api_key) avec l'id ($id) : invalide";
-                return echoRespnse(401, $response, $data);
-            } else {
-                global $user_id;
-                // Obtenir l'ID utilisateur (clé primaire)
-                $user_id = $db->getUserId($api_key);
+            if (!$res) { //  Clé API n'est pas présente dans la table des utilisateurs
+                $res = $db->isValidRoleApiKeyWithID($api_key, $id, $this->role_admin);
+                 if (!$res) { //  Clé API n'est pas présente dans la table des utilisateurs pour un administrateur
+                    $data['error'] = true;
+                    $data['message'] = "401";
+                    $data['result'] = "Accès Refusé. Clé APIKEY ($api_key) avec l'id ($id) : invalide";
+                    return echoRespnse(401, $response, $data);
+                 }
+
             }
         } else {
             // Clé API est absente dans la en-tête
@@ -57,6 +56,10 @@ class AuthenticateApiKey
             return echoRespnse(400, $response, $data);
         }
 
+/*        global $user_id;
+        // Obtenir l'ID utilisateur (clé primaire)
+        $user_id = $db->getUserId($api_key);
+*/        
         $response = $next($request, $response);
 
         return $response;

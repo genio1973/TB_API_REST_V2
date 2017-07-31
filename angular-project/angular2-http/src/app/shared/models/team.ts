@@ -7,4 +7,5 @@ export class Team{
     nom_tournoi?: string;
     date_debut?: Date;
     nom_groupe?: string;
+    id_personne?: number;
 }

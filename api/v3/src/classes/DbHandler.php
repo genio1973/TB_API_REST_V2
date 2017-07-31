@@ -179,13 +179,12 @@ class DbHandler {
                     $sql.="'$val',";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
-
+                
                 // vérifier qu'il y a eu une mise à jour
-                if($this->pdo->exec($sql) == NULL){
+                if($this->pdo->exec($sql) === NULL){
                     $res['id_update'] = NULL;
                     throw new Exception("ID not found");
                 }
-
                 // enregistrement des requêtes
                 $this->pdo->commit();
                 $res['id_update'] = $id;
@@ -215,6 +214,24 @@ class DbHandler {
             return NULL;
     }
 
+    /**
+     * Obtnenir les détails d'enregistrements d'une table, pement de n'avoir qu'une seule méthode.
+     * @param String : nom de la table pour les nouveaux enregistrements
+     * @param Array : tableau des champs $ récupérer
+     * @param String : CLAUSE tel que "WHERE id LIKE 3"
+     * @return resultat ou NULL
+     */
+     public function getDetailsByClause($table, $fields, $clause) {
+            // préparation des la requêtes multiple
+            $sql = "SELECT $fields FROM $table $clause";
+
+            $stmt = $this->pdo->prepare($sql);
+            if ($stmt->execute()){
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
+            }
+            return NULL;
+    }
 
     /**
      * Suppression d'un enregistrement
@@ -592,11 +609,8 @@ class DbHandler {
      */
     public function isPeopleOwner($id_current_user, $id_personne) {
         $stmt = $this->pdo->prepare("SELECT p.id_personne 
-                                        FROM users u
-                                        INNER JOIN tournois t ON t.id_user = u.id_user
-                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
-                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
-                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
+                                        FROM personnes p
+                                        INNER JOIN users u ON p.id_user = u.id_user
                                         WHERE u.id_user = :id_user AND p.id_personne = :id_personne");
         $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
         $stmt->bindParam(":id_personne", $id_personne, PDO::PARAM_INT);
@@ -828,7 +842,7 @@ class DbHandler {
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
+                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
                                         WHERE t.id_tournoi LIKE :id_tournoi
                                         AND t.id_user = :id_user");
                                    
@@ -850,7 +864,7 @@ class DbHandler {
      * @param Int $id_tournoi
      */
     public function getTeamsTournamentById($id_tournoi) {
-        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, e.id_equipe, e.nom_equipe, e.niveau, e.nb_pts, g.id_groupe, g.nom_groupe
+        $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, e.id_equipe, e.nom_equipe, e.niveau, e.nb_pts, e.id_personne, g.id_groupe, g.nom_groupe
                                         FROM tournois t
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
@@ -871,12 +885,12 @@ class DbHandler {
      */
     public function getTeamsByGroupById($id_groupe) {
         $stmt = $this->pdo->prepare("SELECT t.nom_tournoi, t.date_debut, u.id_user,u.nom_user, e.id_equipe, e.nom_equipe, g.id_groupe, g.nom_groupe,
-                                        p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays 
+                                        p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays, p.id_user 
                                         FROM users u
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
+                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
                                         WHERE g.id_groupe LIKE :id_groupe");
                                    
         $stmt->bindParam(":id_groupe", $id_groupe, PDO::PARAM_INT);
@@ -902,7 +916,7 @@ class DbHandler {
                                         INNER JOIN tournois t ON t.id_user = u.id_user
                                         INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
                                         INNER JOIN equipes e ON g.id_groupe = e.id_groupe
-                                        INNER JOIN personnes p ON p.id_equipe = e.id_equipe
+                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
                                         WHERE t.id_tournoi LIKE :id_tournoi                                        
                                         AND t.id_user LIKE :id_user
                                         AND g.id_groupe LIKE :id_groupe");

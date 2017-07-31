@@ -59,6 +59,73 @@ Routes par défauts : vx/resp/route
             return echoRespnse(200, $response, $data);
         });
 
+        /* Liste des équipes coachées par une personne
+        * url - /resp/personne/{id_tournoi}/equipes
+        * methode - GET
+        */
+        $app->get('/personne/{id_personne}/equipes', function (Request $request, Response $response) {
+            $headers = $request->getHeaders();            
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id_personne');
+
+            $db = new DbHandler();
+            $res = $db->isPeopleOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
+            }
+
+            // Préparation de la requête
+            $table = 'equipes';
+            $fields = '*';
+            $clause = 'WHERE id_personne LIKE ' . $id;
+            $res = $db->getDetailsByClause($table, $fields, $clause);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+        /* Liste des personnes du responsable en cours
+        * url - /resp/personne/{id_tournoi}/equipes
+        * methode - GET
+        */
+        $app->get('/personnes', function (Request $request, Response $response) {
+            $headers = $request->getHeaders();            
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $db = new DbHandler();
+            // Préparation de la requête
+            $table = 'personnes';
+            $fields = '*';
+            $clause = 'WHERE id_user LIKE ' . $id_current_user;
+            $res = $db->getDetailsByClause($table, $fields, $clause);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
 
 
         /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
@@ -67,9 +134,7 @@ Routes par défauts : vx/resp/route
         * methode - GET
         */
         $app->get('/tournaments', function (Request $request, Response $response)  {
-            // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
+
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
 
@@ -326,26 +391,22 @@ Routes par défauts : vx/resp/route
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
 
+            // pour chaque personne ajouter l'utilisateur qui en sera le propriétaire
+            foreach($data as $p){
+                $p['id_user'] = $id_current_user;
+                $dataNew[] = $p;
+            }
+            $data = $dataNew;
+            
             // Contrôle que les champs soient cohérents
-            $fieldsToCheck = array("prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays", "id_equipe");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            $fieldsToCheck = array("prenom", "nom", "courriel", "tel", "tel_mobile", "adresse", "localite", "pays", "id_user");
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
-                $resultat['message'] = "400";
+                $resultat['message'] = "402";
                 $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
-                return echoRespnse(400, $response, $resultat);
+                return echoRespnse(402, $response, $resultat);
             }
-
             $db = new DbHandler();
-            // permission pour ajouter dans des personnes avec les équipes des groupes lui appartenant
-            foreach($data as $personne){
-                if( !$db->isTeamOwner($id_current_user, $personne['id_equipe']) ){
-                    $resultat['error'] = TRUE;
-                    $resultat['message'] = "400";
-                    $resultat["result"] = "Permission refusée pour votre identitifant. Au moins une équipe mentionnées ne correspond pas au numéro de groupe !";
-                    return echoRespnse(400, $response, $resultat);
-                }
-            }
-
             //$res = $db->createPersons($data);
             $res = $db->createMultiple('personnes', $data);
             $data=NULL;
@@ -391,7 +452,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("niveau","nom_equipe","id_groupe");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] =  "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
@@ -456,7 +517,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("nom_groupe","id_tournoi");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
@@ -521,7 +582,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("nom_terrain");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
@@ -587,7 +648,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("date_match","heure","id_user_dirige","id_terrain","id_equipe_home","id_equipe_visiteur","id_equipe_arbitre");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
@@ -653,7 +714,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("score_home","score_visiteur","id_match");
-            if(!verifyRequiredFields($data, $fieldsToCheck) ){
+            if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
                 $resultat["result"] = "Contrôllez les noms des champs. S'il vous plaît essayer à nouveau";
@@ -1230,9 +1291,9 @@ Routes par défauts : vx/resp/route
             }
 
             // filtre les champs qu'il faut mettre à jour
-            $fieldsToCheck = array("prenom","nom","courriel","tel","tel_mobile","adresse","localite","Pays","id_equipe");
+            $fieldsToCheck = array("prenom","nom","courriel","tel","tel_mobile","adresse","localite","pays","id_user");
             $arrayFields = filterRequiredFields($data, $fieldsToCheck);
-
+/*
             // vérifie que l'id_equipe corresponde à un équipe de propriété de l'utilisateur courant
             if(isset($data['id_equipe'])){
                 $res = $db->isTeamOwner($id_current_user, $data['id_equipe']); // Vérifie que l'utilisateur courant est le propriétaire
@@ -1243,9 +1304,10 @@ Routes par défauts : vx/resp/route
                     return echoRespnse(400, $response, $resultat);
                 }
             }
-
+*/
             //$res = $fieldsToCheck;
             $res = $db->updateByID('personnes', $arrayFields, $id);
+            //return echoRespnse(400, $response, $res);
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;

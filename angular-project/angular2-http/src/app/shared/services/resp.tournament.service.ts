@@ -10,6 +10,7 @@ import { Subject } from "rxjs/Subject";
 import { TournamentSimple } from "../models/tournament-simple";
 import { Group } from "../models/group";
 import { Team } from "../models/team";
+import { Coach } from "../models/coach";
 
 @Injectable()
 export class RespTournamentService {
@@ -39,6 +40,32 @@ export class RespTournamentService {
         headers.append('userid', `${userid}`);
         headers.append('APIKEY', `${token}`);
         return new RequestOptions({ headers: headers }); // Create a request option
+    }
+
+
+    /**
+     * Get coaches managed ba this responsible
+     */
+    getCoachs(): Observable<Coach[]>{
+
+         return this.http                    
+            .get(`${this.tournamentUrl}/personnes`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * Get teams'coach
+     * @param coach id du coach
+     */
+        getTeamsByCoach(id: number): Observable<Team[]>{
+
+         return this.http                    
+            .get(`${this.tournamentUrl}/personne/${id}/equipes`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .catch((e) => this.handleError(e));
     }
 
     /*
@@ -112,9 +139,28 @@ export class RespTournamentService {
         this.tournamentSource.next("Tournoi a été créé.");
     }
 
-    updateTournament(tournament: Tournament): Observable<Tournament> {
+    /**
+     * Update tournament
+     * @param tournament 
+     */
+        updateTournament(tournament: Tournament): Observable<Tournament> {
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/tournoi/${tournament.id}`, tournament, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
+
+    
+    /**
+     * Update coach
+     * @param coach 
+     */
+        updateCoach(coach: Coach): Observable<Coach> {
+            console.log(coach);
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/personne/${coach.id_personne}`, coach, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())
         .do(res => this.tournamentUpdated())
@@ -147,6 +193,16 @@ export class RespTournamentService {
      */
     deleteTeam(id: number) : Observable<any>{
         return this.http.delete(`${this.tournamentUrl}/equipe/${id}`, this.headBuilder())
+        .do(this.checkError)
+        .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * Delete a coach
+     * @param id 
+     */
+    deleteCoach(id: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/personne/${id}`, this.headBuilder())
         .do(this.checkError)
         .catch((e) => this.handleError(e));
     }
@@ -219,10 +275,9 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }
 
-
      /**
      * Création d''équipes
-     * @param teams
+     * @param teams : tableau d'équipes
      */
     createTeams(teams: Team[]): Observable<Team> {
         return this.http.post(`${this.tournamentUrl}/equipes`, teams, this.headBuilder())
@@ -232,12 +287,24 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }   
 
+    
+    /**
+     * Création de personnes (coach)
+     * @param coachs : tableau des personnes
+     */
+    createCoachs(coachs: Coach[]): Observable<Coach> {
+        return this.http.post(`${this.tournamentUrl}/personnes`, coachs, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentCreated(res))
+        .catch((e) => this.handleError(e));
+    }  
+
     /**
      * Mise à jour du groupe
      * @param group 
      */
         updateGroup(group: Group): Observable<Tournament> {
-        //console.log(group);
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/groupe/${group.id_groupe}`, group, this.headBuilder())
         .do(this.checkError)
@@ -251,7 +318,6 @@ export class RespTournamentService {
      * @param team 
      */
         updateTeam(team: Team): Observable<Tournament> {
-        console.log(team);
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/equipe/${team.id_equipe}`, team, this.headBuilder())
         .do(this.checkError)

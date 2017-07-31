@@ -34,7 +34,9 @@ export class TeamListComponent implements OnInit {
             .getTournamentTeams(this.tournamentId)
             .subscribe(teams => {
               //this.teams = teams;
-              this.teams = teams.filter(t => t.id_groupe == this.group.id_groupe);
+              if(teams){
+                this.teams = teams.filter(t => t.id_groupe == this.group.id_groupe);
+                }
               },
               err => {
                 this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;

@@ -143,7 +143,7 @@ export class PublicTournamentService {
 
 
     /**
-     * Get teams from a group
+     * Get team from a group
      * @param id identifiant du groupe 
      */
     getTeam(id: number): Observable<Team>{

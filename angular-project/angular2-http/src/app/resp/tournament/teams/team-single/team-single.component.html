@@ -27,9 +27,14 @@
 -->
     <div class="form-group">
       <label>id groupe</label>
-      <input type="text" class="form-control" name="id_groupe" readonly [(ngModel)]="team.id_groupe">
+      <input type="text" class="form-control" name="id_groupe" readonly value="{{group.nom_groupe}}" >
     </div>
     
+    <div *ngIf="groups" class="form-group">
+      <select class="form-control" name="statut_tournoi" [(ngModel)]="teams[0].id_groupe">
+          <option *ngFor="let group of groups" [value]="group.id_groupe">{{group.nom_groupe}}</option>
+      </select>
+    </div>    
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
