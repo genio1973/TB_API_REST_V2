@@ -451,7 +451,7 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             // Contrôle que les champs soient cohérents
-            $fieldsToCheck = array("niveau","nom_equipe","id_groupe");
+            $fieldsToCheck = array("niveau", "nb_pts", "nom_equipe","id_groupe", "id_personne");
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -1358,7 +1358,7 @@ Routes par défauts : vx/resp/route
             }
 
             // filtre les champs qu'il faut mettre à jour
-            $fieldsToCheck = array("nom_equipe","nb_pts","niveau","id_groupe");
+            $fieldsToCheck = array("nom_equipe", "nb_pts", "niveau", "id_groupe", "id_personne");
             $arrayFields = filterRequiredFields($data, $fieldsToCheck);
 
             //$res = $fieldsToCheck;

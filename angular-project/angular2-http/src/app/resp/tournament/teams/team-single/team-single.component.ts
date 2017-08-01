@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Team } from "../../../../shared/models/team";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { Router, ActivatedRoute } from "@angular/router";
+import { RespTournamentService } from "../../../../shared/services/resp.tournament.service";
+import { Coach } from "../../../../shared/models/coach";
+import { Group } from "../../../../shared/models/group";
 
 @Component({
   selector: 'my-team-single',
@@ -13,11 +16,16 @@ export class TeamSingleComponent implements OnInit {
     team: Team;
     teamId: number;
     tournamentId: number;
+    coachs: Coach[];
+    coach: Coach;
+    group: Group;
+    groups: Group[];
 
     errorMessage = '';
     successMessage = '';
 
     constructor(private service: PublicTournamentService,
+                private respService: RespTournamentService,
                 private router: Router,
                 private route: ActivatedRoute) { }
 
@@ -32,7 +40,24 @@ export class TeamSingleComponent implements OnInit {
 
     this.service
       .getTeam(this.teamId)
-      .subscribe( team => { this.team = team; console.log("Team : " + this.team.nom_equipe);} );       
+      .subscribe(team => this.team = team);       
+
+    this.respService
+        .getCoachs()
+        .subscribe(coachs => {
+          this.coachs = coachs;
+          this.coach = coachs.find(c => c.id_personne == this.team.id_personne);
+         } ); 
+
+      this.service
+      .getGroupsTournament(this.tournamentId)
+      .subscribe(groups => {
+        this.groups = groups;
+        this.group = groups.find( g => g.id_groupe == this.team.id_groupe)
+      }); 
+
+
     }
+    
     
 }

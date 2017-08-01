@@ -26,11 +26,19 @@
       <input type="texte" class="form-control" name="nb_pts" [(ngModel)]="team.nb_pts">
     </div>
 -->
-    <div class="form-group">
-      <label>id groupe</label>
-      <input type="text" class="form-control" name="id_groupe" [(ngModel)]="team.id_groupe">
+    <div *ngIf="groups" class="form-group">
+      <label>Groupe</label>
+      <select class="form-control" name="statut_tournoi" [(ngModel)]="team.id_groupe">
+          <option *ngFor="let g of groups" [value]="g.id_groupe">{{g.nom_groupe}}</option>
+      </select>
     </div>
     
+    <div *ngIf="coachs" class="form-group">
+      <label>Coach</label>
+      <select class="form-control" name="id_personne" [(ngModel)]="team.id_personne" >
+          <option *ngFor="let c of coachs" [ngValue]="c.id_personne">{{c.nom}} {{c.prenom}}</option>
+      </select>
+    </div> 
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

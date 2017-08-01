@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
           let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/responsible/tournaments';
 
           this.router.navigate([redirect]);
-          console.log(data); 
+          //console.log(data); 
         },
         err => {
           this.errorMessage = err;
