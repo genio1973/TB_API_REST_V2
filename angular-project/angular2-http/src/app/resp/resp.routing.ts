@@ -62,7 +62,8 @@ export const respRoutes: Routes = [
                         component: TournamentComponent,
                         canActivateChild: [AuthGuardService],
                         children: [
-                                    { path: '', redirectTo: 'groups', pathMatch: 'full' },
+                                    //{ path: '', redirectTo: 'groups', pathMatch: 'full' },
+                                    { path: 'coachs/list', component: CoachListComponent },
                                     {
                                         path: 'groups',
                                         component: GroupsComponent,

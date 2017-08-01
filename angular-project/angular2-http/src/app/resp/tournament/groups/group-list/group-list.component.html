@@ -1,25 +1,33 @@
-<div class="panel-heading">
-   <h3>Groupe(s)</h3>
-   <a [routerLink]="['/responsible/tournament', tournamentId, 'groups','create'] " class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un groupe</i> </a>
-</div>
-<hr/>
-
-<div *ngIf="groups" class="table-responsive">
-    <ng-container *ngFor="let group of groups" >
-        <div class="row">
-            <div class="col-sm-12">
-            <!--   Groupe -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <a [routerLink]="['/responsible/tournament', tournamentId, 'groups', group.id_groupe,'edit'] " class="btn btn-sm btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{group.nom_groupe}} 
-                    </div>
-                    <div class="panel-body">    
-                        <my-team-list [tournamentId]="tournamentId" [group]="group"></my-team-list>
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Groupe(s)</h1> <a [routerLink]="['/responsible/tournament', tournamentId, 'groups','create'] " class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un groupe</i> </a>
+    </div>
+    <div class="panel-body">
+        <div *ngIf="groups" class="table-responsive">
+            <ng-container *ngFor="let group of groups" >
+                <div class="row">
+                    <div class="col-sm-12">
+                    <!--   Groupe -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a [routerLink]="['/responsible/tournament', tournamentId, 'groups', group.id_groupe,'edit'] " class="btn btn-sm btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{group.nom_groupe}} 
+                            </div>
+                            <div class="panel-body">    
+                                <my-team-list [tournamentId]="tournamentId" [group]="group"></my-team-list>
+                            </div>
+                        </div>
+                        <!-- End  Groupe -->
                     </div>
                 </div>
-                <!-- End  Groupe -->
-            </div>
+            </ng-container>
+            
         </div>
-    </ng-container>
-    
+    </div>
 </div>
+
+
+
+
+
+
+

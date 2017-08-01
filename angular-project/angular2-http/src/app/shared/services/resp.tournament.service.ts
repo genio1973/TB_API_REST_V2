@@ -59,10 +59,22 @@ export class RespTournamentService {
      * Get teams'coach
      * @param coach id du coach
      */
-        getTeamsByCoach(id: number): Observable<Team[]>{
+    getTeamsByCoach(id: number): Observable<Team[]>{
 
          return this.http                    
             .get(`${this.tournamentUrl}/personne/${id}/equipes`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * Get teams from a tournament with coach details
+     * @param id_tournament identifiant du groupe 
+     */
+    getTournamentTeams(id_tournament: number): Observable<Team[]>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournament/${id_tournament}/equipes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));

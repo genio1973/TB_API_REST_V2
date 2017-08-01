@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                     <ng-container *ngFor="let tournament of tournaments" >
-                          <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournament.id, 'groups'] ">
+                          <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournament.id] ">
                                 <!--<td>{{tournament.id}}</td>-->
                                 <td>{{tournament.date_debut}}</td>
                                 <td>{{tournament.nom_tournoi}}</td>

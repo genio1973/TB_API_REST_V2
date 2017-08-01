@@ -3,6 +3,8 @@ import { Group } from "../../../../shared/models/group";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { Team } from "../../../../shared/models/team";
+import { RespTournamentService } from "../../../../shared/services/resp.tournament.service";
+import { Coach } from "../../../../shared/models/coach";
 
 @Component({
   selector: 'my-team-list',
@@ -16,8 +18,11 @@ export class TeamListComponent implements OnInit {
     errorMessage = '';
     successMessage = '';
     teams: Team[];  
+    coachs: Coach[];
+    groups: Group[];
 
     constructor( private service: PublicTournamentService,
+                 private respService: RespTournamentService,
                  private router: Router,
                  private route: ActivatedRoute ){}
 
@@ -28,41 +33,45 @@ export class TeamListComponent implements OnInit {
         this.tournamentId = params['idtournoi'];
       });
 
-      if(this.group){
-        this.service
-            //.getTeamsGroup(this.group.id_groupe)
-            .getTournamentTeams(this.tournamentId)
-            .subscribe(teams => {
-              //this.teams = teams;
-              if(teams){
-                this.teams = teams.filter(t => t.id_groupe == this.group.id_groupe);
-                }
-              },
-              err => {
-                this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;
-              });
-      }
-      else{
-        this.service
-            .getTournamentTeams(this.tournamentId)
-            .subscribe(teams => {
-                this.teams = teams;
-              },
-              err => {
-                this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;
-              });
+      if(this.group) {
+        this.getTeamsInGroupInfo();
+      } else {
+        this.getAllTeamsInfo();
       }
     }
-          
-  /**
-   * Clear all messages after 5 sec
-   */
-  clearMessages(){
-    
-    setTimeout(() => {
-      this.errorMessage = '';
-      this.successMessage = '';  
-    }, 5000);
+
+         
+    private getTeamsInGroupInfo(){
+      this.service
+      //.getTeamsGroup(this.group.id_groupe)
+      .getTournamentTeams(this.tournamentId)
+      .subscribe(teams => {
+        //this.teams = teams;
+        if(teams){
+          this.teams = teams.filter(t => t.id_groupe == this.group.id_groupe);
+          }
+        },
+        err => {
+          this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;
+        });
+    }
+
+
+  private getAllTeamsInfo(){
+      this.service
+          .getTournamentTeams(this.tournamentId)
+          .subscribe(teams => this.teams = teams,
+            err => {
+              this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;
+            });
+      
+        this.respService
+          .getCoachs()
+          .subscribe(coachs => this.coachs = coachs); 
+
+        this.service
+        .getGroupsTournament(this.tournamentId)
+        .subscribe(groups => this.groups = groups); 
   }
 }
 

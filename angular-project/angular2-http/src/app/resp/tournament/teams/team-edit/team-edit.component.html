@@ -28,7 +28,7 @@
 -->
     <div *ngIf="groups" class="form-group">
       <label>Groupe</label>
-      <select class="form-control" name="statut_tournoi" [(ngModel)]="team.id_groupe">
+      <select class="form-control" name="id_groupe" [(ngModel)]="team.id_groupe">
           <option *ngFor="let g of groups" [value]="g.id_groupe">{{g.nom_groupe}}</option>
       </select>
     </div>

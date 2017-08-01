@@ -1,33 +1,56 @@
-<!--
-<a routerLink="/responsible/tournament/', tournament.id,'/groups" class="btn btn-sm btn-info">Créer un groupe</a>
--->
-<h1>Tournoi</h1>
-<div *ngIf="tournament" class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Date (réf)</th><th>Nom</th><th>Statut</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="odd gradeX" [routerLink]="['/responsible/tournaments', tournament.id, 'edit']">
-                        <td>{{tournament.date_debut}}</td>
-                        <td>{{tournament.nom_tournoi}} {{tournament.id_statut}}</td>
-                        
-                        <ng-container [ngSwitch]="tournament.id_statut">
-                            <td *ngSwitchCase="'1'" class="info">{{tournament.statut_tournoi}}</td>
-                            <td *ngSwitchCase="'2'" class="success">{{tournament.statut_tournoi}}</td>
-                            <td *ngSwitchCase="'3'" class="danger">{{tournament.statut_tournoi}}</td>
-                            <td *ngSwitchDefault  class="warning"> ??</td>
-                        </ng-container>
-                    </tr>
-                </tbody>
-            </table>
+<div *ngIf="tournament">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+        <ul class="nav navbar-nav">
+            <li><a [routerLink]="['/responsible/tournament', tournament.id, 'teams', 'list']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Equipes</a></li>
+            <li><a [routerLink]="['/responsible/tournament', tournament.id, 'groups', 'list']" routerLinkActive="active" >Groupes</a></li>
+            <li><a [routerLink]="['/responsible/tournament', tournament.id, 'coachs', 'list']" routerLinkActive="active" >Coachs</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a routerLink="/responsible/tournaments">Tournois</a></li>
+        </ul>
         </div>
-        
-    </div>     
-     
+    </nav>
+
+
+<!-- Tournament info -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+            Information générales
+    </div>
+    <div class="panel-body">
+        <div *ngIf="tournament" class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date (réf)</th><th>Nom</th><th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd gradeX" [routerLink]="['/responsible/tournaments', tournament.id, 'edit']">
+                            <td>{{tournament.date_debut}}</td>
+                            <td>{{tournament.nom_tournoi}} {{tournament.id_statut}}</td>
+                            
+                            <ng-container [ngSwitch]="tournament.id_statut">
+                                <td *ngSwitchCase="'1'" class="info">{{tournament.statut_tournoi}}</td>
+                                <td *ngSwitchCase="'2'" class="success">{{tournament.statut_tournoi}}</td>
+                                <td *ngSwitchCase="'3'" class="danger">{{tournament.statut_tournoi}}</td>
+                                <td *ngSwitchDefault  class="warning"> ??</td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> 
+    </div>
+</div>
+<!--End Tournament info -->
+</div>
+
+
 
 <!-- <my-groups></my-groups> -->
 <!-- <my-teams></my-teams> -->

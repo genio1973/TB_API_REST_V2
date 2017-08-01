@@ -845,9 +845,6 @@ class DbHandler {
                                         INNER JOIN personnes p ON p.id_personne = e.id_personne
                                         WHERE t.id_tournoi LIKE :id_tournoi
                                         AND t.id_user = :id_user");
-                                   
-
-
 
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
@@ -859,6 +856,36 @@ class DbHandler {
         }
         return NULL;
     }
+
+
+    
+    /**
+     * Obtention des personnes ayant la responsabilité d'une équipe du tournoi : id de l'utislisateur et de l'id du tournoi
+     * @param Int $id_current_user
+     * @param Int $id_tournoi
+     */
+    public function getPeopleTournamentById($id_user, $id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT p.id_personne, p.nom, p.prenom, p.courriel, p.tel, p.tel_mobile, p.adresse, p.localite, p.pays
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        INNER JOIN personnes p ON p.id_personne = e.id_personne
+                                        WHERE t.id_tournoi LIKE :id_tournoi
+                                        AND t.id_user = :id_user");
+
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+        $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            //$this->pdo = NULL;
+            return $response;
+        }
+        return NULL;
+    }
+
+
     /**
      *Obtention d'un tournoi par id de l'utislisateur et de l'id du tournoi
      * @param Int $id_tournoi

@@ -203,8 +203,6 @@ Routes par défauts : vx/resp/route
         */
         $app->get('/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
             // Obtenir les en-têtes de requêtes
-            // Nullement besoin de test la présence, car cela est fait précédement
-            // en vérifiant l'authentifcation sur la route du group responsable
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
 
@@ -227,6 +225,34 @@ Routes par défauts : vx/resp/route
             return echoRespnse(200, $response, $data);
         });
 
+       /** Liste des personnes coachant une équipe dans un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
+        * url - /resp/tournament/{id_tournoi}/personnes
+        * headears - content id_user and API_KEY
+        * methode - GET
+        */
+        $app->get('/tournament/{id_tournoi}/personnes', function (Request $request, Response $response) {
+            // Obtenir les en-têtes de requêtes
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+
+            $id_tournoi = $request->getAttribute('id_tournoi');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getPeopleTournamentById($id_current_user, $id_tournoi);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
         
 
         /* Liste des équipes dans un groupe appartenant 
