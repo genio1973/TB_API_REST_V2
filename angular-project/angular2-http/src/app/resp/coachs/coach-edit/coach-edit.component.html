@@ -1,0 +1,55 @@
+<div *ngIf="coach">
+  <div>
+  <a [routerLink]="['/responsible/coachs']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+  <a (click)="deleteCoach()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer ce coach</i></a>
+  </div>
+  <form (ngSubmit)="updateCoach()">
+
+    <div class="form-group">
+      <label>Prénom</label>
+      <input type="text" class="form-control" name="prenom" [(ngModel)]="coach.prenom">
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom" [(ngModel)]="coach.nom">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" name="courriel" [(ngModel)]="coach.courriel">
+    </div>
+
+    <div class="form-group">
+      <label>Téléphone fixe</label>
+      <input type="text" class="form-control" name="tel" [(ngModel)]="coach.tel">
+    </div>
+    
+    <div class="form-group">
+      <label>Téléphone portable</label>
+      <input type="text" class="form-control" name="tel_mobile" [(ngModel)]="coach.tel_mobile">
+    </div>
+
+    <div class="form-group">
+      <label>Rue</label>
+      <input type="text" class="form-control" name="adresse" [(ngModel)]="coach.adresse">
+    </div>
+
+    <div class="form-group">
+      <label>Localité</label>
+      <input type="text" class="form-control" name="localite" [(ngModel)]="coach.localite">
+    </div>
+
+    <div class="form-group">
+      <label>Pays</label>
+      <input type="text" class="form-control" name="pays" [(ngModel)]="coach.pays">
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <button type="submit" class="btn btn-success">Mettre à jour</button>
+
+  </form>
+
+</div>

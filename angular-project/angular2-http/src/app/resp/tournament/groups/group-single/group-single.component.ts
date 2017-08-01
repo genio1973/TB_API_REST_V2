@@ -25,9 +25,8 @@ export class GroupSingleComponent implements OnInit {
       
       let tournamentId = 0;
       
-      // get the id from the url
+      // get the id's from the url
       this.id_groupe = this.route.snapshot.params['idgroup'];
-      // get the id from the url
       this.route.pathFromRoot[2].params.subscribe(params => {
         this.tournamentId = params['idtournoi'];
       });

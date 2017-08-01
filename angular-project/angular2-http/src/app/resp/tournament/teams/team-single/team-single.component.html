@@ -1,0 +1,47 @@
+
+  <div *ngIf="team">  
+  
+  <a [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"> Modifier</i></a>
+
+  <form>
+
+    <div class="form-group">
+      <label>ID</label>
+      <input type="text" class="form-control" name="id" readonly [(ngModel)]="team.id_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" class="form-control" name="nom_equipe" readonly [(ngModel)]="team.nom_equipe">
+    </div>
+
+    <div class="form-group">
+      <label>Niveau/Catégorie (M15, M16...)</label>
+      <input type="text" class="form-control" name="niveau" readonly [(ngModel)]="team.niveau">
+    </div>
+<!--
+    <div class="form-group">
+      <label>Nbombre de points</label>
+      <input type="texte" class="form-control" name="nb_pts" readonly [(ngModel)]="team.nb_pts">
+    </div>
+-->
+    
+    <div *ngIf="groups" class="form-group">
+      <label>Groupe</label>
+      <select class="form-control" name="statut_tournoi" readonly [(ngModel)]="team.id_groupe">
+          <option *ngFor="let g of groups" [value]="g.id_groupe">{{g.nom_groupe}}</option>
+      </select>
+    </div>    
+
+    <div *ngIf="coachs" class="form-group">
+      <label>Coach</label>
+      <select class="form-control" name="id_personne" readonly [(ngModel)]="team.id_personne" >
+          <option *ngFor="let c of coachs" [ngValue]="c.id_personne">{{c.nom}} {{c.prenom}}</option>
+      </select>
+    </div> 
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  </form>
+</div>

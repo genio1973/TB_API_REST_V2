@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'my-teams',
-  template: `
-    <p>
-      teams Works!
-      <my-coachs></my-coachs>
-    </p>
-  `,
+  templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
+  tournamentId: number;
 
-  constructor() { }
+  constructor( private route: ActivatedRoute ) { }
 
   ngOnInit() {
+          // get the id from the url
+      this.route.pathFromRoot[2].params.subscribe(params => {
+        console.log(params['idtournoi']);
+        this.tournamentId = params['idtournoi'];
+      })
   }
 
 }

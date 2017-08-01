@@ -46,6 +46,5 @@ export class ResponsiblesComponent implements OnInit {
       this.errorMessage = '';
       this.successMessage = '';  
     }, 5000);
-    
   }
 }

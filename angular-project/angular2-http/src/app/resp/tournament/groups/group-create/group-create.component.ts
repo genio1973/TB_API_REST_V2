@@ -8,11 +8,10 @@ import { Router, ActivatedRoute } from "@angular/router";
   templateUrl: './group-create.component.html',
   styleUrls: ['./group-create.component.css']
 })
+
 export class GroupCreateComponent implements OnInit {
 
-
     groups: Group[] =  [{ id_groupe: null, nom_groupe:'', id_tournoi: 0}];
-    tournamentId: number;
     successMessage: string = '';
     errorMessage: string = '';
 
@@ -35,9 +34,9 @@ export class GroupCreateComponent implements OnInit {
 
         this.service.createGroups(this.groups)
           .subscribe(
-            user => {
+            data => {
               this.successMessage = 'Tournoi a été créé.';
-              //this.router.navigate(['/admin/users/list']);
+              this.router.navigate(['/responsible/tournament',  this.groups[0].id_tournoi, 'groups']);
               //console.log('user was created');
             },
             err => {

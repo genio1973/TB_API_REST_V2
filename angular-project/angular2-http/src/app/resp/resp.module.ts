@@ -11,12 +11,20 @@ import { TournamentSingleComponent } from "./tournaments/tournament-single/tourn
 import { TournamentComponent } from "./tournament/tournament.component";
 import { GroupsComponent } from "./tournament/groups/groups.component";
 import { TeamsComponent } from "./tournament/teams/teams.component";
-import { CoachsComponent } from "./tournament/teams/coachs/coachs.component";
 import { MatchsComponent } from "./tournament/groups/matchs/matchs.component";
 import { GroupSingleComponent } from "./tournament/groups/group-single/group-single.component";
 import { GroupListComponent } from "./tournament/groups/group-list/group-list.component";
 import { GroupCreateComponent } from "./tournament/groups/group-create/group-create.component";
 import { GroupEditComponent } from "./tournament/groups/group-edit/group-edit.component";
+import { TeamCreateComponent } from './tournament/teams/team-create/team-create.component';
+import { TeamEditComponent } from './tournament/teams/team-edit/team-edit.component';
+import { TeamSingleComponent } from './tournament/teams/team-single/team-single.component';
+import { TeamListComponent } from './tournament/teams/team-list/team-list.component';
+import { CoachsComponent } from "./coachs/coachs.component";
+import { CoachSingleComponent } from "./coachs/coach-single/coach-single.component";
+import { CoachEditComponent } from "./coachs/coach-edit/coach-edit.component";
+import { CoachCreateComponent } from "./coachs/coach-create/coach-create.component";
+import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
 
 @NgModule({
   imports: [
@@ -40,6 +48,14 @@ import { GroupEditComponent } from "./tournament/groups/group-edit/group-edit.co
     GroupCreateComponent,
     GroupListComponent,
     GroupSingleComponent,
+    TeamCreateComponent,
+    TeamEditComponent,
+    TeamSingleComponent,
+    TeamListComponent,
+    CoachListComponent,
+    CoachCreateComponent,
+    CoachEditComponent,
+    CoachSingleComponent,
   ],
   providers: [
   ]

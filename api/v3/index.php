@@ -31,18 +31,18 @@ $app->group('/admin', function () use ($app) {
 //    require_once('src/routes/arbitre.php');
 //    require_once('src/routes/responsable.php');
     require_once('src/routes/admin.php');
-})->add(new AuthenticateApiKey($config['role']['ADMIN']));
+})->add(new AuthenticateApiKey($config['role']['ADMIN'], $config['role']['ADMIN']));
 
 //Groupement des routes pour les responsables de tournois
 $app->group('/resp', function () use ($app) {
 //    require_once('src/routes/arbitre.php');
     require_once('src/routes/responsable.php');
-})->add(new AuthenticateApiKey($config['role']['RESPONSABLE']));
+})->add(new AuthenticateApiKey($config['role']['RESPONSABLE'], $config['role']['ADMIN']));
 
 //Groupement des routes pour les arbitres
 $app->group('/arbitre', function () use ($app) {
     require_once('src/routes/arbitre.php');
-})->add(new AuthenticateApiKey($config['role']['ARBITRE']));
+})->add(new AuthenticateApiKey($config['role']['ARBITRE'], $config['role']['ADMIN']));
 
 $app->run();
 ?>

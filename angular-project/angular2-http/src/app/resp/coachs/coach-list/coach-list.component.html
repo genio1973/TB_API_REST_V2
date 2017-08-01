@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Liste des coachs</h1> <a routerLink="/responsible/coachs/create" class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Ajouter un nouveau coach</i> </a>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <!--<th>id</th>--><th>Nom</th><th>Email</th><th>tél</th><th>adresse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let coach of coachs" >
+                          <tr class="odd gradeX" [routerLink]="['/responsible/coachs', coach.id_personne] ">
+                                <td>{{coach.prenom}} {{coach.nom}}</td>
+                                <td>{{coach.courriel}}</td>
+                                <td>{{coach.tel}}<br/>{{coach.tel_mobile}}</td>
+                                <td><address>{{coach.adresse}}<br/>{{coach.localite}}<br/>{{coach.pays}}<br/></address></td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>

@@ -117,6 +117,37 @@ $app->get('/public/resultats/groupe/{id_groupe}', function (Request $request, Re
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
+
+
+/* Liste des résultats d'un groupe
+ * url - /public/equipe/{id_equipe}
+ * methode - GET
+ */
+$app->get('/public/equipe/{id_equipe}', function (Request $request, Response $response) {
+            $id_equipe = $request->getAttribute('id_equipe');
+            // Prépartaion de la ruquête sur une seule table
+            $table = 'equipes';
+            $fields = '*';
+            $field_filter = 'id_equipe';
+            $db = new DbHandler();
+            $res = array();
+
+            $res = $db->getDetailsByID($table, $fields, $field_filter, $id_equipe);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
 /* Liste des matchs d'une équipe
  * url - /public/matchs/equipe/{id_equipe}
  * methode - GET
@@ -401,6 +432,7 @@ $app->get('/public/tournament/{id}', function (Request $request, Response $respo
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
+
 
 /* Liste les tournois
 * url - /public/tournaments

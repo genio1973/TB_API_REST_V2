@@ -1,15 +1,3 @@
-   
-    <!--
-    <a routerLink="/responsible/tournament/', tournament.id,'/groups" class="btn btn-sm btn-info">Créer un groupe</a>
-    -->
-<!--
-<div  *ngIf="groups">
-    <div *ngFor="let group of groups">
-            <h2>Groupe : {{group.nom_groupe}} </h2> 
-    </div>
-</div>
--->
-
 <div class="panel-heading">
    <h3>Groupe(s)</h3>
    <a [routerLink]="['/responsible/tournament', tournamentId, 'groups','create'] " class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un groupe</i> </a>
@@ -19,38 +7,19 @@
 <div *ngIf="groups" class="table-responsive">
     <ng-container *ngFor="let group of groups" >
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
             <!--   Groupe -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                     <a [routerLink]="['/responsible/tournament', tournamentId, 'groups', group.id_groupe,'edit'] " class="btn btn-sm btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{group.nom_groupe}} 
+                        <a [routerLink]="['/responsible/tournament', tournamentId, 'groups', group.id_groupe,'edit'] " class="btn btn-sm btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{group.nom_groupe}} 
                     </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr><th>Nom de l'équipe </th></tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let group of groups" >
-                                        <tr class="odd gradeX" [routerLink]="['/responsible/tournament', group.id_groupe, 'groups'] ">
-                                                <td>{{group.nom_groupe}}</td>                                                              
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="panel-body">    
+                        <my-team-list [tournamentId]="tournamentId" [group]="group"></my-team-list>
                     </div>
                 </div>
                 <!-- End  Groupe -->
             </div>
         </div>
     </ng-container>
+    
 </div>
-
-
-        <!--                                <td>
-                                    <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                    <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm"><i class="fa fa-gears" aria-hidden="true"></i></a>
-                                </td>
-                                -->

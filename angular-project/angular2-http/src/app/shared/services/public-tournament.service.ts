@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
 import { Group } from "../models/group";
+import { Team } from "../models/team";
 
 @Injectable()
 export class PublicTournamentService {
@@ -95,10 +96,66 @@ export class PublicTournamentService {
          return this.http                    
             .get(`${this.tournamentUrl}/tournament/${id}/groupes`, this.headBuilder())
             .do(this.checkError)
+            .map(res => res.json().result)            
+            .catch((e) => this.handleError(e));
+    }
+
+    /**
+     * Get teams from a tournament
+     * @param id_tournament identifiant du groupe 
+     */
+    getTournamentTeams(id_tournament: number): Observable<Team[]>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournament/${id_tournament}/equipes`, this.headBuilder())
+            .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));
     }
 
+
+    /**
+     * Get teams from a group
+     * @param id_group identifiant du groupe 
+     */
+    getTeamsGroup(id_group: number): Observable<Team[]>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/equipes/groupe/${id_group}`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            //.map(this.toTeam)
+            //.find( t => t.id_equipe == id_group)
+            .catch((e) => this.handleError(e));
+    }
+
+    /*
+    * Convert tournament info from API to our standard
+    */
+    // private toTeam(team): Team {
+    //     return {
+    //             id_equipe: team.id_equipe,
+    //             niveau: team.niveau,
+    //             nom_equipe: team.nom_equipe,
+    //             nb_pts: team.nb_pts,
+    //             id_groupe: team.id_groupe,
+    //         };
+    // }
+
+
+
+    /**
+     * Get team from a group
+     * @param id identifiant du groupe 
+     */
+    getTeam(id: number): Observable<Team>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/equipe/${id}`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => {
+                    let teams = res.json().result;
+                    return teams.find(t => t.id_equipe === id);
+            })
+            .catch((e) => this.handleError(e));
+    }
 
     /*
     * Check if error comes from API
@@ -106,7 +163,7 @@ export class PublicTournamentService {
     private checkError(res : Response) {
         let apiResp : ApiResponse = res.json();
         if(apiResp.error){
-            localStorage.clear();
+            //localStorage.clear();
             throw new Error( apiResp.result || 'Server error.');
         }                
     }    
