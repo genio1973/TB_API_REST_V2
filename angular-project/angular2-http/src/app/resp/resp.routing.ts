@@ -24,6 +24,7 @@ import { CoachSingleComponent } from "./coachs/coach-single/coach-single.compone
 import { CoachCreateComponent } from "./coachs/coach-create/coach-create.component";
 import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
 import { CoachsComponent } from "./coachs/coachs.component";
+import { SimulationComponent } from "./tournament/simulation/simulation.component";
 
 
 export const respRoutes: Routes = [
@@ -53,7 +54,8 @@ export const respRoutes: Routes = [
                                     { path: 'list',     component: TournamentListComponent },
                                     { path: 'create',   component: TournamentCreateComponent },
                                     { path: ':id',      component: TournamentSingleComponent},
-                                    { path: ':id/edit', component: TournamentEditComponent},                         
+                                    { path: ':id/edit', component: TournamentEditComponent},  
+                                                        
                         ]
                                 
                     },
@@ -64,6 +66,7 @@ export const respRoutes: Routes = [
                         children: [
                                     //{ path: '', redirectTo: 'groups', pathMatch: 'full' },
                                     { path: 'coachs/list', component: CoachListComponent },
+                                    { path: 'simul',   component: SimulationComponent },   
                                     {
                                         path: 'groups',
                                         component: GroupsComponent,

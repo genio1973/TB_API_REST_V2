@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-            <h1>Liste des tournois</h1> <a routerLink="/responsible/tournaments/create" class="btn btn-sm btn-primary"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un tournoi</i> </a>
+            <h1>Liste des tournois</h1> <a routerLink="/responsible/tournaments/create" class="btn btn-sm btn-info"> <i class="fa fa-plus-square" aria-hidden="true"> Créer un tournoi</i> </a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -24,8 +24,9 @@
                                     <td *ngSwitchDefault  class="warning">{{tournament.statut_tournoi}}</td>
                                 </ng-container>
                                 <td>
-                                    <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                    <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm"><i class="fa fa-gears" aria-hidden="true"></i></a>
+                                    <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-info btn-sm" title="Editer le tournoi"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm" title="Configurer le tournoi"><i class="fa fa-gears" aria-hidden="true"></i></a>
+                                    <a [routerLink]="['/responsible/tournament', tournament.id, 'simul']" class="btn btn-warning btn-sm" title="Simuler la planification"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></a>
                                 </td>
                                 <td *ngIf="isLoggedInAsAdmin" [routerLink]="['/admin/resp/', tournament.id_user] "> {{tournament.nom_user}} {{tournament.prenom_user}}</td>
                         </tr>

@@ -1,0 +1,47 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Simulation</h1>
+    </div>
+    <div class="panel-body">
+        <div *ngIf="configSimul">
+            <form (ngSubmit)="simulPlanning()">
+                <div class="col-sm-12 form-group">
+                <div class="col-sm-4"><label>Heure de début</label></div>
+                <div class="col-sm-2"><input type="number" min="0" max="23" class="form-control" name="heure_debut_h" required [(ngModel)]="configSimul.heure_debut_h"></div>
+                <div class="col-sm-2"><input type="number" min="0" max="59" class="form-control" name="heure_debut_min" required [(ngModel)]="configSimul.heure_debut_min"></div>
+                </div>
+
+                <div class="col-sm-12 form-group">
+                <div class="col-sm-4"><label>Durée d'un match [min]</label></div>
+                <div class="col-sm-2"><input type="number" class="form-control" min="5" max="120" name="match_duree" required [(ngModel)]="configSimul.match_duree"></div>
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    <div class="col-sm-2"><input (click)="toggleMatchs_meme_terrain()" name="nb_terrains" type="checkbox" class="form-control" [(ngModel)]="configSimul.matchs_meme_terrain"></div>
+                    <div class="col-sm-4"><label>Les matchs d'un groupe se déroulent sur le même terrain</label></div>
+                </div>
+
+                <div *ngIf="!configSimul.matchs_meme_terrain"> 
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-4"><label>Nombre de terrains</label></div>
+                        <div class="col-sm-2"><input type="number" class="form-control" min="1" max="5" name="nb_terrains" required [(ngModel)]="configSimul.nb_terrains"></div>
+                    </div>
+                </div>
+
+
+            <!--
+                <div *ngIf="coachs" class="form-group">
+                <label>Coach</label>
+                <select class="form-control" name="id_personne" [(ngModel)]="team.id_personne" >
+                    <option *ngFor="let c of coachs" [ngValue]="c.id_personne">{{c.nom}} {{c.prenom}}</option>
+                </select>
+                </div> 
+            -->
+                <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+                <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                <button type="submit" class="btn btn-success">Lancer la simulation</button>
+            </form>
+        </div>
+    </div>
+</div>
+

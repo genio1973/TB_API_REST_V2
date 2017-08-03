@@ -25,6 +25,9 @@ import { CoachSingleComponent } from "./coachs/coach-single/coach-single.compone
 import { CoachEditComponent } from "./coachs/coach-edit/coach-edit.component";
 import { CoachCreateComponent } from "./coachs/coach-create/coach-create.component";
 import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
+import { MatchSingleComponent } from "./tournament/matchs/match-single/match-single.component";
+import { MatchListComponent } from "./tournament/matchs/match-list/match-list.component";
+import { SimulationComponent } from "./tournament/simulation/simulation.component";
 
 @NgModule({
   imports: [
@@ -56,6 +59,9 @@ import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
     CoachCreateComponent,
     CoachEditComponent,
     CoachSingleComponent,
+    MatchListComponent,
+    MatchSingleComponent,
+    SimulationComponent,
   ],
   providers: [
   ]
