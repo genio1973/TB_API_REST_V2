@@ -21,7 +21,8 @@
                     <div class="col-sm-4"><label>Les matchs d'un groupe se déroulent sur le même terrain</label></div>
                 </div>
 
-                <div *ngIf="!configSimul.matchs_meme_terrain"> 
+                <!--<div *ngIf="!configSimul.matchs_meme_terrain"> -->
+                <div> 
                     <div class="col-sm-12 form-group">
                         <div class="col-sm-4"><label>Nombre de terrains</label></div>
                         <div class="col-sm-2"><input type="number" class="form-control" min="1" max="5" name="nb_terrains" required [(ngModel)]="configSimul.nb_terrains"></div>
@@ -47,8 +48,5 @@
 <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
 
-<my-matchs *ngIf="simulLaunched"
-    [configSimul] = "configSimul"
-    [groupsPlan] = "groupsPlan">
-</my-matchs>
+<my-matchs *ngIf="simulLaunched" [groupsPlan] = "groupsPlan" [configSimul] = "configSimul"></my-matchs>
 

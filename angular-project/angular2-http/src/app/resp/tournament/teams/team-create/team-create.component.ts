@@ -58,7 +58,7 @@ export class TeamCreateComponent implements OnInit {
             data => {
               this.successMessage = `L'équipe a été créé.`;
               if(this.groups){
-                this.router.navigate(['/responsible/tournament',  this.groups[0].id_tournoi]);
+                this.router.navigate(['/responsible/tournament',  this.groups[0].id_tournoi,'teams']);
               }
               else{
                 this.router.navigate(['/responsible/tournament',  this.group.id_tournoi, 'groups']);

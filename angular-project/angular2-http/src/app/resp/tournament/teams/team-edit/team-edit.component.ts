@@ -84,7 +84,6 @@ export class TeamEditComponent implements OnInit {
         updateTeam(){
         this.errorMessage = '';
         this.successMessage = '';
-        //console.log("===========>" + this.team.id_personne);
 
         this.respService.updateTeam(this.team)
           .subscribe(

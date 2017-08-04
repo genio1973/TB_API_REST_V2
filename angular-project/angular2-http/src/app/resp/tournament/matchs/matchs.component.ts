@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ConfigSimul } from "../../../shared/plannings/ConfigSimul";
 import { MatchsPlan } from "../../../shared/plannings/matchs-plan";
 import { Match } from "../../../shared/models/match";
 import { MatchDetails } from "../../../shared/models/match-details";
+import { MatchsGroupBy } from "../../../shared/plannings/matchs-group-by";
+import { ConfigSimul } from "../../../shared/plannings/config-simul";
 
 @Component({
   selector: 'my-matchs',
@@ -11,35 +12,104 @@ import { MatchDetails } from "../../../shared/models/match-details";
 })
 export class MatchsComponent implements OnChanges {
 
-  @Input() configSimul: ConfigSimul = null;
   @Input() groupsPlan: MatchsPlan[] = [];
-  matchs: MatchDetails[] = [];
+  @Input() configSimul: ConfigSimul;
+  displayByGroup: string = 'groupe';
+  matchsGroupBy: MatchsGroupBy[] = [];
   
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
     
-    //console.log(`DATE : ${date_heure}`);
-    let terrainId: number = 0;
-
-    //selon la configuration reçue, préparer les infos de chaque match
-    this.groupsPlan.map( g =>{ let date_heure : Date = new Date(this.dateTimeStart());
-                                terrainId++;
-                                g.planning.map(m => {
-                                    m.date_match = date_heure;
-                                    m.statut = 'non jouée';
-                                    m.id_terrain = terrainId;
-                                    this.matchs.push(m);
-                                    date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
-                                  })
-                              });
+    switch(this.displayByGroup){
+      default:
+      case 'groupe': this.matchsByGroups(); break;
+      case 'terrain': this.matchsByPitches(); break;
+      case 'heure' : this.matchsByHours(); break;
+    }
   }
 
 
-  private dateTimeStart(): string{
-    let hh = this.configSimul.heure_debut_h < 10 ? `0${this.configSimul.heure_debut_h}`:  this.configSimul.heure_debut_h;
-    let min = this.configSimul.heure_debut_min < 10 ? `0${this.configSimul.heure_debut_min}`:  this.configSimul.heure_debut_min;
-    return `${this.configSimul.tournoi_date}T${hh}:${min}:00`;
+  ngOnInit(): void {
   }
 
+  pitchDisplayType(){
+    this.displayByGroup = 'terrain';
+    this.matchsByPitches();
+  }
+
+  groupDisplayType(){
+    this.displayByGroup = 'groupe';
+    this.matchsByGroups();
+  }
+
+  timeDisplayType(){
+    this.displayByGroup = 'heure';
+    this.matchsByHours();
+  }
+
+  /**
+   * regrouper par groupe
+   */
+  private matchsByGroups(){
+    this.matchsGroupBy = [];
+    this.groupsPlan.map(g => {
+      if(g.planning.length>0) {
+        this.matchsGroupBy.push(new MatchsGroupBy(g.planning));
+      }
+    });
+  }
+
+  /**
+   * Trié par heure de début du match
+   */
+  private matchsByHours(){
+    this.matchsGroupBy = [];
+    let matchs: MatchDetails[] = [];
+
+    // Récupère tous le match en une seule liste
+    this.groupsPlan.map( g =>{ g.planning.map(m => { matchs.push(m)})});
+
+    // trie par heure
+    matchs.sort((a: any, b: any) => {
+      if (a.date_match < b.date_match) {
+        return -1;
+      } else if (a.date_match > b.date_match) {
+        return 1;
+      } else {
+        return 0;
+      }});
+    
+    // place dans l'attibut de classe les matchs
+    this.matchsGroupBy.push(new MatchsGroupBy(matchs));
+    this.matchsGroupBy[0].groupId = null;
+
+    //[0].planning = this.matchsByGroups[0].planning.sort();
+    console.log(this.matchsGroupBy);
+
+  }
+
+  /**
+   *  regrouper par terrain
+   */
+  private matchsByPitches(){
+    this.matchsGroupBy = [];
+    
+    let terrainIds:number[]=[];
+    for(let i=0; i < this.configSimul.nb_terrains; i++){ 
+      terrainIds[i]=i+1;
+    }
+
+    //console.log("Debug");
+    let planning: MatchDetails[] = [];
+    terrainIds.map(numTerrain => {
+      this.groupsPlan
+        .map(g => { planning=g.planning.filter(m=> m.id_terrain == numTerrain);
+                    if(planning.length > 0){
+                      //console.log(planning);
+                      this.matchsGroupBy.push(new MatchsGroupBy(planning));
+                    }      
+                })
+    });
+  }
 }
