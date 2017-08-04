@@ -37,11 +37,18 @@
                 </select>
                 </div> 
             -->
-                <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-                <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
                 <button type="submit" class="btn btn-success">Lancer la simulation</button>
             </form>
         </div>
     </div>
 </div>
+<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+
+<my-matchs *ngIf="simulLaunched"
+    [configSimul] = "configSimul"
+    [groupsPlan] = "groupsPlan">
+</my-matchs>
 

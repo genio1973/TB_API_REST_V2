@@ -127,6 +127,34 @@ export class PublicTournamentService {
             .catch((e) => this.handleError(e));
     }
 
+
+    /**
+     * Get groups and their teams from a tournament
+     * @param id_tournament identifiant du tournoi 
+     */
+    getGroupsAndTeams(id_tournament: number): Observable<Group[]>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournament/${id_tournament}/groupes/equipes`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)
+            .map(groups => groups.map(this.toGoupTeams))
+            .catch((e) => this.handleError(e));
+    }
+
+    /*
+    * Convert tournament info from API to our standard
+    */
+    private toGoupTeams(group): Group {
+        //console.log(group);
+        return {
+                id_groupe: group.id_groupe,
+                nom_groupe: group.nom_groupe,
+                id_tournoi: group.id_tournoi,
+                teams: group.equipes
+            };
+    }
+
+
     /*
     * Convert tournament info from API to our standard
     */

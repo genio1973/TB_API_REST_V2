@@ -1,0 +1,34 @@
+<div *ngIf="!match">
+
+      
+
+
+  <!-- Simulation info -->
+  <div class="panel panel-default">
+      <div class="panel-heading">
+              <h1>Résultat de la simulation</h1>
+      </div>
+      <div class="panel-body">
+        <!--
+        <nav class="navbar">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a (click)="pitchDisplayType()">Par terrain</a></li>
+                <li><a (click)="groupDisplayType()">Par groupes</a></li>
+            </ul>
+          </div>
+        </nav>
+        -->
+        <my-match-list
+                  [configSimul] = "configSimul"
+                  [groupsPlan] = "groupsPlan">
+
+        </my-match-list>
+ 
+        
+      </div>
+  </div>
+  <!--End Simulation info -->
+</div>
+
+

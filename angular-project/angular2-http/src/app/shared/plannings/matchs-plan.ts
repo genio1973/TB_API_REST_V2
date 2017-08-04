@@ -1,12 +1,15 @@
 
 import { Team } from "../models/team";
 import { Match } from "../models/match";
+import { MatchDetails } from "../models/match-details";
 
 export class MatchsPlan {
-    planning: Match[];
+    planning: MatchDetails[];
+    groupId: number;
 
     constructor(teams: Team[]) {
         this.initializePlan(teams);
+        this.groupId = teams[0].id_groupe;
     }
 
 
@@ -32,118 +35,118 @@ export class MatchsPlan {
     * ]
     */ 
 
-    private plan3Teams(teams: Team[]): Match[]{
+    private plan3Teams(teams: Team[]): MatchDetails[]{
         return [
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[2].id_equipe}, 
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[1].id_equipe}   
+                {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[2]},
+                {equipe_home: teams[2], equipe_visiteur: teams[0], equipe_arbitre: teams[1]}, 
+                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[0]}   
         ];
     }
 
-    private plan4Teams(teams: Team[]): Match[]{
+    private plan4Teams(teams: Team[]): MatchDetails[]{
         return [
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[3].id_equipe}
+                {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[3]},
+                {equipe_home: teams[2], equipe_visiteur: teams[2], equipe_arbitre: teams[0]},
+                {equipe_home: teams[3], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
+                {equipe_home: teams[1], equipe_visiteur: teams[1], equipe_arbitre: teams[0]},
+                {equipe_home: teams[2], equipe_visiteur: teams[2], equipe_arbitre: teams[1]},
+                {equipe_home: teams[1], equipe_visiteur: teams[1], equipe_arbitre: teams[2]}
         ];
     
     }    
 
-    private plan5Teams(teams: Team[]): Match[]{
+    private plan5Teams(teams: Team[]): MatchDetails[]{
         return [
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[4].id_equipe}
+                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[0]},
+                {equipe_home: teams[2], equipe_visiteur: teams[3], equipe_arbitre: teams[1]},
+                {equipe_home: teams[4], equipe_visiteur: teams[0], equipe_arbitre: teams[2]},
+                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[4]},
+                {equipe_home: teams[3], equipe_visiteur: teams[4], equipe_arbitre: teams[1]},
+                {equipe_home: teams[0], equipe_visiteur: teams[2], equipe_arbitre: teams[3]},
+                {equipe_home: teams[3], equipe_visiteur: teams[1], equipe_arbitre: teams[0]},
+                {equipe_home: teams[2], equipe_visiteur: teams[4], equipe_arbitre: teams[3]},
+                {equipe_home: teams[0], equipe_visiteur: teams[3], equipe_arbitre: teams[4]},
+                {equipe_home: teams[4], equipe_visiteur: teams[1], equipe_arbitre: teams[3]}
         ];
     
     } 
 
-    private plan6Teams(teams: Team[]): Match[]{
+    private plan6Teams(teams: Team[]): MatchDetails[]{
         return [
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[4].id_equipe}
+                {equipe_home: teams[0], equipe_visiteur: teams[5], equipe_arbitre: teams[1]},
+                {equipe_home: teams[4], equipe_visiteur: teams[1], equipe_arbitre: teams[0]},
+                {equipe_home: teams[3], equipe_visiteur: teams[2], equipe_arbitre: teams[4]},
+                {equipe_home: teams[5], equipe_visiteur: teams[1], equipe_arbitre: teams[3]},
+                {equipe_home: teams[2], equipe_visiteur: teams[0], equipe_arbitre: teams[5]},
+                {equipe_home: teams[4], equipe_visiteur: teams[3], equipe_arbitre: teams[0]},
+                {equipe_home: teams[5], equipe_visiteur: teams[2], equipe_arbitre: teams[3]},
+                {equipe_home: teams[1], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
+                {equipe_home: teams[0], equipe_visiteur: teams[4], equipe_arbitre: teams[1]},
+                {equipe_home: teams[3], equipe_visiteur: teams[5], equipe_arbitre: teams[4]},
+                {equipe_home: teams[2], equipe_visiteur: teams[4], equipe_arbitre: teams[5]},
+                {equipe_home: teams[1], equipe_visiteur: teams[0], equipe_arbitre: teams[2]},
+                {equipe_home: teams[5], equipe_visiteur: teams[4], equipe_arbitre: teams[1]},
+                {equipe_home: teams[0], equipe_visiteur: teams[3], equipe_arbitre: teams[5]},
+                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[3]}
         ];
     }
 
-    private plan7Teams(teams: Team[]): Match[]{
+    private plan7Teams(teams: Team[]): MatchDetails[]{
             return [
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[7].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[7].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[7].id_equipe}
+                    {equipe_home: teams[6], equipe_visiteur: teams[1], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[5], equipe_arbitre: teams[1]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[4], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[6], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[4], equipe_arbitre: teams[6]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[3], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[5], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[4], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[0], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[3], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[2], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[0], equipe_arbitre: teams[6]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[2], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[1], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[0], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[3], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[6], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[6], equipe_arbitre: teams[1]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[5], equipe_arbitre: teams[6]}
         ];
     }
 
-    private plan8Teams(teams: Team[]): Match[]{
+    private plan8Teams(teams: Team[]): MatchDetails[]{
             return [
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[8].id_equipe, id_equipe_arbitre: teams[7].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[8].id_equipe, id_equipe_arbitre: teams[7].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[8].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[8].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[8].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[8].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[1].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[8].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[3].id_equipe, id_equipe_visiteur: teams[1].id_equipe, id_equipe_arbitre: teams[7].id_equipe},
-                    {id_equipe_home: teams[2].id_equipe, id_equipe_visiteur: teams[4].id_equipe, id_equipe_arbitre: teams[3].id_equipe},
-                    {id_equipe_home: teams[5].id_equipe, id_equipe_visiteur: teams[8].id_equipe, id_equipe_arbitre: teams[4].id_equipe},
-                    {id_equipe_home: teams[7].id_equipe, id_equipe_visiteur: teams[6].id_equipe, id_equipe_arbitre: teams[5].id_equipe},
-                    {id_equipe_home: teams[1].id_equipe, id_equipe_visiteur: teams[2].id_equipe, id_equipe_arbitre: teams[6].id_equipe},
-                    {id_equipe_home: teams[8].id_equipe, id_equipe_visiteur: teams[3].id_equipe, id_equipe_arbitre: teams[2].id_equipe},
-                    {id_equipe_home: teams[4].id_equipe, id_equipe_visiteur: teams[7].id_equipe, id_equipe_arbitre: teams[8].id_equipe},
-                    {id_equipe_home: teams[6].id_equipe, id_equipe_visiteur: teams[5].id_equipe, id_equipe_arbitre: teams[4].id_equipe}
+                    {equipe_home: teams[0], equipe_visiteur: teams[7], equipe_arbitre: teams[6]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[1], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[5], equipe_arbitre: teams[1]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[0], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[7], equipe_arbitre: teams[6]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[4], equipe_arbitre: teams[7]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[2], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[5], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[6], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[7], equipe_visiteur: teams[3], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[1], equipe_arbitre: teams[7]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[0], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[5], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[2], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[7], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[3], equipe_arbitre: teams[1]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[4], equipe_arbitre: teams[0]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[1], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[7], equipe_visiteur: teams[6], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[2], equipe_visiteur: teams[0], equipe_arbitre: teams[6]},
+                    {equipe_home: teams[1], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
+                    {equipe_home: teams[4], equipe_visiteur: teams[7], equipe_arbitre: teams[3]},
+                    {equipe_home: teams[6], equipe_visiteur: teams[5], equipe_arbitre: teams[4]},
+                    {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[5]},
+                    {equipe_home: teams[7], equipe_visiteur: teams[2], equipe_arbitre: teams[1]},
+                    {equipe_home: teams[3], equipe_visiteur: teams[6], equipe_arbitre: teams[7]},
+                    {equipe_home: teams[5], equipe_visiteur: teams[4], equipe_arbitre: teams[3]}
         ];
     }    
                   

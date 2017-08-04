@@ -1,14 +1,14 @@
 import { Team } from "../models/team";
 import { Responsible } from "../models/responsible";
 
-export class Match {
+export class MatchDetails {
     id_match?: number;
     date_match?: Date;
     heure?: Date;
     statut?: string;
-    id_user_dirige?: number;
-    id_equipe_home: number;
-    id_equipe_visiteur: number;
-    id_equipe_arbitre?: number;
+    user_dirige?: Responsible;
+    equipe_home: Team;
+    equipe_visiteur: Team;
+    equipe_arbitre?: Team;
     id_terrain?: number;
 }

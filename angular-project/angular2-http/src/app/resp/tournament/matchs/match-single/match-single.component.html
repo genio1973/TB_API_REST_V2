@@ -1,0 +1,10 @@
+<div class="row" *ngIf="match">
+    <div class="col-sm-1"  *ngIf="match.id">{{match.id}}</div>
+    <div class="col-sm-1"  *ngIf="match.date_match">{{match.date_match | date: 'HH:mm'}}</div>
+    <div class="col-sm-2"  *ngIf="match.equipe_home">{{match.equipe_home.nom_equipe}}</div>
+    <div class="col-sm-2"  *ngIf="match.equipe_visiteur">{{match.equipe_visiteur.nom_equipe}}</div>
+    <div class="col-sm-2"  *ngIf="match.equipe_arbitre">{{match.equipe_arbitre.nom_equipe}}</div>
+    <div class="col-sm-2"  *ngIf="match.user_dirige">{{match.user_dirige.nom_user}}</div>
+    <div class="col-sm-1"  *ngIf="match.id_terrain">{{match.id_terrain}}</div>
+    <div class="col-sm-1"  *ngIf="match.id_statut">{{match.id_statut}}</div>
+</div>

@@ -11,7 +11,6 @@ import { TournamentSingleComponent } from "./tournaments/tournament-single/tourn
 import { TournamentComponent } from "./tournament/tournament.component";
 import { GroupsComponent } from "./tournament/groups/groups.component";
 import { TeamsComponent } from "./tournament/teams/teams.component";
-import { MatchsComponent } from "./tournament/groups/matchs/matchs.component";
 import { GroupSingleComponent } from "./tournament/groups/group-single/group-single.component";
 import { GroupListComponent } from "./tournament/groups/group-list/group-list.component";
 import { GroupCreateComponent } from "./tournament/groups/group-create/group-create.component";
@@ -28,6 +27,7 @@ import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
 import { MatchSingleComponent } from "./tournament/matchs/match-single/match-single.component";
 import { MatchListComponent } from "./tournament/matchs/match-list/match-list.component";
 import { SimulationComponent } from "./tournament/simulation/simulation.component";
+import { MatchsComponent } from "./tournament/matchs/matchs.component";
 
 @NgModule({
   imports: [
