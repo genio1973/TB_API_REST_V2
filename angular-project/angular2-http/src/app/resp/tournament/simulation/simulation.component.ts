@@ -50,15 +50,13 @@ export class SimulationComponent implements OnInit {
       .getGroupsAndTeams(this.tournamentId)
       .subscribe(groups => { this.groups = groups;    
                              this.configSimul.nb_terrains = groups.length;                      
-                            //console.log(`==>> ${this.groups[1].teams[1].nom_equipe}`);
-                            console.log(groups);
                           });
   }
 
   simulPlanning(){
+    this.errorMessage = '';
     this.simulLaunched = true;
     this.groupsPlan = [];
-    
     
     // for each group create a matchs planification
     this.groups.forEach(group => { 
@@ -69,19 +67,71 @@ export class SimulationComponent implements OnInit {
                           this.groupsPlan.push (new MatchsPlan(group.teams, this.configSimul.auto_arbitrage));
                           }
                         });
-    this.matchs = [];
-    if(this.configSimul.matchs_meme_terrain){
-      this.setMatch();
-    }
-    else{
-      
-      this.setMatchDifferentPitches();
-    }
+    
+    this.matchs = []; //Delete old simulation if existing
+    
+    // Si pas d'erreur detectée...
+    if(!this.errorMessage){
+      if(this.configSimul.matchs_meme_terrain){
+            this.setMatch(); // All group's matchs played on the same pitch
+          }
+          else{
+            this.setMatchDifferentPitches();
+          }
 
-    this.clearMessages();
-
+          if(this.checkConflict()) {
+            //this.errorMessage = 'Il y a des conflits, vérifiez les horraires de chaque équipe.'
+          }
+    }
   }
 
+
+  /**
+   * Check if a team plays once per playtime 
+   */
+  private checkConflict():boolean{
+    this.groupsPlan.map
+    // Récupère tous le match en une seule liste
+    this.matchs = [];
+    this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
+
+    
+    // récupère toutes les datesHeure différentes des matchs, sans duplication
+    let heuresMatchs = [];
+    this.matchs.map(m => { if (heuresMatchs.indexOf(m.date_match.getTime()) == -1) heuresMatchs.push(m.date_match.getTime())});
+
+    // pour chaque tranche horaire, vérifie q'un équipe n'est pas présente plus d'une fois
+    let teamsInConflict: Team[] = [];
+    heuresMatchs
+      .map( h => {
+        let matchsPerHour = [];
+        matchsPerHour.push( this.matchs.filter(m => m.date_match.getTime() == h));
+
+        // Récupère les équipes de la tranche horaire en cours
+        let teams: Team[] = [];
+        matchsPerHour.map(matchs => matchs.map( m => { teams.push(m.equipe_home);
+                                                       teams.push(m.equipe_visiteur)
+                                                       if(m.equipe_arbitre){teams.push(m.equipe_arbitre)}}));
+
+        // Répertorie les équipes en conflits d'horaire
+        teams.map( t => { 
+          if(teams.filter( x => x.id_equipe === t.id_equipe).length > 1) {
+            if(teamsInConflict.indexOf(t) == -1){
+              teamsInConflict.push(t);
+            }
+          }})
+
+        });
+
+        // Y-a-t-il des équipes en conflit ?
+        this.errorMessage ='';
+        if(teamsInConflict.length > 0){
+          this.errorMessage = `Equipe(s): `
+          teamsInConflict.map(t => this.errorMessage += `${t.nom_equipe}. ` );
+          return true;
+        }
+    return false;
+  }
 
   /**
    * Clear all messages after 5 sec
@@ -156,10 +206,8 @@ export class SimulationComponent implements OnInit {
             });
       })
 
-      this.groupsPlan.map(g =>{
-        g.planning = this.matchs.filter(m => m.equipe_home.id_groupe == g.groupId);
-        //console.log(g.planning);
-      })
+      // filter matchs on their group
+      this.groupsPlan.map(g =>{ g.planning = this.matchs.filter(m => m.equipe_home.id_groupe == g.groupId); })
   }
     
 

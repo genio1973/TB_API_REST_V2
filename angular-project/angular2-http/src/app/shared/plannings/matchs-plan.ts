@@ -9,9 +9,9 @@ export class MatchsPlan {
     private auto_arbitrage:boolean = false;
 
     constructor(teams: Team[], autoArbitrage:boolean) {
-        this.initializePlan(teams);
         this.groupId = teams[0].id_groupe;
         this.auto_arbitrage = autoArbitrage;
+        this.initializePlan(teams);
     }
 
 
@@ -64,7 +64,7 @@ export class MatchsPlan {
             ];       
         }
         return [
-                {equipe_home: teams[2], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
+                {equipe_home: teams[2], equipe_visiteur: teams[3], equipe_arbitre: teams[0]},
                 {equipe_home: teams[0], equipe_visiteur: teams[2], equipe_arbitre: teams[3]},
                 {equipe_home: teams[1], equipe_visiteur: teams[3], equipe_arbitre: teams[2]},
                 {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[3]},
@@ -90,16 +90,16 @@ export class MatchsPlan {
             ];
         }
         return [
-                {equipe_home: teams[1], equipe_visiteur: teams[4], equipe_arbitre: teams[1]},
+                {equipe_home: teams[1], equipe_visiteur: teams[4], equipe_arbitre: teams[2]},
                 {equipe_home: teams[2], equipe_visiteur: teams[3], equipe_arbitre: teams[4]},
-                {equipe_home: teams[0], equipe_visiteur: teams[2], equipe_arbitre: teams[2]},
+                {equipe_home: teams[0], equipe_visiteur: teams[2], equipe_arbitre: teams[3]},
                 {equipe_home: teams[3], equipe_visiteur: teams[4], equipe_arbitre: teams[0]},
                 {equipe_home: teams[1], equipe_visiteur: teams[3], equipe_arbitre: teams[4]},
-                {equipe_home: teams[4], equipe_visiteur: teams[0], equipe_arbitre: teams[3]},
-                {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[0]},
+                {equipe_home: teams[4], equipe_visiteur: teams[0], equipe_arbitre: teams[1]},
+                {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[4]},
                 {equipe_home: teams[2], equipe_visiteur: teams[4], equipe_arbitre: teams[1]},
                 {equipe_home: teams[3], equipe_visiteur: teams[0], equipe_arbitre: teams[2]},
-                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[3]}
+                {equipe_home: teams[1], equipe_visiteur: teams[2], equipe_arbitre: teams[0]}
         ];
     
     } 
