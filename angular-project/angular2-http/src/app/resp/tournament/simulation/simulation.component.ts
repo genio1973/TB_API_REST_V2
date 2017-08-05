@@ -20,7 +20,9 @@ export class SimulationComponent implements OnInit {
   tournament: Tournament; 
   //d: Date = new Date("2017-08-17T08:30:00+0100");
   d: Date = new Date("2017-08-17T08:30:00");
-  configSimul: ConfigSimul = {tournoi_date: this.d, heure_debut_h: this.d.getHours(), heure_debut_min: this.d.getMinutes(), match_duree: 5, matchs_meme_terrain: true, nb_terrains:2};
+  configSimul: ConfigSimul = {tournoi_date: this.d, heure_debut_h: this.d.getHours(),
+                               heure_debut_min: this.d.getMinutes(), match_duree: 5, matchs_meme_terrain: true,
+                               auto_arbitrage: false, nb_terrains:2};
   groupsPlan: MatchsPlan[] = [];
   groups: Group[] = []; 
   tournamentId: number;
@@ -49,6 +51,7 @@ export class SimulationComponent implements OnInit {
       .subscribe(groups => { this.groups = groups;    
                              this.configSimul.nb_terrains = groups.length;                      
                             //console.log(`==>> ${this.groups[1].teams[1].nom_equipe}`);
+                            console.log(groups);
                           });
   }
 
@@ -62,8 +65,9 @@ export class SimulationComponent implements OnInit {
                           if(group.teams.length<3 || group.teams.length>8){
                             this.errorMessage = `Le nombre d'équipes par groupe doit être entre 3 et 8 !`;
                             this.simulLaunched = false;
+                          }else{
+                          this.groupsPlan.push (new MatchsPlan(group.teams, this.configSimul.auto_arbitrage));
                           }
-                          this.groupsPlan.push (new MatchsPlan(group.teams));
                         });
     this.matchs = [];
     if(this.configSimul.matchs_meme_terrain){
@@ -78,9 +82,6 @@ export class SimulationComponent implements OnInit {
 
   }
 
-  toggleMatchs_meme_terrain(){
-    this.configSimul.matchs_meme_terrain = !this.configSimul.matchs_meme_terrain; 
-  }
 
   /**
    * Clear all messages after 5 sec

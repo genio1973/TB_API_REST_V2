@@ -83,10 +83,6 @@ export class MatchsComponent implements OnChanges {
     // place dans l'attibut de classe les matchs
     this.matchsGroupBy.push(new MatchsGroupBy(matchs));
     this.matchsGroupBy[0].groupId = null;
-
-    //[0].planning = this.matchsByGroups[0].planning.sort();
-    console.log(this.matchsGroupBy);
-
   }
 
   /**

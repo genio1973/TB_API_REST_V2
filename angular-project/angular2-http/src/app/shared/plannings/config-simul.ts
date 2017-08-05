@@ -4,5 +4,6 @@ export class ConfigSimul{
   heure_debut_min: number;
   match_duree: number;
   matchs_meme_terrain: boolean;
+  auto_arbitrage: boolean;
   nb_terrains: number;
 }
