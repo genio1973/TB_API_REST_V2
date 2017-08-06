@@ -13,37 +13,28 @@
 
                 <div class="col-sm-12 form-group">
                 <div class="col-sm-6"><label>Durée d'un match [min]</label></div>
-                <div class="col-sm-6"><input type="number" class="form-control" min="5" max="120" name="match_duree" required [(ngModel)]="configSimul.match_duree"></div>
+                <div class="col-sm-6"><input type="number" class="form-control" min="5" max="240" name="match_duree" required [(ngModel)]="configSimul.match_duree"></div>
                 </div>
 
                 <div class="col-sm-12 form-group">
+                    <div class="col-sm-6"><label>Nombre de terrains</label></div>
+                    <div class="col-sm-6"><input type="number" class="form-control" min="1" name="nb_terrains" [(ngModel)]="configSimul.nb_terrains"></div>
+                </div>
+
+                <div *ngIf="configSimul.nb_terrains>=groups.length" class="col-sm-12 form-group">  
                     <div class="col-sm-10"><label>Les matchs d'un groupe se déroulent sur le même terrain</label></div>
-                    <div class="col-sm-2"><input type="checkbox" [checked]="configSimul.matchs_meme_terrain" (change)="configSimul.matchs_meme_terrain = !configSimul.matchs_meme_terrain" /></div>
+                    <div class="col-sm-2"><input type="checkbox" [checked]="configSimul.matchs_meme_terrain" (change)="playSamePitch()" /></div>
                 </div>
 
-                <!--<div *ngIf="!configSimul.matchs_meme_terrain"> -->
-                <div> 
-                    <div class="col-sm-12 form-group">
-                        <div class="col-sm-6"><label>Nombre de terrains</label></div>
-                        <div class="col-sm-6"><input type="number" class="form-control" min="1" max="5" name="nb_terrains" [(ngModel)]="configSimul.nb_terrains"></div>
-                    </div>
-                </div>
 
-                <div class="col-sm-12 form-group">
+                <div *ngIf="configSimul.matchs_meme_terrain" class="col-sm-12 form-group">
                     <div class="col-sm-10"><label>Les équipes sont-elles amenées à faire de l'arbitrage</label></div>
                     <div class="col-sm-2"><input type="checkbox" [checked]="configSimul.auto_arbitrage" (change)="configSimul.auto_arbitrage = !configSimul.auto_arbitrage" /></div>
                 </div>
 
-            <!--
-                <div *ngIf="coachs" class="form-group">
-                <label>Coach</label>
-                <select class="form-control" name="id_personne" [(ngModel)]="team.id_personne" >
-                    <option *ngFor="let c of coachs" [ngValue]="c.id_personne">{{c.nom}} {{c.prenom}}</option>
-                </select>
-                </div> 
-            -->
-
-                <button type="submit" class="btn btn-success">Lancer la simulation</button>
+                <div class="col-sm-12 form-group">
+                    <button type="submit" class="btn btn-warning btn-block">Lancer la simulation</button>
+                </div>
             </form>
         </div>
     </div>

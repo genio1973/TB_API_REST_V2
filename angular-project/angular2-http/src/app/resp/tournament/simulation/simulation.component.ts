@@ -53,13 +53,16 @@ export class SimulationComponent implements OnInit {
                           });
   }
 
+  /**
+   * Build a planning matchs with the user's settings
+   */
   simulPlanning(){
     this.errorMessage = '';
     this.simulLaunched = true;
     this.groupsPlan = [];
-    
-    // for each group create a matchs planification
-    this.groups.forEach(group => { 
+
+    // for each group build the matchs planification
+    this.groups.map(group => { 
                           if(group.teams.length<3 || group.teams.length>8){
                             this.errorMessage = `Le nombre d'équipes par groupe doit être entre 3 et 8 !`;
                             this.simulLaunched = false;
@@ -67,22 +70,23 @@ export class SimulationComponent implements OnInit {
                           this.groupsPlan.push (new MatchsPlan(group.teams, this.configSimul.auto_arbitrage));
                           }
                         });
-    
-    this.matchs = []; //Delete old simulation if existing
-    
-    // Si pas d'erreur detectée...
-    if(!this.errorMessage){
-      if(this.configSimul.matchs_meme_terrain){
-            this.setMatch(); // All group's matchs played on the same pitch
-          }
-          else{
-            this.setMatchDifferentPitches();
-          }
 
-          if(this.checkConflict()) {
-            //this.errorMessage = 'Il y a des conflits, vérifiez les horraires de chaque équipe.'
-          }
+
+    if(this.configSimul.matchs_meme_terrain){
+      this.setMatch(); // Each group : matchs played on the same pitch
     }
+    else{
+      this.setMatchDifferentPitches();
+    }
+    
+
+   
+  
+    // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
+    if(this.checkConflict()) {
+            //this.errorMessage = 'Il y a des conflits, vérifiez les horraires de chaque équipe.'
+    }
+
   }
 
 
@@ -109,14 +113,17 @@ export class SimulationComponent implements OnInit {
 
         // Récupère les équipes de la tranche horaire en cours
         let teams: Team[] = [];
-        matchsPerHour.map(matchs => matchs.map( m => { teams.push(m.equipe_home);
-                                                       teams.push(m.equipe_visiteur)
+        matchsPerHour.map(matchs => matchs.map( m => {  
+                                                       teams.push(m.equipe_home);
+                                                       teams.push(m.equipe_visiteur);
                                                        if(m.equipe_arbitre){teams.push(m.equipe_arbitre)}}));
+        
 
         // Répertorie les équipes en conflits d'horaire
         teams.map( t => { 
           if(teams.filter( x => x.id_equipe === t.id_equipe).length > 1) {
             if(teamsInConflict.indexOf(t) == -1){
+              t.date_debut = h;
               teamsInConflict.push(t);
             }
           }})
@@ -127,7 +134,7 @@ export class SimulationComponent implements OnInit {
         this.errorMessage ='';
         if(teamsInConflict.length > 0){
           this.errorMessage = `Equipe(s): `
-          teamsInConflict.map(t => this.errorMessage += `${t.nom_equipe}. ` );
+          teamsInConflict.map(t => this.errorMessage += `${this.msToTime(t.date_debut)}==>${t.nom_equipe}.    ` );
           return true;
         }
     return false;
@@ -143,6 +150,20 @@ export class SimulationComponent implements OnInit {
     }, 5000);
   }
 
+  /**
+   * Converte time ms in time (hh:mm:ss)
+   * @param duration 
+   */
+  private msToTime(duration) {
+        let minutes:number = Math.trunc((duration/(1000*60))%60);
+        let hours:number = Math.trunc((duration/(1000*60*60))%24);
+
+        hours += 2; //UTC +2 !!
+        let shours: string = (hours < 10) ? "0" + hours.toString() : hours.toString();
+        let sminutes: string = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
+
+        return shours + ":" + sminutes + ":";
+    }
 
 
   /**
@@ -168,46 +189,70 @@ export class SimulationComponent implements OnInit {
    * Met à jour les données des matchs qui se jouent indifféremnt sur les terrains à disposition
    */
   private setMatchDifferentPitches(){
-      // Récupère tous le match en une seule liste
-      this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
+   // Get the tot matchs 
+    let nbPitches = this.configSimul.nb_terrains;
+    let nbMatchTotal: number = 0;
+    this.groupsPlan.map(group => nbMatchTotal+= group.planning.length);
 
-      // Si les matchs ne se jouent sur le même terrain
-      let nbGroups: number = this.groupsPlan.length;
-
-      // nombre total des matchs (pour tous les groupes)
-      let nbMatchTotal: number = 0;
-      this.groupsPlan.map(g => nbMatchTotal += g.planning.length);
-      
-      // nombre de terrrains à disposition
-      let terrainIds:number[]=[];
-      for(let i=0; i < this.configSimul.nb_terrains; i++){ 
-        terrainIds[i]=i+1;
+    // Build the pitchPlanning with the number of pitches availaibles
+    let pitchesPlanning: {terrain:number, date_match: Date}[] = [];
+    let date_heure : Date = new Date(this.dateTimeStart());
+    for(let i=0; i<nbMatchTotal; i++){      
+      pitchesPlanning.push({terrain: i%nbPitches+1, date_match: date_heure});
+      if(i%nbPitches==nbPitches-1){
+        date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000))
       }
+    }
 
-      let indexTerrain = 0;
-      // mélange aléatoire des tous les matchs
-      this.matchs = this.shuffle(this.matchs);
 
-      // attribution des terrains
-      let date_heure : Date = new Date(this.dateTimeStart());
-      this.matchs.forEach( m => {
-        m.id_terrain = terrainIds[indexTerrain++];
-        indexTerrain %= terrainIds.length;
-      });
+    // Build general planning. Put for each match the pitch number
+    let numberGroups: number = this.groupsPlan.length -1 ; // 0 to length-1
+    let planning: MatchDetails[] = [];
+    let match: MatchDetails;
+    let cptPitch: number = 0;
 
-      // Mise en place de l'heure
-      terrainIds.forEach(id => { date_heure = new Date(this.dateTimeStart());
-          this.matchs
-            .filter(m => m.id_terrain == id)
-            .map(m=>{
-                      m.date_match = date_heure;
-                      m.statut = 'non jouée';
-                      date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
-            });
-      })
+    // Build the planning
+    for(let i=0; i<nbMatchTotal; i++){
+      // If the planning of a group contains more than 2 matches of the little planning group the take out 2 matches of the greather
+      // Else take out just one match from the bigger group
+      // first of all sort the groups (number of maths)
+      this.groupsPlan.sort((a: MatchsPlan, b: MatchsPlan) => {
+        if (a.planning.length < b.planning.length) {
+          return 1;
+        } else if (a.planning.length > b.planning.length) {
+          return -1;
+        } else {
+          return 0;
+        }});
 
-      // filter matchs on their group
-      this.groupsPlan.map(g =>{ g.planning = this.matchs.filter(m => m.equipe_home.id_groupe == g.groupId); })
+      // take out one match
+      match = this.groupsPlan[0].planning.pop();
+      match.id_terrain = pitchesPlanning[cptPitch].terrain;
+      match.statut = 'non joué';
+      match.date_match = pitchesPlanning[cptPitch++].date_match;
+      planning.push(match);
+
+      // the greather goups was containing 2 matchs more than the little group ?
+      if(this.groupsPlan[0].planning.length > this.groupsPlan[numberGroups].planning.length){
+        match = this.groupsPlan[0].planning.pop();
+        match.id_terrain = pitchesPlanning[cptPitch].terrain;
+        match.statut = 'non joué';
+        match.date_match = pitchesPlanning[cptPitch++].date_match;
+        planning.push(match);
+        i++;
+      }
+    }
+
+
+    // replace les matchs dans les plannings de chaque groupe
+    // mémoriser les numéro des groupes
+    let memGroup: number[] = [];
+    this.groups.map(g => memGroup.push(g.id_groupe));
+
+    planning.map(m => {
+      let index = memGroup.indexOf(m.equipe_home.id_groupe);  //retrieve index
+      this.groupsPlan[index].planning.push(m);
+    })
   }
     
 
@@ -221,23 +266,15 @@ export class SimulationComponent implements OnInit {
   }
 
   /**
-   * Mélange le tableau reçu en paramètre
-   * @param data 
+   * En cas de changement de l'attribut check : les matchs se jouent ou pas sur le même terrain
    */
-    private shuffle(data) {
-			var m = data.length, t, i;
+  playSamePitch(){
+    this.configSimul.matchs_meme_terrain = !this.configSimul.matchs_meme_terrain;
 
-      while(m) {
-			    i = Math.floor(Math.random() * m--);
-			    t = data[m];
-			    data[m] = data[i];
-			    data[i] = t;
-			};
-
-	  		return data;
-  };
-      
-
+    if(this.configSimul.nb_terrains < this.groups.length){
+      this.configSimul.matchs_meme_terrain = true;
+    }
+  }
 
 }
 

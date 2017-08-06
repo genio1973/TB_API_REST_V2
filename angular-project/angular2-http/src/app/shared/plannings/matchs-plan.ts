@@ -4,7 +4,7 @@ import { Match } from "../models/match";
 import { MatchDetails } from "../models/match-details";
 
 export class MatchsPlan {
-    planning: MatchDetails[];
+    planning: MatchDetails[] = [];
     groupId: number;
     private auto_arbitrage:boolean = false;
 
@@ -43,6 +43,7 @@ export class MatchsPlan {
                     {equipe_home: teams[1], equipe_visiteur: teams[2]}   
             ];
         }
+
         
         return [
                 {equipe_home: teams[0], equipe_visiteur: teams[1], equipe_arbitre: teams[2]},
