@@ -18,17 +18,16 @@ export class SimulationComponent implements OnInit {
   successMessage ='';
   errorMessage = '';
   tournament: Tournament; 
-  //d: Date = new Date("2017-08-17T08:30:00+0100");
   d: Date = new Date("2017-08-17T08:30:00");
-  configSimul: ConfigSimul = {tournoi_date: this.d, heure_debut_h: this.d.getHours(),
-                               heure_debut_min: this.d.getMinutes(), match_duree: 5, matchs_meme_terrain: true,
-                               auto_arbitrage: false, nb_terrains:2};
+  d_pause: Date; // = new Date("2017-08-17T12:30:00");
+  configSimul: ConfigSimul = { tournoi_date: this.d, heure_debut_h: this.d.getHours(),
+                               heure_debut_min: this.d.getMinutes(), match_duree: 12, matchs_meme_terrain: true,
+                               auto_arbitrage: false, nb_terrains:2, pausePresence: false,
+                               pause_debut_h:12, pause_debut_min:10, pause_duree: 60};
   groupsPlan: MatchsPlan[] = [];
   groups: Group[] = []; 
   tournamentId: number;
   simulLaunched = false;
-  matchs: MatchDetails[] = [];
-  //terrains: MatchDetails[] = [];
 
   constructor( private service: PublicTournamentService,
                private route: ActivatedRoute ){}
@@ -61,6 +60,14 @@ export class SimulationComponent implements OnInit {
     this.simulLaunched = true;
     this.groupsPlan = [];
 
+    //définir l'heure de la pause
+    if(this.configSimul.pausePresence){
+      this.d_pause = new Date(this.configSimul.tournoi_date);
+      this.d_pause.setHours(this.configSimul.pause_debut_h);
+      this.d_pause.setMinutes(this.configSimul.pause_debut_min);
+    }
+
+
     // for each group build the matchs planification
     this.groups.map(group => { 
                           if(group.teams.length<3 || group.teams.length>8){
@@ -78,9 +85,6 @@ export class SimulationComponent implements OnInit {
     else{
       this.setMatchDifferentPitches();
     }
-    
-
-   
   
     // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
     if(this.checkConflict()) {
@@ -94,22 +98,22 @@ export class SimulationComponent implements OnInit {
    * Check if a team plays once per playtime 
    */
   private checkConflict():boolean{
-    this.groupsPlan.map
+    let matchs: MatchDetails[] = [];
     // Récupère tous le match en une seule liste
-    this.matchs = [];
-    this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
+    matchs = [];
+    this.groupsPlan.map( g =>{ g.planning.map(m => { matchs.push(m)})});
 
     
     // récupère toutes les datesHeure différentes des matchs, sans duplication
     let heuresMatchs = [];
-    this.matchs.map(m => { if (heuresMatchs.indexOf(m.date_match.getTime()) == -1) heuresMatchs.push(m.date_match.getTime())});
+    matchs.map(m => { if (heuresMatchs.indexOf(m.date_match.getTime()) == -1) heuresMatchs.push(m.date_match.getTime())});
 
     // pour chaque tranche horaire, vérifie q'un équipe n'est pas présente plus d'une fois
     let teamsInConflict: Team[] = [];
     heuresMatchs
       .map( h => {
         let matchsPerHour = [];
-        matchsPerHour.push( this.matchs.filter(m => m.date_match.getTime() == h));
+        matchsPerHour.push( matchs.filter(m => m.date_match.getTime() == h));
 
         // Récupère les équipes de la tranche horaire en cours
         let teams: Team[] = [];
@@ -117,7 +121,6 @@ export class SimulationComponent implements OnInit {
                                                        teams.push(m.equipe_home);
                                                        teams.push(m.equipe_visiteur);
                                                        if(m.equipe_arbitre){teams.push(m.equipe_arbitre)}}));
-        
 
         // Répertorie les équipes en conflits d'horaire
         teams.map( t => { 
@@ -127,14 +130,13 @@ export class SimulationComponent implements OnInit {
               teamsInConflict.push(t);
             }
           }})
-
         });
 
         // Y-a-t-il des équipes en conflit ?
         this.errorMessage ='';
         if(teamsInConflict.length > 0){
           this.errorMessage = `Equipe(s): `
-          teamsInConflict.map(t => this.errorMessage += `${this.msToTime(t.date_debut)}==>${t.nom_equipe}.    ` );
+          teamsInConflict.map(t => this.errorMessage += ` --${t.nom_equipe}@${this.msToTime(t.date_debut)}--` );
           return true;
         }
     return false;
@@ -162,36 +164,49 @@ export class SimulationComponent implements OnInit {
         let shours: string = (hours < 10) ? "0" + hours.toString() : hours.toString();
         let sminutes: string = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
 
-        return shours + ":" + sminutes + ":";
+        return shours + ":" + sminutes;
     }
 
 
   /**
-   * 
+   * Build the pitchPlanning with the number of pitches availaibles.
+   * The group's matches are planigied on same pitch
    */
    private setMatch(){
       // Si les matchs se jouent sur le même terrain       
       let terrainId:number = 0;
+      let pauseToDo: boolean;
+
       //selon la configuration reçue, préparer les infos de chaque match
       this.groupsPlan.map( g =>{ let date_heure : Date = new Date(this.dateTimeStart());
-                                  terrainId++;
-                                  g.planning.map(m => {
-                                      m.date_match = date_heure;
-                                      m.statut = 'non jouée';
-                                      m.id_terrain = terrainId;
-                                      //this.matchs.push(m);
-                                      date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
-                                    })
-                                });
+        terrainId++;
+        pauseToDo = this.configSimul.pausePresence;
+        g.planning.map(m => {
+          m.date_match = date_heure;
+          m.statut = 'non jouée';
+          m.id_terrain = terrainId;
+
+          //Définir la nouvelle heure pour les prochains matchs
+          date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
+
+          //Si c'est dans l'heure de la pause alors décaler de la durée de la pause
+          if(pauseToDo && date_heure.getTime() >= this.d_pause.getTime()){
+            date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000) + (this.configSimul.pause_duree*60*1000)); 
+            pauseToDo = false;
+          }
+        })
+      });
   }  
 
   /**
-   * Met à jour les données des matchs qui se jouent indifféremnt sur les terrains à disposition
+   * Build the pitchPlanning with the number of pitches availaibles.
+   * The group's matches can be played on different pitches
    */
   private setMatchDifferentPitches(){
    // Get the tot matchs 
     let nbPitches = this.configSimul.nb_terrains;
     let nbMatchTotal: number = 0;
+    let pauseToDo: boolean = this.configSimul.pausePresence;
     this.groupsPlan.map(group => nbMatchTotal+= group.planning.length);
 
     // Build the pitchPlanning with the number of pitches availaibles
@@ -201,6 +216,14 @@ export class SimulationComponent implements OnInit {
       pitchesPlanning.push({terrain: i%nbPitches+1, date_match: date_heure});
       if(i%nbPitches==nbPitches-1){
         date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000))
+          //Définir la nouvelle heure pour les prochains matchs
+          date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
+
+          //Si c'est dans l'heure de la pause alors décaler de la durée de la pause
+          if(pauseToDo && date_heure.getTime() >= this.d_pause.getTime()){
+            date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000) + (this.configSimul.pause_duree*60*1000)); 
+            pauseToDo = false;
+          }
       }
     }
 

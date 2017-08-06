@@ -6,4 +6,8 @@ export class ConfigSimul{
   matchs_meme_terrain: boolean;
   auto_arbitrage: boolean;
   nb_terrains: number;
+  pausePresence:boolean;
+  pause_debut_h:number;
+  pause_debut_min:number;
+  pause_duree: number;
 }
