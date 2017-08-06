@@ -17,6 +17,8 @@ export class TournamentEditComponent implements OnInit {
     errorMessage: string = '';
     needPasswordChange: boolean = false;
     statuts : StatutTournoi;
+    id_statut_tmp: number;
+    askToConfirm=false;
 
     constructor(private tournamentService: RespTournamentService,
                 private route: ActivatedRoute,
@@ -28,11 +30,21 @@ export class TournamentEditComponent implements OnInit {
 
       this.tournamentService
           .getTournament(id)
-          .subscribe(tournament=> this.tournament = tournament);
+          .subscribe(tournament => { this.tournament = tournament; this.id_statut_tmp = tournament.id_statut;});
 
       this.tournamentService
           .getAllTounamentStatuts()
           .subscribe(status => this.statuts = status);
+    }
+
+
+    // ask to update tournament
+    modifyStatut(){
+      // if we try to back to new status
+      if(this.tournament.id_statut == 1 ){
+        this.askToConfirm = true;
+      }
+
     }
 
     /**
@@ -42,8 +54,15 @@ export class TournamentEditComponent implements OnInit {
 
         this.errorMessage = '';
         this.successMessage = '';
-        //let tournamentSimple : Tournament;
-        //tournamentSimple = this.tournament; 
+
+        // if we change the statut to new
+        if(this.askToConfirm && this.tournament.id_statut == 1){
+          this.tournamentService.deleteTournamentPitches(this.tournament.id)
+            .subscribe();
+            
+          this.tournamentService.deleteTournamentMatchs(this.tournament.id)
+            .subscribe();
+        }
         
         this.tournamentService.updateTournament(this.tournament)
           .subscribe(

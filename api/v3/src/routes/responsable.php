@@ -37,11 +37,11 @@ Routes par défauts : vx/resp/route
         });
 
         /** Récuère tous les status à dispo
-        * url - /resp/tournaments/statuts
+        * url - /resp/tournois/statuts
         * headears - content id_user and API_KEY
         * methode - GET
         **/
-        $app->get('/tournaments/statuts', function (Request $request, Response $response)  {
+        $app->get('/tournois/statuts', function (Request $request, Response $response)  {
             $db = new DbHandler();
             $res = array();
             $res = $db->getAllStatuts();
@@ -129,11 +129,11 @@ Routes par défauts : vx/resp/route
 
 
         /* Liste des tournois créés par l'utilisateur en cours, selon son id dans son entête
-        * url - /resp/tournaments
+        * url - /resp/tournois
         * headears - content id_user and API_KEY
         * methode - GET
         */
-        $app->get('/tournaments', function (Request $request, Response $response)  {
+        $app->get('/tournois', function (Request $request, Response $response)  {
 
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
@@ -157,13 +157,13 @@ Routes par défauts : vx/resp/route
 
 
         /* Liste les info d'un tournoi
-        * url - /public/tournaments
+        * url - /public/tournoi
         * headears - content id_user and API_KEY
         * methode - GET
         * Paramètre spécifant le statut
             * @Pamam - id du tournoi
         */
-        $app->get('/tournament/{id}', function (Request $request, Response $response) {
+        $app->get('/tournoi/{id}', function (Request $request, Response $response) {
             require 'src/include/config.php';
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
@@ -197,11 +197,11 @@ Routes par défauts : vx/resp/route
 
 
         /* Liste des équipes pour un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
-        * url - /resp/tournament/{id_tournoi}/equipes
+        * url - /resp/tournoi/{id_tournoi}/equipes
         * headears - content id_user and API_KEY
         * methode - GET
         */
-        $app->get('/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
+        $app->get('/tournoi/{id_tournoi}/equipes', function (Request $request, Response $response) {
             // Obtenir les en-têtes de requêtes
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
@@ -226,11 +226,11 @@ Routes par défauts : vx/resp/route
         });
 
        /** Liste des personnes coachant une équipe dans un tournoi appartenant à l'utilisateur en cours, selon son id dans son entête
-        * url - /resp/tournament/{id_tournoi}/personnes
+        * url - /resp/tournoi/{id_tournoi}/personnes
         * headears - content id_user and API_KEY
         * methode - GET
         */
-        $app->get('/tournament/{id_tournoi}/personnes', function (Request $request, Response $response) {
+        $app->get('/tournoi/{id_tournoi}/personnes', function (Request $request, Response $response) {
             // Obtenir les en-têtes de requêtes
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
@@ -309,11 +309,11 @@ Routes par défauts : vx/resp/route
        
 
         /* Liste des équipes dans un groupe appartenant à l'utilisateur en cours et en précisant un id de tournoi, selon son id dans son entête
-        * url - /resp/tournament/{id_tournoi}/equipes/groupe/{id_groupe}
+        * url - /resp/tournoi/{id_tournoi}/equipes/groupe/{id_groupe}
         * headears - content id_user and API_KEY
         * methode - GET
         */
-        $app->get('/tournament/{id_tournoi}/equipes/groupe/{id_groupe}', function (Request $request, Response $response) {
+        $app->get('/tournoi/{id_tournoi}/equipes/groupe/{id_groupe}', function (Request $request, Response $response) {
             // Obtenir les en-têtes de requêtes
             // Nullement besoin de test la présence, car cela est fait précédement
             // en vérifiant l'authentifcation sur la route du group responsable
@@ -622,9 +622,9 @@ Routes par défauts : vx/resp/route
             }
 
             // Ajouter l'appartenance des terrains créés
-            foreach($data as $key=>$terrain){
-                $data[$key]['id_user'] = $id_current_user;
-            }
+            // foreach($data as $key=>$terrain){
+            //     $data[$key]['id_user'] = $id_current_user;
+            // }
             //return echoRespnse(201, $response, $data);
 
             $db = new DbHandler();
@@ -703,6 +703,7 @@ Routes par défauts : vx/resp/route
             
             // insertion des enregistrements
             $res = $db->createMultiple('matchs', $data);
+            //return echoRespnse(400, $response, $res);
             $data=NULL;
             if ($res != NULL) {
                 $data["error"] = false;
@@ -866,7 +867,7 @@ Routes par défauts : vx/resp/route
             $id = $request->getAttribute('id');
             
             $db = new DbHandler();
-            $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            //$res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -1088,7 +1089,7 @@ Routes par défauts : vx/resp/route
 
 
        /* Suppression d'un terrain 
-        * url - /resp/tournament/{id_tournament}/terrain/{id}
+        * url - /resp/tournoi/{id_tournament}/terrain/{id}
         * methode - DELETE
         * headears - content id_user and API_KEY
         * body - Json : -
@@ -1099,7 +1100,7 @@ Routes par défauts : vx/resp/route
         *            "id_supprimer": "17"
         *           }
         */
-        $app->delete('/tournament/{id_tournament}/terrain/{id}', function(Request $request, Response $response) use ($app) {
+        $app->delete('/tournoi/{id_tournament}/terrain/{id}', function(Request $request, Response $response) use ($app) {
             $resultat['error'] = FALSE;
             $resultat['message'] = "";
 
@@ -1135,6 +1136,103 @@ Routes par défauts : vx/resp/route
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
+
+
+       /* Suppression des matchs (plannings, terrains et résultats)
+        * url - /resp/tournoi/{id}/matchs
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "result": ...
+        *           }
+        */
+        $app->delete('/tournoi/{id}/matchs', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['message'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
+            }
+            // suppression des matchs en cascade avec ses enfants
+            $res = $db->deleteMatchsByTournamentID($id);
+            
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+       /* Suppression des terrains utilisés pendant un tournoi
+        * url - /resp/tournoi/{id}/terrains
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "result": ...
+        *           }
+        */
+        $app->delete('/tournoi/{id}/terrains', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['message'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+
+            $db = new DbHandler();
+            $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
+            }
+            // suppression des terrains
+            $res=$db->deletePitchsByTournamentID($id);
+            
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
 
 
        /* Suppression des sets d'un match
@@ -1436,7 +1534,7 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             $db = new DbHandler();
-            $res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            //$res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";

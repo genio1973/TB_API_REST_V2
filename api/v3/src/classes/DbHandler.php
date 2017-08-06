@@ -303,6 +303,82 @@ class DbHandler {
             return NULL;
         }
 
+   
+    /**
+     * Suppression de tous les matchs un id de tournoi
+     * @param Integer : id_tournament
+     */
+     public function deleteMatchsByTournamentID($id_tournament) {
+            try{
+                // Cherche tous les id des matchs du tournois
+                $stmt = $this->pdo->prepare("SELECT DISTINCT m.id_match FROM tournois t
+                                                INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                                INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                                INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                                INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                                WHERE t.id_tournoi LIKE :id");
+                $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+
+                if ($stmt->execute()){
+                    $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    if($ids){
+                        $idList ="";
+                        foreach($ids as $id){
+                            $idList .=$id['id_match'].","; 
+                        }
+                        $idList = rtrim($idList,',');
+                        $stmt = $this->pdo->prepare("DELETE from matchs WHERE id_match IN ($idList)");
+                        if ($stmt->execute()){
+                            return TRUE;
+                        }                    
+                    }
+                    return TRUE;
+                }
+            }catch(EXCEPTION $e){
+                return NULL;
+            }
+            return NULL;
+        }
+
+    /**
+     * Suppression de tous les terrains pour un id de tournoi
+     * @param Integer : id_tournament
+     */
+     public function deletePitchsByTournamentID($id_tournament) {
+            try{
+                // Cherche tous les id des matchs du tournois
+                $stmt = $this->pdo->prepare("SELECT DISTINCT m.id_terrain FROM tournois t
+                                                INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                                INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                                INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                                INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                                WHERE t.id_tournoi LIKE :id");
+
+                $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+
+                if ($stmt->execute()){
+                    $ids = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    if($ids){
+                        $idList ="";
+                        foreach($ids as $id){
+                            $idList .=$id['id_terrain'].","; 
+                        }
+                        $idList = rtrim($idList,',');
+                        $stmt = $this->pdo->prepare("DELETE from terrains WHERE id_terrain IN ($idList)");
+                        
+                        if ($stmt->execute()){
+                            return TRUE;
+                        }                    
+                    }
+                    return TRUE;
+                }
+            }catch(EXCEPTION $e){
+                return NULL;
+            }
+            return NULL;
+        }
+
 
     /**
      * Suppression du score (sets liés à un match)
@@ -629,22 +705,22 @@ class DbHandler {
      * @param Integer $id_terrain
      * @return boolean
      */
-    public function isPitchOwner($id_current_user, $id_terrain) {
-        $stmt = $this->pdo->prepare("SELECT t.id_terrain 
-                                        FROM users u
-                                        INNER JOIN terrains t ON t.id_user = u.id_user
-                                        WHERE u.id_user = :id_user AND t.id_terrain = :id_terrain");
-        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
-        $stmt->bindParam(":id_terrain", $id_terrain, PDO::PARAM_INT);
-        if ($stmt->execute())
-        {
-            $res = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($res){
-                return true;
-            }
-        }
-        return false;
-    }
+    // public function isPitchOwner($id_current_user, $id_terrain) {
+    //     $stmt = $this->pdo->prepare("SELECT t.id_terrain 
+    //                                     FROM users u
+    //                                     INNER JOIN terrains t ON t.id_user = u.id_user
+    //                                     WHERE u.id_user = :id_user AND t.id_terrain = :id_terrain");
+    //     $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+    //     $stmt->bindParam(":id_terrain", $id_terrain, PDO::PARAM_INT);
+    //     if ($stmt->execute())
+    //     {
+    //         $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    //         if($res){
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     /**
      * Validation de la propriété du groupe pour un match

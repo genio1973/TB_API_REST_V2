@@ -40,7 +40,7 @@ export class PublicTournamentService {
     getTournamentsByStatut(id: number): Observable<Tournament[]> {
 
          return this.http                    
-                    .get(`${this.tournamentUrl}/tournaments/statut/${id}`)
+                    .get(`${this.tournamentUrl}/tournois/statut/${id}`)
                     .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
@@ -53,7 +53,7 @@ export class PublicTournamentService {
     getTournaments(): Observable<Tournament[]> {
 
          return this.http
-                    .get(`${this.tournamentUrl}/tournaments`)
+                    .get(`${this.tournamentUrl}/tournois`)
                     .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
@@ -65,7 +65,7 @@ export class PublicTournamentService {
     */
     getTournament(id: number): Observable<Tournament> {
         return this.http
-            .get(`${this.tournamentUrl}/tournament/${id}`)
+            .get(`${this.tournamentUrl}/tournoi/${id}`)
             .do(this.checkError)
             .map(res => res.json().result)
             .map(this.toTournament)
@@ -94,7 +94,7 @@ export class PublicTournamentService {
      */
     getGroupsTournament(id: number): Observable<Group[]>{
          return this.http                    
-            .get(`${this.tournamentUrl}/tournament/${id}/groupes`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournoi/${id}/groupes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)            
             .catch((e) => this.handleError(e));
@@ -106,7 +106,7 @@ export class PublicTournamentService {
      */
     getTournamentTeams(id_tournament: number): Observable<Team[]>{
          return this.http                    
-            .get(`${this.tournamentUrl}/tournament/${id_tournament}/equipes`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournoi/${id_tournament}/equipes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));
@@ -134,7 +134,7 @@ export class PublicTournamentService {
      */
     getGroupsAndTeams(id_tournament: number): Observable<Group[]>{
          return this.http                    
-            .get(`${this.tournamentUrl}/tournament/${id_tournament}/groupes/equipes`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournoi/${id_tournament}/groupes/equipes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .map(groups => groups.map(this.toGoupTeams))

@@ -21,9 +21,17 @@
 
     <div class="form-group">
       <label>Statut du tournoi</label>
-      <select class="form-control" name="statut_tournoi" [(ngModel)]="tournament.id_statut">
+      <select class="form-control" name="statut_tournoi" [(ngModel)]="tournament.id_statut" (change)="modifyStatut()">
           <option *ngFor="let statut of statuts" [value]="statut.id_statut">{{statut.nom_statut}}</option>
       </select>
+    </div>
+
+    <div *ngIf="askToConfirm">
+      <div class="col-sm-12 form-group">
+        <p>Attention, si vous êtes passé d'un statut de CLOS/OUVERT à un staut de NOUVEAU.</p>
+        <p class="text-danger">Cela entrainera la suppression des plans des matchs et résultats. </p>
+        <p>Les groupes, équipes et coachs sont conservés. </p>
+      </div>
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
@@ -32,6 +40,9 @@
     <button type="submit" class="btn btn-success">Mettre à jour</button>
 
   </form>
+
+
+
 
 </div>
 <router-outlet></router-outlet>

@@ -226,11 +226,11 @@ $app->get('/userbyemail/{email}', function (Request $request, Response $response
             return echoRespnse(200, $response, $data);
         });
 /* Liste des tournois
- * url - /admin/tournaments
+ * url - /admin/tournois
  * headears - content id_user and API_KEY
  * methode - GET
  */
-$app->get('/tournaments', function (Request $request, Response $response) {
+$app->get('/tournois', function (Request $request, Response $response) {
             $db = new DbHandler();
             $res = $db->getTournaments();
             if ($res != NULL) {
@@ -249,11 +249,11 @@ $app->get('/tournaments', function (Request $request, Response $response) {
         });
 
 /* Informations d'un tournoi, selon son id
- * url - /admin/tournament/{id_tournoi}
+ * url - /admin/tournoi/{id_tournoi}
  * headears - content id_user and API_KEY
  * methode - GET
  */
-$app->get('/tournament/{id}', function (Request $request, Response $response) {
+$app->get('/tournoi/{id}', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id');
 
             $db = new DbHandler();
@@ -274,11 +274,11 @@ $app->get('/tournament/{id}', function (Request $request, Response $response) {
         });
 
 /* Liste des tournois créés par un utilateur, selon son email
- * url - /admin/tournament/email/{email}
+ * url - /admin/tournoi/email/{email}
  * headears - content id_user and API_KEY
  * methode - GET
  */
-$app->get('/tournaments/email/{email}', function (Request $request, Response $response) {
+$app->get('/tournois/email/{email}', function (Request $request, Response $response) {
             $email = $request->getAttribute('email');
 
             $db = new DbHandler();
@@ -302,11 +302,11 @@ $app->get('/tournaments/email/{email}', function (Request $request, Response $re
 
 
 /* Liste des tournois créés par un utilateur, selon son id
- * url - /admin/tournaments/id/{id_user}
+ * url - /admin/tournois/id/{id_user}
  * headears - content id_user and API_KEY
  * methode - GET
  */
-$app->get('/tournaments/id/{id_user}', function (Request $request, Response $response) {
+$app->get('/tournois/id/{id_user}', function (Request $request, Response $response) {
         $id = $request->getAttribute('id_user');
 
         $db = new DbHandler();

@@ -76,7 +76,7 @@ export class RespTournamentService {
      */
     getTournamentTeams(id_tournament: number): Observable<Team[]>{
          return this.http                    
-            .get(`${this.tournamentUrl}/tournament/${id_tournament}/equipes`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournoi/${id_tournament}/equipes`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));
@@ -88,7 +88,7 @@ export class RespTournamentService {
     getTournamentsByStatut(id: number): Observable<Tournament[]> {
 
          return this.http                    
-                    .get(`${this.tournamentUrl}/tournaments/statut/${id}`, this.headBuilder())
+                    .get(`${this.tournamentUrl}/tournois/statut/${id}`, this.headBuilder())
                     .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
@@ -100,7 +100,7 @@ export class RespTournamentService {
      */
     getAllTounamentStatuts(){
          return this.http                    
-            .get(`${this.tournamentUrl}/tournaments/statuts`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournois/statuts`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .catch((e) => this.handleError(e));
@@ -113,7 +113,7 @@ export class RespTournamentService {
     getTournaments(): Observable<Tournament[]> {
 
          return this.http
-                    .get(`${this.tournamentUrl}/tournaments`, this.headBuilder())
+                    .get(`${this.tournamentUrl}/tournois`, this.headBuilder())
                     .do(this.checkError)
                     .map(res => res.json().result)
                     .map(tournaments => tournaments.map(this.toTournament))
@@ -125,7 +125,7 @@ export class RespTournamentService {
     */
     getTournament(id: number): Observable<Tournament> {
         return this.http
-            .get(`${this.tournamentUrl}/tournament/${id}`, this.headBuilder())
+            .get(`${this.tournamentUrl}/tournoi/${id}`, this.headBuilder())
             .do(this.checkError)
             .map(res => res.json().result)
             .map(this.toTournament)
@@ -200,7 +200,25 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }
 
+    /**
+     * Delete all matchs from a tournament
+     * @param id : tournament id 
+     */
+    deleteTournamentMatchs(id: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/tournoi/${id}/matchs`, this.headBuilder())
+        .do(this.checkError)
+        .catch((e) => this.handleError(e));
+    }
 
+    /**
+     * Delete all pitches used in a tournament
+     * @param id : tournament id 
+     */
+    deleteTournamentPitches(id: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/tournoi/${id}/terrains`, this.headBuilder())
+        .do(this.checkError)
+        .catch((e) => this.handleError(e));
+    }
     /**
      * Delete a team
      * @param id 

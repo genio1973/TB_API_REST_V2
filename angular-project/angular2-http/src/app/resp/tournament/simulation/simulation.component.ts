@@ -47,7 +47,7 @@ export class SimulationComponent implements OnInit {
       this.tournamentId = params['idtournoi'];
     });
 
-    this.service
+    this.respService
       .getTournament(this.tournamentId)
       .subscribe(t => { this.configSimul.tournoi_date  = t.date_debut;
                         this.tournament = t;
@@ -294,7 +294,7 @@ export class SimulationComponent implements OnInit {
     
 
   /**
-   * Formatagde de l'heure
+   * Formatage de l'heure
    */
   private dateTimeStart(): string{
     let hh = this.configSimul.heure_debut_h < 10 ? `0${this.configSimul.heure_debut_h}`:  this.configSimul.heure_debut_h;
@@ -313,40 +313,31 @@ export class SimulationComponent implements OnInit {
     }
   }
 
-
+  matchs: MatchDetails[] = [];
   /**
    * Insert the planning data (with tournament) in database
    */
   InsertDataMatchsToDB(){
 
-    let matchs: MatchDetails[] = [];
+    
 
     // Récupère tous le match en une seule liste
-    this.groupsPlan.map( g =>{ g.planning.map(m => { matchs.push(m)})});
+    this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
 
     //Insert les nouveau terrains    
-    this.insertPitchesDB(matchs);
+    this.insertPitchesDB();
     
     // Insert les matchs
-    this.insertMatchsDB(matchs);
+    this.insertMatchsDB();
 
-    // Le tournoi a un nouveau statut : OUVERT 
-    this.tournament.id_statut = 2;
-    this.respService.updateTournament(this.tournament)
-        .subscribe(
-          res => {
-            this.successMessage += "Le tournoi passe en mode ouvert";
-          }
-        )
-    this.router.navigate(['/responsible/tournaments/list']);
+    
   }
 
 
   /**
    * Insert les nouveauy terrains  
    */
-  private insertPitchesDB(matchs: MatchDetails[])
-  {
+  private insertPitchesDB(){
     let id_first_pitch_inserted: number = 0;
     let pitches: Pitch[] = [];
 
@@ -366,7 +357,7 @@ export class SimulationComponent implements OnInit {
                   pitches.map(t => t.id_terrain = id_first_pitch_inserted++);
 
                   // update in planning all the id pitches (from inserted id)
-                  matchs.map(m=> {
+                  this.matchs.map(m=> {
                     m.id_terrain = pitches[m.id_terrain-1].id_terrain;
                   });
 
@@ -379,16 +370,25 @@ export class SimulationComponent implements OnInit {
   /**
    * Insert les matchs dans la bd, avec un délai avant de créer 
    */
-  private insertMatchsDB(matchs: MatchDetails[]){
+  private insertMatchsDB(){
     
     let matchsToPost: Match[] = [];
-    matchs.map(m => { matchsToPost.push(this.toMatchFieldCreation(m))});
-
+    
     setTimeout(() => {
+    this.matchs.map(m => { matchsToPost.push(this.toMatchFieldCreation(m))});
       this.respService.createMatchs(matchsToPost)
       .subscribe(
         res => {
           this.successMessage = "Création terminée";
+          // Le tournoi a un nouveau statut : OUVERT 
+          this.tournament.id_statut = 2;
+          this.respService.updateTournament(this.tournament)
+              .subscribe(
+                res => {
+                  this.successMessage += "Le tournoi passe en mode ouvert";
+                }
+              )
+          this.router.navigate(['/responsible/tournaments/list']);
         },
         err => {
           this.errorMessage = err;

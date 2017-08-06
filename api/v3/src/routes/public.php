@@ -174,10 +174,10 @@ $app->get('/public/matchs/equipe/{id_equipe}', function (Request $request, Respo
         });
 
 /* Liste des matchs pour un tournoi
- * url - /public/tournament/{id_tournoi}/matchs
+ * url - /public/tournoi/{id_tournoi}/matchs
  * methode - GET
  */
-$app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id_tournoi}/matchs', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 
             $db = new DbHandler();
@@ -199,10 +199,10 @@ $app->get('/public/tournament/{id_tournoi}/matchs', function (Request $request, 
         });
 
 /* Liste les noms des équipes pour un tournoi
- * url - /public/tournament/{id_tournoi}/equipes
+ * url - /public/tournoi/{id_tournoi}/equipes
  * methode - GET
  */
-$app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id_tournoi}/equipes', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 
             $db = new DbHandler();
@@ -224,10 +224,10 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
         });
 
 /* Liste des groupes pour un tournoi
-* url - /public/tournament/{id_tournoi}/groupes
+* url - /public/tournoi/{id_tournoi}/groupes
 * methode - GET
 */
-$app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id_tournoi}/groupes', function (Request $request, Response $response) {
             // Prépartaion de la ruquête sur une seule table
             $id = $request->getAttribute('id_tournoi');
             $table = 'groupes';
@@ -251,10 +251,10 @@ $app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request,
         });
 
 /* Liste des groupes avec les équipes pour un tournoi
-* url - /public/tournament/{id_tournoi}/groupes/equipes
+* url - /public/tournoi/{id_tournoi}/groupes/equipes
 * methode - GET
 */
-$app->get('/public/tournament/{id_tournoi}/groupes/equipes', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id_tournoi}/groupes/equipes', function (Request $request, Response $response) {
             // Prépartaion de la ruquête sur une seule table
             $id = $request->getAttribute('id_tournoi');
             
@@ -297,10 +297,10 @@ $app->get('/public/tournament/{id_tournoi}/groupes/equipes', function (Request $
 
 
 /* Liste des matchs listés par terrain pour un tounoi spécifique 
- * url - /public/tournament/{id_tournoi}/matchs/terrains
+ * url - /public/tournoi/{id_tournoi}/matchs/terrains
  * methode - GET
  */
-$app->get('/public/tournament/{id_tournoi}/matchs/terrains', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id_tournoi}/matchs/terrains', function (Request $request, Response $response) {
             $id_tournoi = $request->getAttribute('id_tournoi');
 
             $db = new DbHandler();
@@ -425,7 +425,7 @@ $app->get('/public/terrain/{id}', function (Request $request, Response $response
         });
 
 /* Liste les tournois qui on un statut de type :  (Nouveau, Ouvert et Clos)
-* url - /public/tournaments
+* url - /public/tournois
 * methode - GET
 * Paramètre spécifant le statut
      * @Pamam - statuts :
@@ -433,7 +433,7 @@ $app->get('/public/terrain/{id}', function (Request $request, Response $response
      *              2 : Ouvert
      *              3 : Clos
 */
-$app->get('/public/tournaments/statut/{id}', function (Request $request, Response $response) {
+$app->get('/public/tournois/statut/{id}', function (Request $request, Response $response) {
             $id = $request->getAttribute('id'); 
             $db = new DbHandler();
             $res = $db->getTournamentsStatut($id);
@@ -451,13 +451,13 @@ $app->get('/public/tournaments/statut/{id}', function (Request $request, Respons
             return echoRespnse(200, $response, $data);
         });
 
-/* Liste les tournois qui on un statut de type au minimum 2:  (Ouvert et Clos)
-* url - /public/tournaments
+/* Liste les info d'un tournoi
+* url - /public/tournoi
 * methode - GET
 * Paramètre spécifant le statut
      * @Pamam - id du tournoi
 */
-$app->get('/public/tournament/{id}', function (Request $request, Response $response) {
+$app->get('/public/tournoi/{id}', function (Request $request, Response $response) {
             $id = $request->getAttribute('id'); 
             $db = new DbHandler();
             // Prépartaion de la ruquête sur une seule table
@@ -481,10 +481,10 @@ $app->get('/public/tournament/{id}', function (Request $request, Response $respo
 
 
 /* Liste les tournois
-* url - /public/tournaments
+* url - /public/tournois
 * methode - GET
 */
-$app->get('/public/tournaments', function (Request $request, Response $response) {
+$app->get('/public/tournois', function (Request $request, Response $response) {
             $db = new DbHandler();
             $res = $db->getTournaments();
             if ($res != NULL) {
