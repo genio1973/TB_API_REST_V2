@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Les terrains</h1>
+    </div>
+    <div class="panel-body">
+
+        <div *ngIf="pitches">
+            <form (ngSubmit)="updatePitches()">
+
+                <div *ngFor="let p of pitches" class="col-sm-12 form-group">
+                    <div class="col-sm-3">Nom du terrain</div>
+                    <div class="col-sm-9"><input type="text" class="form-control" name="product-{{p.id_terrain}}" required [(ngModel)]="p.nom_terrain"></div>                   
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    <button type="submit" class="btn btn-success btn-block">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+

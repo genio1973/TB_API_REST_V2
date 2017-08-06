@@ -25,10 +25,9 @@
                                 </ng-container>
                                 <td>
                                     <a [routerLink]="['/responsible/tournaments', tournament.id, 'edit']" class="btn btn-info btn-sm" title="Editer le tournoi"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                    <ng-container *ngIf="tournament.id_statut == 1">
-                                        <a [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm" title="Configurer le tournoi"><i class="fa fa-gears" aria-hidden="true"></i></a>
-                                        <a [routerLink]="['/responsible/tournament', tournament.id, 'simul']" class="btn btn-warning btn-sm" title="Simuler la planification"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></a>
-                                    </ng-container>
+                                    <a *ngIf="tournament.id_statut == 1" [routerLink]="['/responsible/tournament', tournament.id, 'groups']" class="btn btn-success btn-sm" title="Configurer le tournoi"><i class="fa fa-gears" aria-hidden="true"></i></a>
+                                    <a *ngIf="tournament.id_statut == 1" [routerLink]="['/responsible/tournament', tournament.id, 'simul']" class="btn btn-warning btn-sm" title="Simuler la planification"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></a>
+                                    <a *ngIf="tournament.id_statut == 2" [routerLink]="['/responsible/tournament', tournament.id, 'pitches']" class="btn btn-info btn-sm" title="Editer les terrains"><i class="fa fa-table" aria-hidden="true"></i></a>
                                 </td>
                                 <td *ngIf="isLoggedInAsAdmin" [routerLink]="['/admin/resp/', tournament.id_user] "> {{tournament.nom_user}} {{tournament.prenom_user}}</td>
                         </tr>

@@ -168,11 +168,23 @@ export class RespTournamentService {
 
     
     /**
+     * Update pitch
+     * @param pitch 
+     */
+    updatePitch(pitch: Pitch): Observable<Pitch> {
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/terrain/${pitch.id_terrain}`, pitch, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
+
+    /**
      * Update coach
      * @param coach 
      */
         updateCoach(coach: Coach): Observable<Coach> {
-            console.log(coach);
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/personne/${coach.id_personne}`, coach, this.headBuilder())
         .do(this.checkError)

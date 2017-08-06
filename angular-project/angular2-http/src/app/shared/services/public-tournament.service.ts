@@ -9,6 +9,7 @@ import { ApiResponse } from "../models/api-response";
 import { Subject } from "rxjs/Subject";
 import { Group } from "../models/group";
 import { Team } from "../models/team";
+import { Pitch } from "../models/pitch";
 
 @Injectable()
 export class PublicTournamentService {
@@ -99,6 +100,20 @@ export class PublicTournamentService {
             .map(res => res.json().result)            
             .catch((e) => this.handleError(e));
     }
+        
+
+    /**
+     * Get pitches from a tournament
+     * @param id identifiant du tournoi 
+     */
+    getTournamentPitches(id: number): Observable<Pitch[]>{
+         return this.http                    
+            .get(`${this.tournamentUrl}/tournoi/${id}/terrains`, this.headBuilder())
+            .do(this.checkError)
+            .map(res => res.json().result)            
+            .catch((e) => this.handleError(e));
+    }
+
 
     /**
      * Get teams from a tournament

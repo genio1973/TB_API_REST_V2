@@ -25,6 +25,7 @@ import { CoachCreateComponent } from "./coachs/coach-create/coach-create.compone
 import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
 import { CoachsComponent } from "./coachs/coachs.component";
 import { SimulationComponent } from "./tournament/simulation/simulation.component";
+import { PitchesComponent } from "./tournament/pitches/pitches.component";
 
 
 export const respRoutes: Routes = [
@@ -66,7 +67,8 @@ export const respRoutes: Routes = [
                         children: [
                                     { path: '', redirectTo: 'teams', pathMatch: 'full' },
                                     { path: 'coachs/list', component: CoachListComponent },
-                                    { path: 'simul',   component: SimulationComponent },   
+                                    { path: 'simul',   component: SimulationComponent }, 
+                                    { path: 'pitches',   component: PitchesComponent },   
                                     {
                                         path: 'groups',
                                         component: GroupsComponent,

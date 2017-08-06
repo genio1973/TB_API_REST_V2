@@ -1535,12 +1535,12 @@ Routes par défauts : vx/resp/route
 
             $db = new DbHandler();
             //$res = $db->isPitchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
-            if(!$res){
-                $resultat['error'] = TRUE;
-                $resultat['message'] = "400";
-                $resultat["result"] = "Permission refusée pour votre identifiant, ou id non trouvé !";
-                return echoRespnse(400, $response, $resultat);
-            }
+            // if(!$res){
+            //     $resultat['error'] = TRUE;
+            //     $resultat['message'] = "400";
+            //     $resultat["result"] = "Permission refusée pour votre identifiant, ou id non trouvé !";
+            //     return echoRespnse(400, $response, $resultat);
+            // }
 
             // filtre les champs qu'il faut mettre à jour
             $fieldsToCheck = array("nom_terrain");

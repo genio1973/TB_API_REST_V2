@@ -265,7 +265,29 @@ class DbHandler {
          return $res;
     }
 
-    
+    /**
+     * Obtient tous les terrains utilisés pour un id de tournoi
+     * @param Integer : id_tournament
+     */
+    public function getPitchesByTournamentID($id_tournament) {
+        // Cherche tous les id des terrains du tournois
+        $stmt = $this->pdo->prepare("SELECT DISTINCT ter.id_terrain, ter.nom_terrain FROM tournois t
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                        INNER JOIN terrains ter ON ter.id_terrain = m.id_terrain
+                                        WHERE t.id_tournoi LIKE :id");
+        $stmt->bindParam(":id", $id_tournament, PDO::PARAM_INT);
+
+        if ($stmt->execute()){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);           
+            }
+        return null;
+    }
+
+
+
     /**
      * Suppression de tous les terrains utilisés pour un id de tournoi
      * @param Integer : id_tournament

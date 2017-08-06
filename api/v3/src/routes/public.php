@@ -346,6 +346,29 @@ $app->get('/public/matchs/terrain/{id_terrain}', function (Request $request, Res
             return echoRespnse(200, $response, $data);
         });
 
+/* Liste terrains pour un tournoi spécifique 
+ * url - /public/matchs/terrain/{id_terrain}
+ * methode - GET
+ */
+$app->get('/public/tournoi/{id_tournoi}/terrains', function (Request $request, Response $response) {
+            $id = $request->getAttribute('id_tournoi'); 
+            $db = new DbHandler();
+            $res = $db->getPitchesByTournamentID($id);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
 
 /* Obtient le classement d'un groupe par l'id du groupe
  * url - /public/classement/groupe/{id_groupe}
