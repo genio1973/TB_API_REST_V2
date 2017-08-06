@@ -11,6 +11,8 @@ import { TournamentSimple } from "../models/tournament-simple";
 import { Group } from "../models/group";
 import { Team } from "../models/team";
 import { Coach } from "../models/coach";
+import { Pitch } from "../models/pitch";
+import { Match } from "../models/match";
 
 @Injectable()
 export class RespTournamentService {
@@ -287,8 +289,8 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }
 
-     /**
-     * Création d''équipes
+    /**
+     * Création déquipes
      * @param teams : tableau d'équipes
      */
     createTeams(teams: Team[]): Observable<Team> {
@@ -298,6 +300,30 @@ export class RespTournamentService {
         .do(res => this.tournamentCreated(res))
         .catch((e) => this.handleError(e));
     }   
+
+    /**
+     * Création de terrains
+     * @param pitches : tableau de terrain
+     */
+    createPitches(pitches: Pitch[]): Observable<ApiResponse> {
+        return this.http.post(`${this.tournamentUrl}/terrains`, pitches, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .catch((e) => this.handleError(e));
+    } 
+    
+
+    
+    /**
+     * Création de terrains
+     * @param matchs : tableau de matchs
+     */
+    createMatchs(matchs: Match[]): Observable<ApiResponse> {
+        return this.http.post(`${this.tournamentUrl}/matchs`, matchs, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .catch((e) => this.handleError(e));
+    } 
 
     
     /**

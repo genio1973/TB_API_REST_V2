@@ -225,7 +225,6 @@ $app->get('/public/tournament/{id_tournoi}/equipes', function (Request $request,
 
 /* Liste des groupes pour un tournoi
 * url - /public/tournament/{id_tournoi}/groupes
-* headears - content id_user and API_KEY
 * methode - GET
 */
 $app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request, Response $response) {
@@ -250,6 +249,53 @@ $app->get('/public/tournament/{id_tournoi}/groupes', function (Request $request,
             // echo de la réponse  JSON
             return echoRespnse(200, $response, $data);
         });
+
+/* Liste des groupes avec les équipes pour un tournoi
+* url - /public/tournament/{id_tournoi}/groupes/equipes
+* methode - GET
+*/
+$app->get('/public/tournament/{id_tournoi}/groupes/equipes', function (Request $request, Response $response) {
+            // Prépartaion de la ruquête sur une seule table
+            $id = $request->getAttribute('id_tournoi');
+            
+            $db = new DbHandler();
+            $res = $db->getGoupsTeams($id);
+            if ($res != NULL) {
+                // regroupe les équipes par groupe
+                $groupe=0;
+                foreach($res as $equipe){
+                    if($equipe['id_groupe'] != $groupe){
+                        $groupe = $equipe['id_groupe'];
+                    }
+                    $groups[$groupe]['nom_groupe'] = $equipe['nom_groupe'];
+                    $groups[$groupe]['id_tournoi'] = $equipe['id_tournoi'];
+                    $groups[$groupe]['date_debut'] = $equipe['date_debut'];
+                    $groups[$groupe]['id_groupe'] = $equipe['id_groupe'];
+                    $groups[$groupe]['equipes'][] = array('id_equipe'=>$equipe['id_equipe'], 'nom_equipe'=>$equipe['nom_equipe'], 'id_groupe'=>$equipe['id_groupe']);                   
+                    // $data["result"][$groupe]['nom_groupe'] = $equipe['nom_groupe'];
+                    // $data["result"][$groupe]['id_tournoi'] = $equipe['id_tournoi'];
+                    // $data["result"][$groupe]['id_groupe'] = $equipe['id_groupe'];
+                    // $data["result"][$groupe]['equipes'][] = array('id_equipe'=>$equipe['id_equipe'], 'nom_equipe'=>$equipe['nom_equipe']);  $data["result"][$groupe]['nom_groupe'] = $equipe['nom_groupe'];
+                }
+                foreach($groups as $g){
+                    $data["result"][] = $g;
+                }
+                $data["error"] = false;
+                $data["message"] = "200";
+                //$data["result"] = $groups;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+
+            //
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
 /* Liste des matchs listés par terrain pour un tounoi spécifique 
  * url - /public/tournament/{id_tournoi}/matchs/terrains
  * methode - GET

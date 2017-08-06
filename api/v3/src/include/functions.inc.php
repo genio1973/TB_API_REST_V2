@@ -46,6 +46,26 @@ function filterRequiredFields($data, $fieldsToCheck) {
 }
 
 /**
+ * Filtre des champs nécessaires avant de passé une requête
+ * renvoi uniquement les valeur de $data pour les clés
+ * se trouvant dans $fieldsToCheck
+ * @param Array avec les clés à tester
+ * @param Array avec les champs autorisés
+ * @return Array avec les clé et valeurs acceptées 
+ */
+function filterRequiredFieldsArray($data, $fieldsToCheck) {
+    $arrayFields = array();
+    foreach ($data as $key => $value){
+        foreach($value as $k => $v){
+            if(in_array($k, $fieldsToCheck) ){
+                    $arrayFields[$key][$k] = $v;
+            }
+        }
+    }
+    return $arrayFields;
+}
+
+/**
  * Vérification des champs nécessaires avant de passé une requête
  * renvoi uniquement les valeur de $data pour les clés
  * se trouvant dans $fieldsToCheck
@@ -56,7 +76,7 @@ function filterRequiredFields($data, $fieldsToCheck) {
 function verifyRequiredFieldsArray($data, $fieldsToCheck) {
     foreach($data as $p => $v){
         foreach($v as $key => $val){
-            if(!in_array($p, $fieldsToCheck) ){
+            if(!in_array($key, $fieldsToCheck) ){
                return false;
             }
         }

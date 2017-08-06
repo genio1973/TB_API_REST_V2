@@ -365,6 +365,7 @@ Routes par défauts : vx/resp/route
 
             // filtre les champs qu'il faut mettre à jour
             $fieldsToCheck = array("nom_tournoi","date_debut");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             //return echoRespnse(400, $response, verifyRequiredFields($data, $fieldsToCheck));
             
             if(!verifyRequiredFields($data, $fieldsToCheck) ){
@@ -426,6 +427,7 @@ Routes par défauts : vx/resp/route
             
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("prenom", "nom", "courriel", "tel", "tel_mobile", "adresse", "localite", "pays", "id_user");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "402";
@@ -478,6 +480,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("niveau", "nb_pts", "nom_equipe","id_groupe", "id_personne");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -543,6 +546,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("nom_groupe","id_tournoi");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -606,8 +610,10 @@ Routes par défauts : vx/resp/route
             $headers = $request->getHeaders();
             $id_current_user = $headers['HTTP_USERID'][0];
 
-            // Contrôle que les champs soient cohérents
+            // filtre les champs qu'il faut mettre à jour
             $fieldsToCheck = array("nom_terrain");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
+
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -673,7 +679,8 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             // Contrôle que les champs soient cohérents
-            $fieldsToCheck = array("date_match","heure","id_user_dirige","id_terrain","id_equipe_home","id_equipe_visiteur","id_equipe_arbitre");
+            $fieldsToCheck = array("date_match","heure","id_user_dirige","id_terrain","id_equipe_home","id_equipe_visiteur","id_equipe_arbitre", "satut");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
@@ -740,6 +747,7 @@ Routes par défauts : vx/resp/route
 
             // Contrôle que les champs soient cohérents
             $fieldsToCheck = array("score_home","score_visiteur","id_match");
+            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
             if(!verifyRequiredFieldsArray($data, $fieldsToCheck) ){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";

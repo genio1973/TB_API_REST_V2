@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Tournament } from "../../../shared/models/tournament";
 import { MatchsPlan } from "../../../shared/plannings/matchs-plan";
 import { Group } from "../../../shared/models/group";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PublicTournamentService } from "../../../shared/services/public-tournament.service";
 import { Team } from "../../../shared/models/team";
 import { MatchDetails } from "../../../shared/models/match-details";
 import { ConfigSimul } from "../../../shared/plannings/config-simul";
+import { RespTournamentService } from "../../../shared/services/resp.tournament.service";
+import { Pitch } from "../../../shared/models/pitch";
+import { ApiResponse } from "../../../shared/models/api-response";
+import { Match } from "../../../shared/models/match";
 
 
 @Component({
@@ -17,6 +21,7 @@ import { ConfigSimul } from "../../../shared/plannings/config-simul";
 export class SimulationComponent implements OnInit {
   successMessage ='';
   errorMessage = '';
+  tournoiNouveau: boolean = false;
   tournament: Tournament; 
   d: Date = new Date("2017-08-17T08:30:00");
   d_pause: Date; // = new Date("2017-08-17T12:30:00");
@@ -24,12 +29,16 @@ export class SimulationComponent implements OnInit {
                                heure_debut_min: this.d.getMinutes(), match_duree: 12, matchs_meme_terrain: true,
                                auto_arbitrage: false, nb_terrains:2, pausePresence: false,
                                pause_debut_h:12, pause_debut_min:10, pause_duree: 60};
+
   groupsPlan: MatchsPlan[] = [];
   groups: Group[] = []; 
   tournamentId: number;
   simulLaunched = false;
+  readyToDbPush: boolean = false;
 
   constructor( private service: PublicTournamentService,
+               private respService: RespTournamentService,
+               private router: Router, 
                private route: ActivatedRoute ){}
 
   ngOnInit(): void {
@@ -42,6 +51,9 @@ export class SimulationComponent implements OnInit {
       .getTournament(this.tournamentId)
       .subscribe(t => { this.configSimul.tournoi_date  = t.date_debut;
                         this.tournament = t;
+                        if(t.id_statut == 1){
+                          this.tournoiNouveau = true;
+                        }
                         });
 
     // get every teams in groups in this tournament
@@ -87,8 +99,9 @@ export class SimulationComponent implements OnInit {
     }
   
     // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
+    this.readyToDbPush = true;
     if(this.checkConflict()) {
-            //this.errorMessage = 'Il y a des conflits, vérifiez les horraires de chaque équipe.'
+        this.readyToDbPush = false;
     }
 
   }
@@ -96,6 +109,7 @@ export class SimulationComponent implements OnInit {
 
   /**
    * Check if a team plays once per playtime 
+   * Return false if no conflict is present
    */
   private checkConflict():boolean{
     let matchs: MatchDetails[] = [];
@@ -297,6 +311,109 @@ export class SimulationComponent implements OnInit {
     if(this.configSimul.nb_terrains < this.groups.length){
       this.configSimul.matchs_meme_terrain = true;
     }
+  }
+
+
+  /**
+   * Insert the planning data (with tournament) in database
+   */
+  InsertDataMatchsToDB(){
+
+    let matchs: MatchDetails[] = [];
+
+    // Récupère tous le match en une seule liste
+    this.groupsPlan.map( g =>{ g.planning.map(m => { matchs.push(m)})});
+
+    //Insert les nouveau terrains    
+    this.insertPitchesDB(matchs);
+    
+    // Insert les matchs
+    this.insertMatchsDB(matchs);
+
+    // Le tournoi a un nouveau statut : OUVERT 
+    this.tournament.id_statut = 2;
+    this.respService.updateTournament(this.tournament)
+        .subscribe(
+          res => {
+            this.successMessage += "Le tournoi passe en mode ouvert";
+          }
+        )
+    this.router.navigate(['/responsible/tournaments/list']);
+  }
+
+
+  /**
+   * Insert les nouveauy terrains  
+   */
+  private insertPitchesDB(matchs: MatchDetails[])
+  {
+    let id_first_pitch_inserted: number = 0;
+    let pitches: Pitch[] = [];
+
+    // crée autant de terrain qu'il est configuré par l'utilistateur
+    for(let i=0; i<this.configSimul.nb_terrains;i++){
+      let ter: Pitch = {id_terrain:0, nom_terrain:'A'};
+      ter.nom_terrain = 'Groupe_' + (i+1);
+      pitches.push(ter);
+    }
+
+    // insert in the db all the necessary pitches
+    this.respService.createPitches(pitches)
+              .subscribe(
+                res => {
+                  let apiResp : ApiResponse = res;
+                  id_first_pitch_inserted = apiResp.result.id_premier_insert;
+                  pitches.map(t => t.id_terrain = id_first_pitch_inserted++);
+
+                  // update in planning all the id pitches (from inserted id)
+                  matchs.map(m=> {
+                    m.id_terrain = pitches[m.id_terrain-1].id_terrain;
+                  });
+
+                },
+                err => {
+                  this.errorMessage = err;
+                });
+  }
+
+  /**
+   * Insert les matchs dans la bd, avec un délai avant de créer 
+   */
+  private insertMatchsDB(matchs: MatchDetails[]){
+    
+    let matchsToPost: Match[] = [];
+    matchs.map(m => { matchsToPost.push(this.toMatchFieldCreation(m))});
+
+    setTimeout(() => {
+      this.respService.createMatchs(matchsToPost)
+      .subscribe(
+        res => {
+          this.successMessage = "Création terminée";
+        },
+        err => {
+          this.errorMessage = err;
+        });
+    }, 2000);
+  }
+
+  /**
+   * Format matc to insert in db
+   * @param m
+   */
+  private toMatchFieldCreation(m: MatchDetails): Match {
+    let match: Match = {
+              date_match: `${m.date_match.getFullYear()}-${m.date_match.getMonth()}-${m.date_match.getDay()}`,
+              heure: `${m.date_match.getHours()}:${m.date_match.getMinutes()}:00`,
+              id_equipe_home: m.equipe_home.id_equipe,
+              id_equipe_visiteur: m.equipe_visiteur.id_equipe,
+              id_terrain: m.id_terrain,
+              statut: m.statut,
+      }
+
+    if(m.equipe_arbitre){
+      match.id_equipe_arbitre = m.equipe_arbitre.id_equipe;
+    }
+    return match;
   }
 
 }

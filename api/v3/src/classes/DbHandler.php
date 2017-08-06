@@ -148,7 +148,7 @@ class DbHandler {
                     $this->pdo->exec($sql);
                 }
                 $res['id_dernier_insert'] = (int) $this->pdo->lastInsertId();
-                $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'];
+                $res['id_premier_insert'] = $res['id_dernier_insert'] - $res['nombre_insert'] +1 ;
 
                 // enregistrement des requêtes
                 $this->pdo->commit();
@@ -848,6 +848,28 @@ class DbHandler {
 
         $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         $stmt->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            //$this->pdo = NULL;
+            return $response;
+        }
+        return NULL;
+    }
+
+
+    /**
+     * Obtention des équipes dans leur groupe pour un tournoi 
+     * @param Int $id_tournoi
+     */
+    public function getGoupsTeams($id_tournoi) {
+        $stmt = $this->pdo->prepare("SELECT g.id_groupe, g.nom_groupe, g.id_groupe, t.nom_tournoi, t.id_tournoi, t.date_debut, e.id_equipe, e.nom_equipe 
+                                        FROM tournois t 
+                                        INNER JOIN groupes g ON t.id_tournoi = g.id_tournoi
+                                        INNER JOIN equipes e ON g.id_groupe = e.id_groupe
+                                        WHERE t.id_tournoi LIKE :id_tournoi");
+
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
         if ($stmt->execute())
         {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);

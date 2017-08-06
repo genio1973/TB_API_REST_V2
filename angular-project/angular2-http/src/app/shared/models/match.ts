@@ -3,8 +3,8 @@ import { Responsible } from "../models/responsible";
 
 export class Match {
     id_match?: number;
-    date_match?: Date;
-    heure?: Date;
+    date_match?: string;
+    heure?: string;
     statut?: string;
     id_user_dirige?: number;
     id_equipe_home: number;
