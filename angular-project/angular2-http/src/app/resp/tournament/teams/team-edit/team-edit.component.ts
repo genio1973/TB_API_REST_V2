@@ -5,6 +5,7 @@ import { RespTournamentService } from "../../../../shared/services/resp.tourname
 import { Router, ActivatedRoute } from "@angular/router";
 import { Coach } from "../../../../shared/models/coach";
 import { Group } from "../../../../shared/models/group";
+import { Tournament } from "../../../../shared/models/tournament";
 
 @Component({
   selector: 'my-team-edit',
@@ -15,6 +16,7 @@ export class TeamEditComponent implements OnInit {
     team: Team = { id_equipe: null, nom_equipe:'', niveau:'', nb_pts:0 ,id_groupe: 0};
     teamId: number;
     tournamentId: number;
+    tournament: Tournament;
     coachs: Coach[];
     coach: Coach;
     group: Group;
@@ -38,6 +40,9 @@ export class TeamEditComponent implements OnInit {
       this.route.pathFromRoot[2].params.subscribe(params => {
         this.tournamentId = params['idtournoi'];
       });
+
+      this.publicService.getTournament(this.tournamentId)
+          .subscribe( t => this.tournament = t);
 
       this.publicService
           .getTeam(this.teamId)

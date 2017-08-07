@@ -365,7 +365,7 @@ Routes par défauts : vx/resp/route
 
             // filtre les champs qu'il faut mettre à jour
             $fieldsToCheck = array("nom_tournoi","date_debut");
-            $data = filterRequiredFieldsArray($data, $fieldsToCheck);
+            $data = filterRequiredFields($data, $fieldsToCheck);
             //return echoRespnse(400, $response, verifyRequiredFields($data, $fieldsToCheck));
             
             if(!verifyRequiredFields($data, $fieldsToCheck) ){

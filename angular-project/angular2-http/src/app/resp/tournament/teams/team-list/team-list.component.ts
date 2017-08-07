@@ -5,6 +5,7 @@ import { PublicTournamentService } from "../../../../shared/services/public-tour
 import { Team } from "../../../../shared/models/team";
 import { RespTournamentService } from "../../../../shared/services/resp.tournament.service";
 import { Coach } from "../../../../shared/models/coach";
+import { Tournament } from "../../../../shared/models/tournament";
 
 @Component({
   selector: 'my-team-list',
@@ -17,6 +18,7 @@ export class TeamListComponent implements OnInit {
     @Input('tournamentId') tournamentId: number;
     errorMessage = '';
     successMessage = '';
+    tournament: Tournament;
     teams: Team[];  
     coachs: Coach[];
     groups: Group[];
@@ -32,6 +34,9 @@ export class TeamListComponent implements OnInit {
         console.log(params['idtournoi']);
         this.tournamentId = params['idtournoi'];
       });
+
+      this.service.getTournament(this.tournamentId)
+          .subscribe( t => this.tournament = t);
 
       if(this.group) {
         this.getTeamsInGroupInfo();

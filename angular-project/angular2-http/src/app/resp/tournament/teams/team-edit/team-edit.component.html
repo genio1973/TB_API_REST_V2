@@ -2,7 +2,7 @@
 <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 
   <div *ngIf="team">  
-  <a (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
+  <a *ngIf="tournament.id_statut == 1" (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
 
   <form (ngSubmit)="updateTeam()">
 
@@ -26,7 +26,7 @@
       <input type="texte" class="form-control" name="nb_pts" [(ngModel)]="team.nb_pts">
     </div>
 -->
-    <div *ngIf="groups" class="form-group">
+    <div *ngIf="groups && tournament.id_statut == 1" class="form-group">
       <label>Groupe</label>
       <select class="form-control" name="id_groupe" [(ngModel)]="team.id_groupe">
           <option *ngFor="let g of groups" [value]="g.id_groupe">{{g.nom_groupe}}</option>

@@ -83,7 +83,7 @@ export class PublicTournamentService {
                 nom_tournoi: tournament.nom_tournoi,
 
                 id_user: tournament.id_user,
-                id_statut: tournament.id_statut_tournoi,
+                id_statut: tournament.id_statut,
                 statut_tournoi: tournament.statut_tournoi,
             };
     }
