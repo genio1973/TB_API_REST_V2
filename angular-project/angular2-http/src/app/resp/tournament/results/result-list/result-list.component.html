@@ -1,4 +1,4 @@
-<div *ngIf="results">
+<div *ngIf="displayResults">
 
   <div class="panel panel-default">
       <div class="panel-heading">
@@ -10,16 +10,29 @@
           <div class="container-fluid">
             <ul class="nav navbar-nav">
                 <li><a [ngClass]="{'text-danger': displayType=='terrain'}" (click)="pitchDisplayType()">Par terrain</a></li>
-                <li><a [ngClass]="{'text-danger': displayType=='groupe'}" (click)="groupDisplayType()">Par groupes</a></li>
+                <li><a [ngClass]="{'text-danger': displayType=='groupe'}" (click)="groupDisplayType()">Par groupe</a></li>
                 <li><a [ngClass]="{'text-danger': displayType=='heure'}" (click)="timeDisplayType()">Par horaire</a></li>
             </ul>
           </div>
         </nav>
-        
+
+        <ng-container *ngFor="let matchs of displayResults">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                        {{displayType}}
+                </div>
+                <div class="panel-body">
+                        <ng-container *ngFor="let result of matchs">
+                            <my-result-single [result]="result"> </my-result-single> 
+                        </ng-container>
+                </div>
+            </div>
+        </ng-container>
+     <!--   
         <ng-container *ngFor="let result of results">
             <my-result-single [result]="result"> </my-result-single> 
         </ng-container>
-
+      -->  
  
         
       </div>
