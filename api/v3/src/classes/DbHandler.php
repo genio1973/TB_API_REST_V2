@@ -1201,7 +1201,6 @@ class DbHandler {
                         $id_match_tmp = $row['id_match'];
                         $set_home = 0;
                         $set_visiteur = 0;
-                        $num_set = 0;
                     }
                     else{
                         // c'est un autre set du même match, alors enlever le score temporaire 
@@ -1210,7 +1209,6 @@ class DbHandler {
                         }
                     }
 
-                    $num_set++;
                     // qui a gagné le set en cours ?
                     if($row['score_home']){
                         $row['score_home'] > $row['score_visiteur'] ? $set_home++ : $set_visiteur++;
@@ -1226,7 +1224,7 @@ class DbHandler {
                     // Mise en forme des score sous différents formats
                     $resultat[$row['id_match']]['score_match'] = $set_home.'-'.$set_visiteur;
                     if($row['score_home']){ 
-                      $resultat[$row['id_match']]['score_sets'][]["set"] = $row['score_home'].'-'.$row['score_visiteur'];
+                      $resultat[$row['id_match']]['score_sets'][]['set'] = array($row['score_home'], $row['score_visiteur']);
                     }
                     $resultat[$row['id_match']]['set_home_gagne'] = $set_home;
                     $resultat[$row['id_match']]['set_visiteur_gagne'] = $set_visiteur;
@@ -1281,7 +1279,6 @@ class DbHandler {
                         $id_match_tmp = $row['id_match'];
                         $set_home = 0;
                         $set_visiteur = 0;
-                        $num_set = 0;
                     }
                     else {
                         // c'est un autre set du même match, alors enlever le score temporaire 
@@ -1290,7 +1287,6 @@ class DbHandler {
                         }
                     }
 
-                    $num_set++;
                     // qui a gagné le set en cours ?
                     if($row['score_home']){
                         $row['score_home'] > $row['score_visiteur'] ? $set_home++ : $set_visiteur++;
@@ -1306,7 +1302,7 @@ class DbHandler {
                     // Mise en forme des score sous différents formats
                     $resultat[$row['id_match']]['score_match'] = $set_home.'-'.$set_visiteur;
                     if($row['score_home']){ 
-                      $resultat[$row['id_match']]['score_sets'][]["set_$num_set"] = $row['score_home'].'-'.$row['score_visiteur'];
+                      $resultat[$row['id_match']]['score_sets'][]['set'] = array($row['score_home'], $row['score_visiteur']);
                     }
                     $resultat[$row['id_match']]['set_home_gagne'] = $set_home;
                     $resultat[$row['id_match']]['set_visiteur_gagne'] = $set_visiteur;

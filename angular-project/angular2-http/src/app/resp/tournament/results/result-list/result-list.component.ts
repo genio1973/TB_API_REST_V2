@@ -26,7 +26,7 @@ export class ResultListComponent implements OnInit {
 
     // get all matchs's results
     this.service.getResultsByTournament(this.tournamentId)
-      .subscribe(r => { this.results = r; console.log(r[0].score_sets); console.log(r) });
+      .subscribe(r => this.results = r);
   }
 
 
@@ -34,95 +34,50 @@ export class ResultListComponent implements OnInit {
     
     switch(this.displayType){
       default:
-      case 'groupe': this.matchsByGroups(); break;
-      case 'terrain': this.matchsByPitches(); break;
-      case 'heure' : this.matchsByHours(); break;
+      case 'groupe': this.groupDisplayType(); break;
+      case 'terrain': this.pitchDisplayType(); break;
+      case 'heure' : this.timeDisplayType(); break;
     }
   }
 
 
   pitchDisplayType(){
     this.displayType = 'terrain';
-    this.matchsByPitches();
+    this.results.sort((a, b) => {
+        if (a.nom_terrain < b.nom_terrain) {
+          return -1;
+        } else if (a.nom_terrain > b.nom_terrain) {
+          return 1;
+        } else {
+          return 0;
+        }});
   }
 
   groupDisplayType(){
     this.displayType = 'groupe';
-    this.matchsByGroups();
+    this.results.sort((a, b) => {
+        if (a.nom_groupe < b.nom_groupe) {
+          return -1;
+        } else if (a.nom_groupe > b.nom_groupe) {
+          return 1;
+        } else {
+          return 0;
+        }});
   }
 
   timeDisplayType(){
     this.displayType = 'heure';
-    this.matchsByHours();
+    this.results.sort((a, b) => {
+        let aNew: Date = new Date(`${a.date_match}T${a.heure}`);
+        let bNew: Date = new Date(`${b.date_match}T${b.heure}`);
+        //bNew: Date = 
+        if (aNew.getTime() < bNew.getTime()) {
+          return -1;
+        } else if (aNew.getTime() > bNew.getTime()) {
+          return 1;
+        } else {
+          return 0;
+        }});
   }
-
-  /**
-   * regrouper par groupe
-   */
-  private matchsByGroups(){
-    /*
-    this.matchsGroupBy = [];
-    this.groupsPlan.map(g => {
-      if(g.planning.length>0) {
-        this.matchsGroupBy.push(new MatchsGroupBy(g.planning));
-      }
-    });
-    */
-  }
-
-  /**
-   * Trié par heure de début du match
-   */
-  private matchsByHours(){
-    /*
-    this.matchsGroupBy = [];
-    let matchs: MatchDetails[] = [];
-
-    // Récupère tous le match en une seule liste
-    this.groupsPlan.map( g =>{ g.planning.map(m => { matchs.push(m)})});
-
-    // trie par heure
-    matchs.sort((a: any, b: any) => {
-      if (a.date_match < b.date_match) {
-        return -1;
-      } else if (a.date_match > b.date_match) {
-        return 1;
-      } else {
-        return 0;
-      }});
-    
-    // place dans l'attibut de classe les matchs
-    this.matchsGroupBy.push(new MatchsGroupBy(matchs));
-    this.matchsGroupBy[0].groupId = null;
-    */
-  }
-
-  /**
-   *  regrouper par terrain
-   */
-  private matchsByPitches(){
-    /*
-    this.matchsGroupBy = [];
-    
-    let terrainIds:number[]=[];
-    for(let i=0; i < this.configSimul.nb_terrains; i++){ 
-      terrainIds[i]=i+1;
-    }
-
-    //console.log("Debug");
-    let planning: MatchDetails[] = [];
-    terrainIds.map(numTerrain => {
-      this.groupsPlan
-        .map(g => { planning=g.planning.filter(m=> m.id_terrain == numTerrain);
-                    if(planning.length > 0){
-                      //console.log(planning);
-                      this.matchsGroupBy.push(new MatchsGroupBy(planning));
-                    }      
-                })
-    });
-  */
-  }
-
-
 
 }

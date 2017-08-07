@@ -1,3 +1,3 @@
 export class ScoreSet{
-    set: string;
+    set: string[];
 }

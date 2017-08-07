@@ -1,11 +1,17 @@
-<div class="row" *ngIf="match">
-    <div class="col-sm-1"  *ngIf="match.id">{{match.id}}</div>
-    <div class="col-sm-1"  *ngIf="match.equipe_home.id_groupe">{{match.equipe_home.id_groupe}}</div>
-    <div class="col-sm-1"  *ngIf="match.date_match">{{match.date_match | date: 'HH:mm'}}</div>
-    <div class="col-sm-2"  *ngIf="match.equipe_home">{{match.equipe_home.nom_equipe}}</div>
-    <div class="col-sm-2"  *ngIf="match.equipe_visiteur">{{match.equipe_visiteur.nom_equipe}}</div>
-    <div class="col-sm-2"  *ngIf="match.equipe_arbitre">{{match.equipe_arbitre.nom_equipe}}</div>
-    <div class="col-sm-1"  *ngIf="match.user_dirige">{{match.user_dirige.nom_user}}</div>
-    <div class="col-sm-1"  *ngIf="match.id_terrain">{{match.id_terrain}}</div>
-    <div class="col-sm-1"  *ngIf="match.id_statut">{{match.id_statut}}</div>
+<div *ngIf="result" class="row">
+    <div class="col-sm-12">
+        <p>
+                {{result.date_match}} {{result.heure}} {{result.nom_equipe_home}} - {{result.nom_equipe_visiteur}} : {{result.score_match}}
+                 (
+                     <ng-container *ngFor="let score_set of result.score_sets">
+                         {{score_set.set[0]}}-{{score_set.set[1]}} 
+                     </ng-container>
+                 )
+                {{result.nom_groupe}}-{{result.nom_terrain}}
+        </p>
+    </div>
+ 
+  <!--End Simulation info -->
 </div>
+
+

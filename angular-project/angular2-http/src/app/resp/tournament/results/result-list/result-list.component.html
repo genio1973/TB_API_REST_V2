@@ -2,7 +2,7 @@
 
   <div class="panel panel-default">
       <div class="panel-heading">
-              <h1>Résultat</h1>
+              <h1>Liste des matchs</h1>
       </div>
       <div class="panel-body">
         
@@ -17,15 +17,6 @@
         </nav>
         
         <ng-container *ngFor="let result of results">
-            <p>
-                {{result.nom_equipe_home}} - {{result.nom_equipe_visiteur}} : {{result.score_match}}
-                 (
-                     <ng-container *ngFor="let score_set of result.score_sets">
-                         {{score_set.set}} 
-                     </ng-container>
-                 )
-
-            </p>
             <my-result-single [result]="result"> </my-result-single> 
         </ng-container>
 
