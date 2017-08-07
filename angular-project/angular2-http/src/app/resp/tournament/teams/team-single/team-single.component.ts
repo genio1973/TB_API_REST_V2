@@ -41,21 +41,21 @@ export class TeamSingleComponent implements OnInit {
     this.service
       .getTeam(this.teamId)
       .subscribe(team => this.team = team);       
+    if(this.team){
+      this.respService
+          .getCoachs()
+          .subscribe(coachs => {
+            this.coachs = coachs;
+            this.coach = coachs.find(c => c.id_personne == this.team.id_personne);
+          } ); 
 
-    this.respService
-        .getCoachs()
-        .subscribe(coachs => {
-          this.coachs = coachs;
-          this.coach = coachs.find(c => c.id_personne == this.team.id_personne);
-         } ); 
-
-      this.service
-      .getGroupsTournament(this.tournamentId)
-      .subscribe(groups => {
-        this.groups = groups;
-        this.group = groups.find( g => g.id_groupe == this.team.id_groupe)
-      }); 
-
+        this.service
+        .getGroupsTournament(this.tournamentId)
+        .subscribe(groups => {
+          this.groups = groups;
+          this.group = groups.find( g => g.id_groupe == this.team.id_groupe)
+        }); 
+    }
 
     }
     

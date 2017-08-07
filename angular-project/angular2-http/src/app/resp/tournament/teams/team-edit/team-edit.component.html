@@ -1,7 +1,7 @@
 <div *ngIf="successMessage" class="alert alert-success">{{successMessage}}</div>
 <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 
-  <div *ngIf="team">  
+<div *ngIf="team && groups && coachs && tournament">  
   <a *ngIf="tournament.id_statut == 1" (click)="deleteTeam()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer</i></a>
 
   <form (ngSubmit)="updateTeam()">
@@ -20,12 +20,7 @@
       <label>Niveau/Catégorie (M15, M16...)</label>
       <input type="text" class="form-control" name="niveau" [(ngModel)]="team.niveau">
     </div>
-<!--
-    <div class="form-group">
-      <label>Nbombre de points</label>
-      <input type="texte" class="form-control" name="nb_pts" [(ngModel)]="team.nb_pts">
-    </div>
--->
+
     <div *ngIf="groups && tournament.id_statut == 1" class="form-group">
       <label>Groupe</label>
       <select class="form-control" name="id_groupe" [(ngModel)]="team.id_groupe">

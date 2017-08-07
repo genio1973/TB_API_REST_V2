@@ -18,7 +18,8 @@ export class TeamEditComponent implements OnInit {
     tournamentId: number;
     tournament: Tournament;
     coachs: Coach[];
-    coach: Coach;
+    coach: Coach = {id_personne:0, nom:'', prenom: '', courriel:''};  
+    
     group: Group;
     groups: Group[];
     successMessage: string = '';
