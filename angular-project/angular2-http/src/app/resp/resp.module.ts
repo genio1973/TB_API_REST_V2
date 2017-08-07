@@ -29,6 +29,9 @@ import { MatchListComponent } from "./tournament/matchs/match-list/match-list.co
 import { SimulationComponent } from "./tournament/simulation/simulation.component";
 import { MatchsComponent } from "./tournament/matchs/matchs.component";
 import { PitchesComponent } from "./tournament/pitches/pitches.component";
+import { ResultListComponent } from "./tournament/results/result-list/result-list.component";
+import { ResultsComponent } from "./tournament/results/results.component";
+import { ResultSingleComponent } from "./tournament/results/result-single/result-single.component";
 
 @NgModule({
   imports: [
@@ -64,6 +67,9 @@ import { PitchesComponent } from "./tournament/pitches/pitches.component";
     MatchSingleComponent,
     SimulationComponent,
     PitchesComponent,
+    ResultsComponent,
+    ResultListComponent,
+    ResultSingleComponent,
   ],
   providers: [
   ]

@@ -119,6 +119,32 @@ $app->get('/public/resultats/groupe/{id_groupe}', function (Request $request, Re
         });
 
 
+/* Liste tous les résultats d'un tournois
+ * url - /public/tournoi/{id_tournoi}/resultats
+ * methode - GET
+ */
+$app->get('/public/tournoi/{id_tournoi}/resultats', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id_tournoi');
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getScoresByTournament($id_tournoi);
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+                //$data["result"][]
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
 /* Liste des résultats d'un groupe
  * url - /public/equipe/{id_equipe}
  * methode - GET

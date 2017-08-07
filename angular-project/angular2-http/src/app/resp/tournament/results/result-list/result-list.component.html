@@ -1,9 +1,8 @@
-<div *ngIf="!match">
+<div *ngIf="results">
 
-  <!-- Simulation info -->
   <div class="panel panel-default">
       <div class="panel-heading">
-              <h1>Résultat de la simulation</h1>
+              <h1>Résultat</h1>
       </div>
       <div class="panel-body">
         
@@ -17,16 +16,21 @@
           </div>
         </nav>
         
-        <ng-container *ngFor="let matchs of matchsGroupBy">
-                  <my-match-list [matchs] = "matchs.planning"></my-match-list>
-                  <hr/>
+        <ng-container *ngFor="let result of results">
+            <p>
+                {{result.nom_equipe_home}} - {{result.nom_equipe_visiteur}} : {{result.score_match}}
+                 (
+                     <ng-container *ngFor="let score_set of result.score_sets">
+                         {{score_set.set}} 
+                     </ng-container>
+                 )
+
+            </p>
+            <my-result-single [result]="result"> </my-result-single> 
         </ng-container>
 
  
         
       </div>
   </div>
-  <!--End Simulation info -->
 </div>
-
-

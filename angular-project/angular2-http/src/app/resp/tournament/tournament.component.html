@@ -7,6 +7,7 @@
             <li><a [routerLink]="['/responsible/tournament', tournament.id, 'groups', 'list']" routerLinkActive="active" >Groupes</a></li>
             <li><a [routerLink]="['/responsible/tournament', tournament.id, 'coachs', 'list']" routerLinkActive="active" >Coachs</a></li>
             <li *ngIf="tournament.id_statut == 2"> <a [routerLink]="['/responsible/tournament', tournament.id, 'pitches']" routerLinkActive="active"><i class="fa fa-table" aria-hidden="true"></i>Terrains</a></li>
+            <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/responsible/tournament', tournament.id, 'results']" routerLinkActive="active"><i class="fa fa-table" aria-hidden="true"></i>Resultats</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

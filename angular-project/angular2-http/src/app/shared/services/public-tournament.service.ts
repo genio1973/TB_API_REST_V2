@@ -10,6 +10,8 @@ import { Subject } from "rxjs/Subject";
 import { Group } from "../models/group";
 import { Team } from "../models/team";
 import { Pitch } from "../models/pitch";
+import { Resultat } from "../models/resultat";
+import { ScoreSet } from "../models/score-set";
 
 @Injectable()
 export class PublicTournamentService {
@@ -199,6 +201,21 @@ export class PublicTournamentService {
             })
             .catch((e) => this.handleError(e));
     }
+
+
+    /*
+    * Get all Tournament matchs results
+    */
+    getResultsByTournament(id: number): Observable<Resultat[]> {
+
+
+         return this.http                    
+                    .get(`${this.tournamentUrl}/tournoi/${id}/resultats`)
+                    .do(this.checkError)
+                    .map(res =>res.json().result)
+                    .catch((e) => this.handleError(e));
+    }
+
 
     /*
     * Check if error comes from API

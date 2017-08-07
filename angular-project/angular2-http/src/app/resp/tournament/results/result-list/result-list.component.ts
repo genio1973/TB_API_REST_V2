@@ -1,23 +1,34 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { MatchsPlan } from "../../../shared/plannings/matchs-plan";
-import { Match } from "../../../shared/models/match";
-import { MatchDetails } from "../../../shared/models/match-details";
-import { MatchsGroupBy } from "../../../shared/plannings/matchs-group-by";
-import { ConfigSimul } from "../../../shared/plannings/config-simul";
+import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Resultat } from "../../../../shared/models/resultat";
+import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: 'my-matchs',
-  templateUrl: './matchs.component.html',
-  styleUrls: ['./matchs.component.css']
+  selector: 'my-result-list',
+  templateUrl: './result-list.component.html',
+  styleUrls: ['./result-list.component.css']
 })
-export class MatchsComponent implements OnChanges {
+export class ResultListComponent implements OnInit {
 
-  @Input() groupsPlan: MatchsPlan[] = [];
-  @Input() configSimul: ConfigSimul;
-  displayType: string = 'groupe';
-  matchsGroupBy: MatchsGroupBy[] = [];
-  
-  constructor() { }
+  tournamentId:number;
+  results: Resultat[] = [];
+  id_statut: number;
+  displayType: string = 'heure';
+
+  constructor(private service: PublicTournamentService, 
+               private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    // get the id from the url
+    this.route.pathFromRoot[2].params.subscribe(params => {
+      this.tournamentId = params['idtournoi'];
+    });
+
+    // get all matchs's results
+    this.service.getResultsByTournament(this.tournamentId)
+      .subscribe(r => { this.results = r; console.log(r[0].score_sets); console.log(r) });
+  }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     
@@ -29,9 +40,6 @@ export class MatchsComponent implements OnChanges {
     }
   }
 
-
-  ngOnInit(): void {
-  }
 
   pitchDisplayType(){
     this.displayType = 'terrain';
@@ -52,18 +60,21 @@ export class MatchsComponent implements OnChanges {
    * regrouper par groupe
    */
   private matchsByGroups(){
+    /*
     this.matchsGroupBy = [];
     this.groupsPlan.map(g => {
       if(g.planning.length>0) {
         this.matchsGroupBy.push(new MatchsGroupBy(g.planning));
       }
     });
+    */
   }
 
   /**
    * Trié par heure de début du match
    */
   private matchsByHours(){
+    /*
     this.matchsGroupBy = [];
     let matchs: MatchDetails[] = [];
 
@@ -83,12 +94,14 @@ export class MatchsComponent implements OnChanges {
     // place dans l'attibut de classe les matchs
     this.matchsGroupBy.push(new MatchsGroupBy(matchs));
     this.matchsGroupBy[0].groupId = null;
+    */
   }
 
   /**
    *  regrouper par terrain
    */
   private matchsByPitches(){
+    /*
     this.matchsGroupBy = [];
     
     let terrainIds:number[]=[];
@@ -107,5 +120,9 @@ export class MatchsComponent implements OnChanges {
                     }      
                 })
     });
+  */
   }
+
+
+
 }
