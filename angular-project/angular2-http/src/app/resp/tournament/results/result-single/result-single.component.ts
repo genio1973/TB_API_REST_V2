@@ -9,6 +9,7 @@ import { Resultat } from "../../../../shared/models/resultat";
 export class ResultSingleComponent implements OnInit {
 
   @Input() result: Resultat;
+  @Input() displayType: string;
   
   constructor() { }
 

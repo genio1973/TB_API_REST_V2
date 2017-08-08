@@ -1,14 +1,19 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Pipe, PipeTransform } from '@angular/core';
 import { Resultat } from "../../../../shared/models/resultat";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { ActivatedRoute } from "@angular/router";
 
+
 @Component({
   selector: 'my-result-list',
   templateUrl: './result-list.component.html',
-  styleUrls: ['./result-list.component.css']
+  styleUrls: ['./result-list.component.css'],
+  
 })
+
 export class ResultListComponent implements OnInit {
+  
+  arrayOfKeys;
 
   tournamentId:number;
   results: Resultat[] = [];
@@ -27,7 +32,11 @@ export class ResultListComponent implements OnInit {
 
     // get all matchs's results
     this.service.getResultsByTournament(this.tournamentId)
-      .subscribe(r => { this.results = r; this.displayResults.push(this.results); });
+      .subscribe(r => { this.results = r;
+                        this.sortingByHours(this.results);
+                        this.displayResults.push({nameBlock:'Horaire', matchs:this.results});
+                       });
+
   }
 
 
@@ -38,11 +47,13 @@ export class ResultListComponent implements OnInit {
       case 'Groupe': this.groupDisplayType(); break;
       case 'Terrain': this.pitchDisplayType(); break;
       case 'Horaire' : this.timeDisplayType(); break;
-    }
-    this.displayResults.map(g=>this.sortingByHours(g));
+    }    
   }
 
 
+  /**
+   * Display match by ptiches
+   */
   private pitchDisplayType(){
 
     this.displayType = 'Terrain';
@@ -59,14 +70,17 @@ export class ResultListComponent implements OnInit {
 
     //for each pitch get the matchs and put it in a specific group
     terrains.map(nom_terrain => {
-      this.displayResults.push(this.results.filter(m => m.nom_terrain == nom_terrain));
+      this.displayResults.push({nameBlock:nom_terrain, matchs: this.results.filter(m => m.nom_terrain == nom_terrain)});
     });
   }
 
+  /**
+   * Display match by group
+   */
   private groupDisplayType(){
     this.displayType = 'Groupe';
     this.displayResults = [];
-    
+
     // Get all id pitches
     let groups:string[] = [];
     this.results.map(m => {
@@ -78,20 +92,24 @@ export class ResultListComponent implements OnInit {
 
     //for each pitch get the matchs and put it in a specific group
     groups.map(nom_groupe => {
-      this.displayResults.push(this.results.filter(m => m.nom_groupe == nom_groupe));      
+      this.displayResults.push({nameBlock:nom_groupe, matchs: this.results.filter(m => m.nom_groupe == nom_groupe)});     
     });
 
   }
 
+  /**
+   * Display matchs by hours
+   */
   private timeDisplayType(){
     this.displayType = 'Horaire';
     this.displayResults = [];
-    this.displayResults.push(this.results); 
-    console.log(this.displayResults);
-    console.log(this.results);
-
+    this.displayResults.push({nameBlock:'Horaire', matchs:this.results});
   }
 
+  /**
+   * sorting match'results by date and hour
+   * @param results
+   */
   private sortingByHours(results: Resultat[]){
 
     results.sort((a, b) => {

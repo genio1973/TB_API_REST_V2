@@ -27,12 +27,14 @@ import { AdminModule } from "./admin/admin.module";
 import { RespModule } from "./resp/resp.module";
 import { PublicTournamentService } from "./shared/services/public-tournament.service";
 import { RespTournamentService } from "./shared/services/resp.tournament.service";
+import { KeysPipe } from "./shared/tools/keys-pipe";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     AccountComponent,
+    KeysPipe,
     NotFoundComponent
   ],
   imports: [

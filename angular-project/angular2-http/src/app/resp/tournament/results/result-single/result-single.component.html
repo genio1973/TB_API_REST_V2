@@ -1,17 +1,86 @@
-<div *ngIf="result" class="row">
-    <div class="col-sm-12">
-        <p>
-                {{result.date_match}} {{result.heure}} {{result.nom_equipe_home}} - {{result.nom_equipe_visiteur}} : {{result.score_match}}
-                 (
-                     <ng-container *ngFor="let score_set of result.score_sets">
-                         {{score_set.set[0]}}-{{score_set.set[1]}} 
-                     </ng-container>
-                 )
-                {{result.nom_groupe}}-{{result.nom_terrain}}
-        </p>
+    <div *ngIf="result" class="col-sm-12 mypointer" [routerLink]="['/responsible', tournamentId, 'results', result.id_match] ">
+        <ng-container [ngSwitch]="displayType">
+            <ng-container *ngSwitchDefault>
+                <div class="col-sm-2">{{result.date_match}} à {{result.heure}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_home}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_visiteur}}</div>
+                <div class="col-sm-1"> {{result.score_match}} <br/>
+                    <ng-container *ngFor="let score_set of result.score_sets">
+                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                    </ng-container>
+                </div>
+                <div class="col-sm-1">{{result.nom_equipe_arbitre}}</div>
+                <div class="col-sm-2">{{result.nom_user_dirige}}</div>
+                <div class="col-sm-1">{{result.nom_terrain}}</div>
+                <div class="col-sm-1">{{result.nom_groupe}}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Terrain'">
+                <div class="col-sm-2">{{result.date_match}} à {{result.heure}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_home}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_visiteur}}</div>
+                <div class="col-sm-1"> {{result.score_match}} <br/>
+                    <ng-container *ngFor="let score_set of result.score_sets">
+                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                    </ng-container>
+                </div>
+                <div class="col-sm-2">{{result.nom_equipe_arbitre}}</div>
+                <div class="col-sm-2">{{result.nom_user_dirige}}</div>
+                <div class="col-sm-1">{{result.nom_groupe}}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Groupe'">
+                <div class="col-sm-2">{{result.date_match}} à {{result.heure}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_home}}</div>
+                <div class="col-sm-2">{{result.nom_equipe_visiteur}}</div>
+                <div class="col-sm-1"> {{result.score_match}} <br/>
+                    <ng-container *ngFor="let score_set of result.score_sets">
+                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                    </ng-container>
+                </div>
+                <div class="col-sm-2">{{result.nom_equipe_arbitre}}</div>
+                <div class="col-sm-2">{{result.nom_user_dirige}}</div>
+                <div class="col-sm-1">{{result.nom_terrain}}</div>
+            </ng-container>
+        </ng-container>
+
     </div>
- 
-  <!--End Simulation info -->
+
+
+
+<!--
+
+<div *ngIf="result" class="row">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Date/Heure</th>
+                    <th>Equipe 1</th>
+                    <th>Equipe 2</th>
+                    <th>Score</th>
+                    <th>Equipe arbitre</th>
+                    <th>Arbitre</th>
+                    <th>Terrain</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="odd gradeX" [routerLink]="['/responsible', tournamentId, 'results', result.id_match] ">
+                    <td>{{result.date_match}} à {{result.heure}}</td>
+                    <td>{{result.nom_equipe_home}}</td>
+                    <td>{{result.nom_equipe_visiteur}}</td>
+                    <td>{{result.score_match}}
+                        (<ng-container *ngFor="let score_set of result.score_sets">
+                                {{score_set.set[0]}}-{{score_set.set[1]}} 
+                            </ng-container>)
+                    </td>
+                    <td>{{result.nom_equipe_arbitre}}</td>
+                    <td>{{result.nom_user_dirige}}</td>
+                    <td>{{result.nom_terrain}}</td>
+                    <td>{{result.nom_groupe}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-
+-->

@@ -16,25 +16,30 @@
           </div>
         </nav>
 
-        <ng-container *ngFor="let matchs of displayResults">
+        <ng-container *ngFor="let matchsBlock of displayResults">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                        {{displayType}}
+                        {{matchsBlock.nameBlock}}
                 </div>
                 <div class="panel-body">
-                        <ng-container *ngFor="let result of matchs">
-                            <my-result-single [result]="result"> </my-result-single> 
-                        </ng-container>
+                    <div class="row">
+                        <div class="col-sm-2">Date_match/heure</div>
+                        <div class="col-sm-2">Equipe 1</div>
+                        <div class="col-sm-2">Equipe 2</div>
+                        <div class="col-sm-1">Score</div>
+                        <div class="col-sm-2">Equipe arbitre</div>
+                        <div class="col-sm-2">Arbitre</div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                    <ng-container *ngFor="let result of matchsBlock.matchs; let odd=odd; let even=even;">
+                        <div class="row" [ngClass]="{ odd: odd, even: even }">
+                            <my-result-single [result]="result" [displayType]="displayType"> </my-result-single> 
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </ng-container>
-     <!--   
-        <ng-container *ngFor="let result of results">
-            <my-result-single [result]="result"> </my-result-single> 
-        </ng-container>
-      -->  
- 
-        
+
       </div>
   </div>
 </div>
