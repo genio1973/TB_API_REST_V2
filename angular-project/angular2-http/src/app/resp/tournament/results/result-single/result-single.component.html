@@ -9,7 +9,7 @@
                     <ng-container *ngIf="result.statut">
                         <span [ngClass]="{'text-danger': result.statut=='final'}">{{result.score_match}} </span>
                         <ng-container *ngFor="let score_set of result.score_sets">
-                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                            <div>{{score_set.set[0]}}-{{score_set.set[1]}}</div>
                         </ng-container>
                     </ng-container>
                 </div>
@@ -26,7 +26,7 @@
                     <ng-container *ngIf="result.statut">
                         <span [ngClass]="{'text-danger': result.statut=='final'}">{{result.score_match}} </span>
                         <ng-container *ngFor="let score_set of result.score_sets">
-                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                            <div>{{score_set.set[0]}}-{{score_set.set[1]}}</div>
                         </ng-container>
                     </ng-container>
                 </div>
@@ -42,7 +42,7 @@
                     <ng-container *ngIf="result.statut">
                         <span [ngClass]="{'text-danger': result.statut=='final'}">{{result.score_match}} </span>
                         <ng-container *ngFor="let score_set of result.score_sets">
-                            {{score_set.set[0]}}-{{score_set.set[1]}} <br/>
+                            <div>{{score_set.set[0]}}-{{score_set.set[1]}}</div>
                         </ng-container>
                     </ng-container>
                 </div>

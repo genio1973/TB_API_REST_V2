@@ -45,11 +45,10 @@ export class GroupEditComponent implements OnInit {
     updateGroup(){
         this.errorMessage = '';
         this.successMessage = '';
-        console.log(this.group);
 
         this.respService.updateGroup(this.group)
           .subscribe(
-            user => {
+            data => {
               this.successMessage = 'Tournoi a été mis à jour.';
               this.router.navigate(['/responsible/tournament',  this.tournamentId, 'groups']);
             },

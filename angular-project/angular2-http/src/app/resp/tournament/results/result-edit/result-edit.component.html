@@ -32,7 +32,7 @@
                                 <td>{{result.nom_equipe_home}}</td>
                                 <ng-container *ngFor="let score_set of result.score_sets; let i = index;">
                                     <td>
-                                        <input type="number" class="form-control" min="0" step="5" name="home_set_{{i+1}}" [(ngModel)]="score_set.set[0]">
+                                        <input (change)="valuechange()" tabindex={{i+1+2}} type="number" class="form-control" min="0" step="5" name="home_set_{{i+1}}" [(ngModel)]="score_set.set[0]">
                                     </td>
                                 </ng-container>
                             </tr>
@@ -40,7 +40,7 @@
                                 <td>{{result.nom_equipe_visiteur}}</td>
                                 <ng-container *ngFor="let score_set of result.score_sets; let i = index;">
                                     <td>
-                                        <input type="number" class="form-control" min="0" step="5" name="visiteur_set_{{i+1}}" [(ngModel)]="score_set.set[1]">
+                                        <input (change)="valuechange()" tabindex={{i+1+2}} type="number" class="form-control" min="0" step="5" name="visiteur_set_{{i+1}}" [(ngModel)]="score_set.set[1]">
                                     </td>
                                 </ng-container>
 
@@ -52,7 +52,7 @@
 
                 <div class="form-group">
                 <label>Statut</label>
-                <select class="form-control" name="statut" [(ngModel)]="result.statut">
+                <select tabindex=9 class="form-control" name="statut" [(ngModel)]="result.statut">
                     <option *ngFor="let s of statuts" [value]="s">Résultat : {{s}}</option>
                 </select>
                 </div>
@@ -61,7 +61,7 @@
                 <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
                 <div class="col-sm-12 form-group">
-                    <button type="submit" class="btn btn-warning btn-block">Mettre à jour le résultat</button>
+                    <button tabindex=10 type="submit" class="btn btn-warning btn-block">Mettre à jour le résultat</button>
                 </div>
             </form>
     </div>

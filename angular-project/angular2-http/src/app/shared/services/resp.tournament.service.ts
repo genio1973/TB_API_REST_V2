@@ -13,6 +13,7 @@ import { Team } from "../models/team";
 import { Coach } from "../models/coach";
 import { Pitch } from "../models/pitch";
 import { Match } from "../models/match";
+import { SetMatch } from "../models/set-match";
 
 @Injectable()
 export class RespTournamentService {
@@ -251,6 +252,16 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }
 
+    /**
+     * Delete all sets played in a match
+     * @param id_match
+     */
+    deleteScore(id_match: number) : Observable<any>{
+        return this.http.delete(`${this.tournamentUrl}/score/match/${id_match}`, this.headBuilder())
+        .do(this.checkError)
+        .catch((e) => this.handleError(e));
+    }
+
 
     /*
     /* The tournament was deleted. Add this info to our stream
@@ -320,7 +331,7 @@ export class RespTournamentService {
     }
 
     /**
-     * Création déquipes
+     * Création d'équipes
      * @param teams : tableau d'équipes
      */
     createTeams(teams: Team[]): Observable<Team> {
@@ -368,6 +379,20 @@ export class RespTournamentService {
         .catch((e) => this.handleError(e));
     }  
 
+
+    /**
+     * Création de sets
+     * @param sets : tableau de sets
+     */
+    createSets(sets: SetMatch[]): Observable<SetMatch> {
+        return this.http.post(`${this.tournamentUrl}/sets`, sets, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentCreated(res))
+        .catch((e) => this.handleError(e));
+    } 
+
+
     /**
      * Mise à jour du groupe
      * @param group 
@@ -393,5 +418,20 @@ export class RespTournamentService {
         .do(res => this.tournamentUpdated())
         .catch((e) => this.handleError(e));
     }
+
+
+    /**
+     * Mise à jour d'un match
+     * @param match 
+     */
+        updateMatch(match: Match): Observable<Tournament> {
+        // attaching a token
+        return this.http.put(`${this.tournamentUrl}/match/${match.id_match}`, match, this.headBuilder())
+        .do(this.checkError)
+        .map(res => res.json())
+        .do(res => this.tournamentUpdated())
+        .catch((e) => this.handleError(e));
+    }
+
 
 }

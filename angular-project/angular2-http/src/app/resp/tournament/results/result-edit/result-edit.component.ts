@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Resultat } from "../../../../shared/models/resultat";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { RespTournamentService } from "../../../../shared/services/resp.tournament.service";
 import { ScoreSet } from "../../../../shared/models/score-set";
+import { Match } from "../../../../shared/models/match";
+import { SetMatch } from "../../../../shared/models/set-match";
 
 @Component({
   selector: 'app-result-edit',
@@ -13,25 +15,26 @@ import { ScoreSet } from "../../../../shared/models/score-set";
 export class ResultEditComponent implements OnInit {
   
   result: Resultat;
-  successMessag: string = '';
+  successMessage: string = '';
   errorMessage: string = '';
   statuts: string[] = ['', 'partiel', 'final'];
+  tournamentId: number;
 
 
   constructor(  private service: PublicTournamentService,
                 private respService: RespTournamentService,
+                private router: Router,
                 private route: ActivatedRoute) { }
 
   ngOnInit() {
-    let id_match: number;
     // get the id from the url
+    let id_match: number;
     id_match = this.route.snapshot.params['idmatch'];
 
     // get the id from the url
-    // let tournamentId;
-    // this.route.pathFromRoot[2].params.subscribe(params => {
-    //   tournamentId = params['idtournoi'];
-    // });
+    this.route.pathFromRoot[2].params.subscribe(params => {
+      this.tournamentId = params['idtournoi'];
+    });
 
     // get all matchs's result
     this.service.getMatchResult(id_match)
@@ -53,6 +56,102 @@ export class ResultEditComponent implements OnInit {
           this.result.score_sets.push(scores);
         }
       });
+  }
+
+
+  updateResult(){
+
+    this.errorMessage = '';
+    this.successMessage = '';
+    
+    // delete old match's result (all sets) 
+    this.deletePreMatchResult();
+
+    // create new match's result
+    this.createNewMatchResult();
+
+    // update statut match
+    this.updateMatchStatut();
+
+    // si pas d'erreur redirige à la liste des résultats
+    if(this.errorMessage == ''){
+      this.successMessage = 'Résultat mis à jour.';
+
+      setTimeout(() => {
+        this.router.navigate(['/responsible/tournament',  this.tournamentId, 'results','list']);
+      }, 3000);
+      
+    }
+
+  }
+
+  /**
+   * When sets value change, check if the statut have to be null or not
+   */
+    valuechange(){
+      this.result.statut = '' ;
+      let isValue: boolean = false;
+      this.result.score_sets.map( s =>  { if((s.set[0] != '' && s.set[0] != null ) || ( s.set[1] != '' && s.set[1] != null )) { isValue = true;}} );
+
+      if(isValue){
+        this.result.statut = 'final' ;
+      }
+
+  }
+
+
+  /**
+   * delete old match's result (all sets) 
+   */
+  private deletePreMatchResult(){
+
+    this.respService.deleteScore(this.result.id_match)
+      .subscribe(
+      data => {
+      },
+      err => {
+        this.errorMessage = err;
+      });
+  }
+
+  /**
+   * create new match's result
+   */
+  private createNewMatchResult(){
+        // get sets (only if values are sets)
+        let newScore: SetMatch[] = [];
+        this.result.score_sets.map( s => {
+          if(s.set[0] != '' && s.set[1] !='' ){
+            let mySet: SetMatch = { score_home: parseInt(s.set[0]), score_visiteur: parseInt(s.set[1]), id_match: this.result.id_match};
+            newScore.push(mySet);
+          }
+        });
+        this.respService.createSets(newScore)
+                  .subscribe(
+                    data => {
+                    },
+                    err => {
+                      this.errorMessage = err;
+                    });
+  }
+
+  /**
+   * update statut match
+   */
+  private updateMatchStatut(){
+      
+    let match: Match = { id_match: this.result.id_match,
+                          statut: this.result.statut,
+                          id_equipe_home: this.result.id_equipe_home, 
+                          id_equipe_visiteur: this.result.id_equipe_visiteur };
+
+    this.respService.updateMatch(match)
+      .subscribe(
+        data => {
+        },
+        err => {
+          this.errorMessage = err;
+        });
   }
 
 }

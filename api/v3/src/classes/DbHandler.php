@@ -795,6 +795,34 @@ class DbHandler {
         return false;
     }
 
+
+
+    /**
+     * Validation de la propriété d'un set dans un match de l'utilsateur
+     * @param Integer $id_current_user
+     * @param Integer $id_team
+     * @return boolean
+     */
+    public function isSetOwner($id_current_user, $id_set) {
+        $stmt = $this->pdo->prepare("SELECT s.id_set
+                                        FROM users u
+                                        INNER JOIN tournois t ON t.id_user = u.id_user
+                                        INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                        INNER JOIN equipes e ON e.id_groupe = g.id_groupe
+                                        INNER JOIN matchs m ON m.id_equipe_home = e.id_equipe
+                                        INNER JOIN sets s ON s.id_match = m.id_match
+                                        WHERE u.id_user = :id_user AND s.id_set = :id_set");
+        $stmt->bindParam(":id_user", $id_current_user, PDO::PARAM_INT);
+        $stmt->bindParam(":id_set", $id_set, PDO::PARAM_INT);
+        if ($stmt->execute())
+        {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($res){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Validation de la propriété du groupe pour un utilsateur
      * @param Integer $id_current_user

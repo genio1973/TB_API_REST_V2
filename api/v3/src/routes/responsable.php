@@ -942,6 +942,56 @@ Routes par défauts : vx/resp/route
         });
 
 
+
+       /* Suppression d'un set 
+        * url - /resp/set/{id}
+        * methode - DELETE
+        * headears - content id_user and API_KEY
+        * body - Json : -
+        * return - {
+        *            "error": false,
+        *            "message": null,
+        *            "nombre_suppression": 1,
+        *            "id_supprimer": "17"
+        *           }
+        */
+        $app->delete('/set/{id}', function(Request $request, Response $response) use ($app) {
+            $resultat['error'] = FALSE;
+            $resultat['message'] = "";
+
+            // récupère l'id du responsable en cours
+            $headers = $request->getHeaders();
+            $id_current_user = $headers['HTTP_USERID'][0];
+            $id = $request->getAttribute('id');
+            
+            $db = new DbHandler();
+            $res = $db->isSetOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            if(!$res){
+                $resultat['error'] = TRUE;
+                $resultat['message'] = "400";
+                $resultat["result"] = "Permission refusée pour votre identifiant ou id non trouvé !";
+                return echoRespnse(400, $response, $resultat);
+            }
+                       
+            // suppression de l'équipe en cascade avec ses enfants
+            $res = $db->deleteByID('sets', $id);
+            $data=NULL;
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible de supprimer les données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });
+
+
+
        /* Suppression d'un groupe 
         * url - /resp/groupe/{id}
         * methode - DELETE
