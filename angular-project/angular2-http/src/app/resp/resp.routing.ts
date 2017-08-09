@@ -35,6 +35,7 @@ export const respRoutes: Routes = [
     { 
         path: 'responsible',
         component: RespComponent,
+        canActivate: [AuthGuardService],
         children: [
                     { path: '', redirectTo: '/account', pathMatch: 'full' },
                     { 
@@ -75,7 +76,7 @@ export const respRoutes: Routes = [
                                     {
                                         path: 'results',
                                         component: ResultsComponent,
-                                        //canActivateChild: [AuthGuardService],
+                                        canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
                                                     { path: 'list',          component: ResultListComponent },
@@ -85,7 +86,7 @@ export const respRoutes: Routes = [
                                     {
                                         path: 'groups',
                                         component: GroupsComponent,
-                                        //canActivateChild: [AuthGuardService],
+                                        canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
                                                     { path: 'list',          component: GroupListComponent },
@@ -97,7 +98,7 @@ export const respRoutes: Routes = [
                                     {
                                         path: 'teams',
                                         component: TeamsComponent,
-                                        //canActivateChild: [AuthGuardService],
+                                        canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
                                                     { path: 'list',                     component: TeamListComponent },
@@ -110,11 +111,9 @@ export const respRoutes: Routes = [
                                     }   
                         ]
                                 
-                    },     
-                                 
+                    }                                
                   ]
     },
-   // { path: '**', component: NotFoundComponent } 
 ];
 
 export const respRouting: ModuleWithProviders = RouterModule.forChild(respRoutes);

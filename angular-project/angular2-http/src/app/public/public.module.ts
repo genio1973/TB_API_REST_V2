@@ -6,8 +6,11 @@ import { PublicComponent } from "./public.component";
 import { LoginComponent } from "./login/login.component";
 import { TournamentsComponent } from "./tournaments/tournaments.component";
 import { TournamentListComponent } from "./tournaments/tournament-list/tournament-list.component";
-import { TournamentSingleComponent } from "./tournaments/tournament-single/tournament-single.component";
 import { FormsModule } from "@angular/forms";
+import { TournamentComponent } from "./tournament/tournament.component";
+import { RankingComponent } from "./tournament/rankings/rankings.component";
+import { RankingListComponent } from "./tournament/rankings/ranking-list/ranking-list.component";
+import { RankingSingleComponent } from "./tournament/rankings/ranking-single/ranking-single.component";
 
 @NgModule({
   imports: [
@@ -20,7 +23,10 @@ import { FormsModule } from "@angular/forms";
     LoginComponent,
     TournamentsComponent,
     TournamentListComponent,
-    TournamentSingleComponent
+    TournamentComponent,
+    RankingComponent,
+    RankingListComponent,
+    RankingSingleComponent,
   ],
   providers: [
 

@@ -1,0 +1,58 @@
+<div *ngIf="tournament">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+        <ul class="nav navbar-nav">
+            <li><a [routerLink]="['/public/tournament', tournament.id, 'teams', 'list']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Equipes</a></li>
+            <li><a [routerLink]="['/public/tournament', tournament.id, 'groups', 'list']" routerLinkActive="active" >Groupes</a></li>
+            <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'results']" routerLinkActive="active"><i class="fa fa-calendar" aria-hidden="true"></i>Resultats</a></li>
+            <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'rankings']" routerLinkActive="active"><i class="fa fa-bar-chart-o fa-cubes" aria-hidden="true"></i>Classements</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a routerLink="/public/tournaments">Tournois</a></li>
+        </ul>
+        </div>
+    </nav>
+
+
+<!-- Tournament info -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+            Information générales
+    </div>
+    <div class="panel-body">
+        <div *ngIf="tournament" class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date (réf)</th><th>Nom</th><th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd gradeX">
+                            <td>{{tournament.date_debut}}</td>
+                            <td>{{tournament.nom_tournoi}} {{tournament.id_statut}}</td>
+                            
+                            <ng-container [ngSwitch]="tournament.id_statut">
+                                <td *ngSwitchCase="'1'" class="info">NOUVEAU</td>
+                                <td *ngSwitchCase="'2'" class="success">OUVERT</td>
+                                <td *ngSwitchCase="'3'" class="danger">CLOS</td>
+                                <td *ngSwitchDefault  class="warning"> ??</td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> 
+    </div>
+</div>
+<!--End Tournament info -->
+</div>
+
+
+
+<!-- <my-groups></my-groups> -->
+<!-- <my-teams></my-teams> -->
+<router-outlet></router-outlet>

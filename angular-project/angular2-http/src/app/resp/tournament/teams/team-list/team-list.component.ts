@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Group } from "../../../../shared/models/group";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterStateSnapshot } from "@angular/router";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { Team } from "../../../../shared/models/team";
 import { RespTournamentService } from "../../../../shared/services/resp.tournament.service";
@@ -22,6 +22,7 @@ export class TeamListComponent implements OnInit {
     teams: Team[];  
     coachs: Coach[];
     groups: Group[];
+    responsibleRoute:boolean = true;
 
     constructor( private service: PublicTournamentService,
                  private respService: RespTournamentService,
@@ -35,6 +36,12 @@ export class TeamListComponent implements OnInit {
         this.tournamentId = params['idtournoi'];
       });
 
+      // Detect if its a public route or not
+      //console.log(this.route.pathFromRoot[1].snapshot.url[0].path);
+      if(this.route.pathFromRoot[1].snapshot.url[0].path === 'public'){
+        this.responsibleRoute = false;
+      }
+
       this.service.getTournament(this.tournamentId)
           .subscribe( t => this.tournament = t);
 
@@ -44,8 +51,11 @@ export class TeamListComponent implements OnInit {
         this.getAllTeamsInfo();
       }
     }
+       
 
-         
+    /**
+     * Get all groups ans their informations
+     */
     private getTeamsInGroupInfo(){
       this.service
       //.getTeamsGroup(this.group.id_groupe)
@@ -61,7 +71,9 @@ export class TeamListComponent implements OnInit {
         });
     }
 
-
+  /**
+   * Get all teams ans their informations
+   */
   private getAllTeamsInfo(){
       this.service
           .getTournamentTeams(this.tournamentId)
@@ -70,10 +82,10 @@ export class TeamListComponent implements OnInit {
               this.errorMessage = `Pas d'équipes à récupérer ou alors... ${err}`;
             });
       
-        this.respService
+        if(this.responsibleRoute){ this.respService
           .getCoachs()
           .subscribe(coachs => this.coachs = coachs); 
-
+        }
         this.service
         .getGroupsTournament(this.tournamentId)
         .subscribe(groups => this.groups = groups); 

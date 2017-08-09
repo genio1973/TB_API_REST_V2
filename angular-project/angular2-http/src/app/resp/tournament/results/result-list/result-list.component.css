@@ -1,3 +1,8 @@
 .even { background-color: #dcdcdc; }
 
 .odd { background-color: #ffffff }
+
+.disabled {
+   pointer-events: none;
+   cursor: not-allowed; 
+}

@@ -11,20 +11,19 @@
         <div *ngIf="teams" class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
                 <thead>
-                    <tr><th>Nom</th><th>Niveau</th><ng-container *ngIf="!group"><th>Groupe</th><th>Coach</th></ng-container></tr>
+                    <tr><th>Nom</th><th>Niveau</th><ng-container *ngIf="!group"><th>Groupe</th><th *ngIf="responsibleRoute">Coach</th></ng-container></tr>
                 </thead>
                 <tbody>
                     <ng-container *ngFor="let team of teams" >
-                        <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe] ">
+                        <tr class="odd gradeX" [routerLink]="['/responsible/tournament', tournamentId, 'teams', team.id_equipe]" [class.disabled]="!responsibleRoute" >
                                 <td>{{team.nom_equipe}}</td> <td>{{team.niveau}}</td> 
                                 <ng-container *ngIf="!group">
-                                    <!--<td>{{team.nom_groupe}}</td>-->
                                     <td>
                                         <select class="form-control" name="id_groupe" readonly [(ngModel)]="team.id_groupe">
                                             <option *ngFor="let g of groups" [value]="g.id_groupe">{{g.nom_groupe}}</option>
                                         </select>
                                     </td>
-                                    <td>
+                                    <td *ngIf="responsibleRoute">
                                         <select class="form-control" name="id_personne" readonly [(ngModel)]="team.id_personne" >
                                             <option *ngFor="let c of coachs" [ngValue]="c.id_personne">{{c.nom}} {{c.prenom}}</option>
                                         </select>

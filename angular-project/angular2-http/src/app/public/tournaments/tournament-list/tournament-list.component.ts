@@ -17,8 +17,7 @@ export class TournamentListComponent implements OnInit {
     ngOnInit(): void {
       this.tournamentService.getTournaments()
           .subscribe(
-            tournaments => this.tournaments = tournaments);
-      console.log(this.tournaments);
+            tournaments =>  this.tournaments = tournaments.filter( t => t.statut_tournoi != 'NOUVEAU'));
     }
 
 }

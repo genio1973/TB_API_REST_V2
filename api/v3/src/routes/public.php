@@ -452,6 +452,34 @@ $app->get('/public/classement/groupe/{id_groupe}', function (Request $request, R
 
 
 
+/* Obtient les classements des groupes d'un tournoi par l'id du tournoi
+ * url - /public/classement/tournoi/{id_tournoi}
+ * methode - GET
+ */
+$app->get('/public/classement/tournoi/{id_tournoi}', function (Request $request, Response $response) {
+            $id_tournoi = $request->getAttribute('id_tournoi');
+
+            $db = new DbHandler();
+            $res = array();
+            $res = $db->getRankingByTournamentID($id_tournoi);
+            
+            if ($res != NULL) {
+                $data["error"] = false;
+                $data["message"] = "200";
+                $data["result"] = $res;
+            } else {
+                $data["error"] = true;
+                $data["message"] = "400";
+                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                return echoRespnse(400, $response, $data);
+            }     
+             
+            // echo de la réponse  JSON
+            return echoRespnse(200, $response, $data);
+        });   
+
+
+
 /* Obtient le détail des équipes d'un groupe par l'id du groupe
  * url - /public/equipes/groupe/{id_groupe}
  * methode - GET

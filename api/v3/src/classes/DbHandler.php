@@ -1501,14 +1501,14 @@ class DbHandler {
                                    
         $stmt->bindParam(":id_terrain", $id_terrain, PDO::PARAM_INT);
 
-        if ($stmt->execute())
-        {
+        if ($stmt->execute()) {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             //$this->pdo = NULL;
             return $response;
         }
         return NULL;
     }
+
 
     /**
      * Obtention le classement d'un groupe par son id 
@@ -1518,6 +1518,43 @@ class DbHandler {
         $group = new Group($this->pdo, $id_groupe);
         return $group->getRanking();
     }
+
+    public function test($id){
+        return $id;
+    }
+    /**
+     * Obtention des classements de groupes d'un tournoi par son id 
+     * @param Int $id_tournoi
+     */
+    public function getRankingByTournamentID($id_tournoi) {
+        
+        
+        // Récupérer les id des groupes du tournoi
+        $stmt = $this->pdo->prepare("SELECT g.id_groupe, g.nom_groupe
+                                    FROM tournois t
+                                    INNER JOIN groupes g ON g.id_tournoi = t.id_tournoi
+                                    WHERE t.id_tournoi LIKE :id_tournoi");
+                                   
+        $stmt->bindParam(":id_tournoi", $id_tournoi, PDO::PARAM_INT);
+
+        if (!$stmt->execute()) {
+            return null;
+        }
+        $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        //return $groups;
+
+        $rankingGroups = array();
+        // Pour chaque groupe, ressortir les classement
+         foreach($groups as $group){
+
+             $ranking['nom_groupe'] =  $group['nom_groupe'];
+             $ranking['classement'] = $this->getRankingByGroupID($group['id_groupe']);
+             $ranking['nom_groupe'] =  $group['nom_groupe'];
+             $rankingGroups[] = $ranking;
+         }
+        return $rankingGroups;
+    }
+
 
     /**
      * Obtention du détail des équipes d'un groupe par l'id du groupe 

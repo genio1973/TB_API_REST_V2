@@ -12,6 +12,7 @@ import { Team } from "../models/team";
 import { Pitch } from "../models/pitch";
 import { Resultat } from "../models/resultat";
 import { ScoreSet } from "../models/score-set";
+import { Ranking } from "../models/ranking";
 
 @Injectable()
 export class PublicTournamentService {
@@ -204,7 +205,7 @@ export class PublicTournamentService {
 
 
     /*
-    * Get all Tournament matchs results
+    * Get all matchs results in a tournament
     */
     getResultsByTournament(id: number): Observable<Resultat[]> {
          return this.http                    
@@ -224,6 +225,21 @@ export class PublicTournamentService {
                     .map(res =>res.json().result)
                     .catch((e) => this.handleError(e));
     }
+
+
+    /*
+    * Get all Tournament all groups ranking in a tournament
+    */
+    getRankingsByTournament(id: number): Observable<Ranking[]> {
+         return this.http                    
+                    .get(`${this.tournamentUrl}/classement/tournoi/${id}`)
+                    .do(this.checkError)
+                    .map(res => { 
+                        console.log (res.json().result);
+                        return res.json().result;})
+                    .catch((e) => this.handleError(e));
+    }
+
 
 
     /*

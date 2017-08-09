@@ -13,6 +13,7 @@ import { Tournament } from "../../../../shared/models/tournament";
 export class GroupListComponent implements OnInit {
     groups: Group[];  
     tournamentId: number;
+    responsibleRoute:boolean = true;
 
     constructor( private service: PublicTournamentService,
                  private router: Router,
@@ -23,6 +24,12 @@ export class GroupListComponent implements OnInit {
       this.route.pathFromRoot[2].params.subscribe(params => {
         this.tournamentId = params['idtournoi'];
       });
+      
+      // Detect if its a public route or not
+      //console.log(this.route.pathFromRoot[1].snapshot.url[0].path);
+      if(this.route.pathFromRoot[1].snapshot.url[0].path === 'public'){
+        this.responsibleRoute = false;
+      }
 
       this.service
           .getGroupsTournament(this.tournamentId)

@@ -20,6 +20,7 @@ export class ResultListComponent implements OnInit {
   displayResults: any = [];
   id_statut: number;
   displayType: string = 'Horaire';
+  responsibleRoute: boolean = true;
 
   constructor(private service: PublicTournamentService, 
                private route: ActivatedRoute) { }
@@ -29,6 +30,12 @@ export class ResultListComponent implements OnInit {
     this.route.pathFromRoot[2].params.subscribe(params => {
       this.tournamentId = params['idtournoi'];
     });
+      
+    // Detect if its a public route or not
+    //console.log(this.route.pathFromRoot[1].snapshot.url[0].path);
+    if(this.route.pathFromRoot[1].snapshot.url[0].path === 'public'){
+      this.responsibleRoute = false;
+    }
 
     // get all matchs's results
     this.service.getResultsByTournament(this.tournamentId)

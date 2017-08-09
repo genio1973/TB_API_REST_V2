@@ -21,7 +21,7 @@
                         <li><a routerLink="/admin/resp"><i class="fa fa-user-circle-o fa-1x" style="color:red;"></i> Responsables</a></li>
                     </ng-container>
                     <ng-container *ngIf="myRoleEnum.RESPONSABLE >= userConnected.id_role" >
-                        <li><a routerLink="/responsible/tournaments"><i class="fa fa-futbol-o fa-1x"></i> Tournois</a></li>
+                        <li><a routerLink="/responsible/tournaments"><i class="fa fa-soccer-ball-o fa-1x"></i> Tournois</a></li>
                         <li><a routerLink="/responsible/coachs"><i class="fa fa-users fa-1x"></i> Coachs</a></li>
                     </ng-container>
                      <li><a routerLink="/account">{{userConnected.email}}</a></li>
