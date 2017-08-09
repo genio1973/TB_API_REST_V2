@@ -425,6 +425,7 @@ export class RespTournamentService {
      * @param match 
      */
         updateMatch(match: Match): Observable<Tournament> {
+            console.log(match);
         // attaching a token
         return this.http.put(`${this.tournamentUrl}/match/${match.id_match}`, match, this.headBuilder())
         .do(this.checkError)

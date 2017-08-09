@@ -1411,7 +1411,7 @@ Routes par défauts : vx/resp/route
             $id_current_user = $headers['HTTP_USERID'][0];
 
             $db = new DbHandler();
-            $res = $db->isTournamentOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
+            $res = $db->isMatchOwner($id_current_user, $id); // Vérifie que l'utilisateur courant est le propriétaire
             if(!$res){
                 $resultat['error'] = TRUE;
                 $resultat['message'] = "400";
