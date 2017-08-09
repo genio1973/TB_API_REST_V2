@@ -14,7 +14,6 @@ import { ResultsComponent } from "../resp/tournament/results/results.component";
 import { ResultListComponent } from "../resp/tournament/results/result-list/result-list.component";
 import { RankingComponent } from "./tournament/rankings/rankings.component";
 import { RankingListComponent } from "./tournament/rankings/ranking-list/ranking-list.component";
-import { RankingSingleComponent } from "./tournament/rankings/ranking-single/ranking-single.component";
 
 export const publicRoutes: Routes = [
         { path: 'public',
@@ -65,7 +64,6 @@ export const publicRoutes: Routes = [
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
                                                     { path: 'list',          component: RankingListComponent },
-                                                    { path: ':idgroup',      component: RankingSingleComponent},
                                         ]
                                     }                                      
                         ]

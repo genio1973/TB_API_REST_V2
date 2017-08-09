@@ -10,7 +10,6 @@ import { FormsModule } from "@angular/forms";
 import { TournamentComponent } from "./tournament/tournament.component";
 import { RankingComponent } from "./tournament/rankings/rankings.component";
 import { RankingListComponent } from "./tournament/rankings/ranking-list/ranking-list.component";
-import { RankingSingleComponent } from "./tournament/rankings/ranking-single/ranking-single.component";
 
 @NgModule({
   imports: [
@@ -26,7 +25,6 @@ import { RankingSingleComponent } from "./tournament/rankings/ranking-single/ran
     TournamentComponent,
     RankingComponent,
     RankingListComponent,
-    RankingSingleComponent,
   ],
   providers: [
 
