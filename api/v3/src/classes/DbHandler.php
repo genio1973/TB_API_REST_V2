@@ -1549,7 +1549,7 @@ class DbHandler {
 
              $ranking['nom_groupe'] =  $group['nom_groupe'];
              $ranking['classement'] = $this->getRankingByGroupID($group['id_groupe']);
-             $ranking['nom_groupe'] =  $group['nom_groupe'];
+             //$ranking['nom_groupe'] =  $group['nom_groupe'];
              $rankingGroups[] = $ranking;
          }
         return $rankingGroups;

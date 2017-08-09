@@ -234,9 +234,7 @@ export class PublicTournamentService {
          return this.http                    
                     .get(`${this.tournamentUrl}/classement/tournoi/${id}`)
                     .do(this.checkError)
-                    .map(res => { 
-                        console.log (res.json().result);
-                        return res.json().result;})
+                    .map(res => res.json().result)
                     .catch((e) => this.handleError(e));
     }
 

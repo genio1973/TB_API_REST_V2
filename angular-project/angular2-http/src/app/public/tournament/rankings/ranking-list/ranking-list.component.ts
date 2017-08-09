@@ -12,7 +12,7 @@ export class RankingListComponent implements OnInit {
 arrayOfKeys;
 
   tournamentId:number;
-  rankings: Ranking[] = [];
+ 
   displayRankings: any = [];
   id_statut: number;
 
@@ -26,13 +26,9 @@ arrayOfKeys;
     });
       
 
-    // get all matchs's rankings
+    // get all group's rankings
     this.service.getRankingsByTournament(this.tournamentId)
-      .subscribe(r => { this.displayRankings = r;
-                        //this.sortingByHours(this.rankings);
-                        this.displayRankings = r;
-                       });
-
+      .subscribe(r => this.displayRankings = r);
   }
 
 
@@ -40,26 +36,4 @@ arrayOfKeys;
        
   }
 
-
-
-  /**
-   * sorting match'rankings by date and hour
-   * @param rankings
-   */
-  /*
-  private sortingByHours(rankings: Ranking[]){
-
-    rankings.sort((a, b) => {
-        let aNew: Date = new Date(`${a.date_match}T${a.heure}`);
-        let bNew: Date = new Date(`${b.date_match}T${b.heure}`);
-        //bNew: Date = 
-        if (aNew.getTime() < bNew.getTime()) {
-          return -1;
-        } else if (aNew.getTime() > bNew.getTime()) {
-          return 1;
-        } else {
-          return 0;
-        }});
-  }
-*/
 }

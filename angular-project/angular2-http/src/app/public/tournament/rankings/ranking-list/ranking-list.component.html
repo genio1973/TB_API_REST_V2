@@ -1,42 +1,37 @@
-<!--
-<div *ngIf="displayResults">
+<div *ngIf="displayRankings">
 
   <div class="panel panel-default">
       <div class="panel-heading">
-              <h1>Liste des matchs</h1>
+              <h1>Classement(s)</h1>
       </div>
       <div class="panel-body">
         
-        <nav class="navbar">
-          <div class="container-fluid">
-            <ul class="nav navbar-nav">
-                <li><a [ngClass]="{'text-danger': displayType=='terrain'}" (click)="pitchDisplayType()">Par terrain</a></li>
-                <li><a [ngClass]="{'text-danger': displayType=='groupe'}" (click)="groupDisplayType()">Par groupe</a></li>
-                <li><a [ngClass]="{'text-danger': displayType=='heure'}" (click)="timeDisplayType()">Par horaire</a></li>
-            </ul>
-          </div>
-        </nav>
-
-        <ng-container *ngFor="let matchsBlock of displayResults">
+        <ng-container *ngFor="let groupsRanking of displayRankings">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                        {{matchsBlock.nameBlock}}
+                        {{groupsRanking.nom_groupe}}
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-2">Date heure</div>
-                        <div class="col-sm-2">Equipe 1</div>
-                        <div class="col-sm-2">Equipe 2</div>
-                        <div class="col-sm-1">Score</div>
-                        <div class="col-sm-2">Equipe arbitre</div>
-                        <div class="col-sm-2">Arbitre</div>
-                        <div class="col-sm-1"></div>
-                    </div>
-                    <ng-container *ngFor="let result of matchsBlock.matchs; let odd=odd; let even=even;">
-                        <div class="row" [ngClass]="{ odd: odd, even: even }" [class.disabled]="!responsibleRoute">
-                            <my-result-single [tournamentId]="tournamentId" [result]="result" [displayType]="displayType"> </my-result-single> 
-                        </div>
-                    </ng-container>
+                    
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr><th>#</th><th>Equipe</th><th>Pts</th><th>J</th><th>G</th><th>P</th><th>Sg/Sp</th><th>Pg/Pp</th></tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let ranking of groupsRanking.classement; let i = index;" >
+                                    <tr class="odd gradeX" >
+                                    <th>{{i+1}}</th>
+                                    <th>{{ranking.nom_equipe}}</th>
+                                    <th>{{ranking.points_actuels}}</th>
+                                    <th>{{ranking.matchs_joues}}</th>
+                                    <th>{{ranking.matchs_gagnes_3pts + ranking.matchs_gagnes_2pts}}</th>
+                                    <th>{{ranking.matchs_perdus_1pt + ranking.matchs_perdus_0pt}}</th>
+                                    <th>{{ranking.sets_ratio | number : '1.3'}}</th>
+                                    <th>{{ranking.points_sets_ratio | number : '1.3'}}</th>
+                                    </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </ng-container>
@@ -44,4 +39,3 @@
       </div>
   </div>
 </div>
--->
