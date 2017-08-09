@@ -82,6 +82,7 @@ export class SimulationComponent implements OnInit {
 
     // for each group build the matchs planification
     this.groups.map(group => { 
+                          console.log(group);
                           if(group.teams.length<3 || group.teams.length>8){
                             this.errorMessage = `Le nombre d'équipes par groupe doit être entre 3 et 8 !`;
                             this.simulLaunched = false;
@@ -90,18 +91,20 @@ export class SimulationComponent implements OnInit {
                           }
                         });
 
-
-    if(this.configSimul.matchs_meme_terrain){
-      this.setMatch(); // Each group : matchs played on the same pitch
-    }
-    else{
-      this.setMatchDifferentPitches();
-    }
-  
-    // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
-    this.readyToDbPush = true;
-    if(this.checkConflict()) {
-        this.readyToDbPush = false;
+    // si tous les groupes sont prêts (nb équipes min, max ok)
+    if(this.simulLaunched){
+      if(this.configSimul.matchs_meme_terrain){
+        this.setMatch(); // Each group : matchs played on the same pitch
+      }
+      else{
+        this.setMatchDifferentPitches();
+      }
+    
+      // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
+      this.readyToDbPush = true;
+      if(this.checkConflict()) {
+          this.readyToDbPush = false;
+      }
     }
 
   }
