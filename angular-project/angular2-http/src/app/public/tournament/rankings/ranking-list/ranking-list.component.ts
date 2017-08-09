@@ -50,7 +50,6 @@ export class RankingListComponent implements OnInit, OnDestroy  {
         .subscribe(r => {
           this.displayRankings = r;
           this.subscribeToData();
-          console.log('REFRESH');
         });
   }
 

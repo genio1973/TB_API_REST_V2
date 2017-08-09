@@ -1,8 +1,9 @@
-import { Component, OnInit, SimpleChanges, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Pipe, PipeTransform, OnDestroy } from '@angular/core';
 import { Resultat } from "../../../../shared/models/resultat";
 import { PublicTournamentService } from "../../../../shared/services/public-tournament.service";
 import { ActivatedRoute } from "@angular/router";
-
+import {AnonymousSubscription} from "rxjs/Subscription";
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'my-result-list',
@@ -11,10 +12,9 @@ import { ActivatedRoute } from "@angular/router";
   
 })
 
-export class ResultListComponent implements OnInit {
-  
+export class ResultListComponent implements OnInit, OnDestroy {
   arrayOfKeys;
-
+  timerSubscription: AnonymousSubscription;
   tournamentId:number;
   results: Resultat[] = [];
   displayResults: any = [];
@@ -42,12 +42,25 @@ export class ResultListComponent implements OnInit {
       .subscribe(r => { this.results = r;
                         this.sortingByHours(this.results);
                         this.displayResults.push({nameBlock:'Horaire', matchs:this.results});
+                        this.refreshData();
                        });
+  }
 
+  ngOnDestroy(): void {
+   if (this.timerSubscription) {
+          this.timerSubscription.unsubscribe();
+      }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.changeDiplayView();
   }
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  /**
+   * Select an another view mode
+   */
+   private changeDiplayView(){
     
     switch(this.displayType){
       default:
@@ -130,6 +143,24 @@ export class ResultListComponent implements OnInit {
         } else {
           return 0;
         }});
+  }
+
+
+
+  private refreshData(): void {
+    // get all matchs's results
+    this.service.getResultsByTournament(this.tournamentId)
+      .subscribe(r => { this.results = r;
+                        this.sortingByHours(this.results);
+                        this.displayResults.push({nameBlock:'Horaire', matchs:this.results});
+                        this.changeDiplayView();
+                        this.subscribeToData();
+                       });
+  }
+
+  private subscribeToData(): void {
+    // Toutes les 60 secondes
+    this.timerSubscription = Observable.timer(60000).first().subscribe(() => this.refreshData());
   }
 
 }
