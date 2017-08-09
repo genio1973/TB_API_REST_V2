@@ -32,6 +32,7 @@ import { PitchesComponent } from "./tournament/pitches/pitches.component";
 import { ResultListComponent } from "./tournament/results/result-list/result-list.component";
 import { ResultsComponent } from "./tournament/results/results.component";
 import { ResultSingleComponent } from "./tournament/results/result-single/result-single.component";
+import { ResultEditComponent } from "./tournament/results/result-edit/result-edit.component";
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { ResultSingleComponent } from "./tournament/results/result-single/result
     ResultsComponent,
     ResultListComponent,
     ResultSingleComponent,
+    ResultEditComponent,
   ],
   providers: [
   ]

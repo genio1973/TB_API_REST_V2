@@ -207,10 +207,19 @@ export class PublicTournamentService {
     * Get all Tournament matchs results
     */
     getResultsByTournament(id: number): Observable<Resultat[]> {
-
-
          return this.http                    
                     .get(`${this.tournamentUrl}/tournoi/${id}/resultats`)
+                    .do(this.checkError)
+                    .map(res =>res.json().result)
+                    .catch((e) => this.handleError(e));
+    }
+
+    /*
+    * Get a match with result
+    */
+    getMatchResult(id: number): Observable<Resultat> {
+         return this.http                    
+                    .get(`${this.tournamentUrl}/match/${id}/resultat`)
                     .do(this.checkError)
                     .map(res =>res.json().result)
                     .catch((e) => this.handleError(e));

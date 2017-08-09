@@ -1,0 +1,68 @@
+<div *ngIf="result" class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Résultat du match {{result.nom_equipe_home}} - {{result.nom_equipe_visiteur}}</h1>
+    </div>
+    <div class="panel-body">
+            <form (ngSubmit)="updateResult()">
+                <div class="col-sm-12 form-group">
+                    <div class="col-sm-2"><label>Date</label></div>
+                    <div class="col-sm-10"><input type="text" readonly class="form-control" name="date" [(ngModel)]="result.date_match"></div>
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    <div class="col-sm-2"><label>Heure</label></div>
+                    <div class="col-sm-10"><input type="text" readonly class="form-control" name="heure" [(ngModel)]="result.heure"></div>
+                </div>
+
+
+                <div class="col-sm-12 form-group table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Equipes</th>
+                                 <ng-container *ngFor="let score_set of result.score_sets; let i = index;">
+                                    <th>
+                                       set {{i+1}} 
+                                    </th>
+                                </ng-container>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{result.nom_equipe_home}}</td>
+                                <ng-container *ngFor="let score_set of result.score_sets; let i = index;">
+                                    <td>
+                                        <input type="number" class="form-control" min="0" step="5" name="home_set_{{i+1}}" [(ngModel)]="score_set.set[0]">
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td>{{result.nom_equipe_visiteur}}</td>
+                                <ng-container *ngFor="let score_set of result.score_sets; let i = index;">
+                                    <td>
+                                        <input type="number" class="form-control" min="0" step="5" name="visiteur_set_{{i+1}}" [(ngModel)]="score_set.set[1]">
+                                    </td>
+                                </ng-container>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                <label>Statut</label>
+                <select class="form-control" name="statut" [(ngModel)]="result.statut">
+                    <option *ngFor="let s of statuts" [value]="s">Résultat : {{s}}</option>
+                </select>
+                </div>
+
+                <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+                <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+                <div class="col-sm-12 form-group">
+                    <button type="submit" class="btn btn-warning btn-block">Mettre à jour le résultat</button>
+                </div>
+            </form>
+    </div>
+</div>

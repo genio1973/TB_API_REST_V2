@@ -28,6 +28,7 @@ import { SimulationComponent } from "./tournament/simulation/simulation.componen
 import { PitchesComponent } from "./tournament/pitches/pitches.component";
 import { ResultsComponent } from "./tournament/results/results.component";
 import { ResultListComponent } from "./tournament/results/result-list/result-list.component";
+import { ResultEditComponent } from "./tournament/results/result-edit/result-edit.component";
 
 
 export const respRoutes: Routes = [
@@ -77,7 +78,8 @@ export const respRoutes: Routes = [
                                         //canActivateChild: [AuthGuardService],
                                         children: [
                                                     { path: '', redirectTo: 'list', pathMatch: 'full' },
-                                                    { path: 'list',          component: ResultListComponent }                         
+                                                    { path: 'list',          component: ResultListComponent },
+                                                    { path: ':idmatch/edit', component: ResultEditComponent},                       
                                         ]
                                     },  
                                     {

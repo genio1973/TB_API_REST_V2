@@ -1163,9 +1163,84 @@ class DbHandler {
         return NULL;
     }
 
+
     /**
      * Obtention de tous les résultats des matchs d'un tournoi selon son id du tournoi 
-     * @param Int $id_groupe
+     * @param Int $id_match
+     */
+    public function getScore($id_match) {
+        try{
+            $stmt = $this->pdo->prepare("SELECT m.id_match, m.date_match, m.heure, m.statut,
+                                                g.id_groupe, g.nom_groupe,
+                                                m.id_equipe_home, e1.nom_equipe as 'nom_equipe_home',
+                                                m.id_equipe_visiteur, e2.nom_equipe as 'nom_equipe_visiteur',
+                                                m.id_equipe_arbitre, e3.nom_equipe as 'nom_equipe_arbitre',
+                                                u.id_user, u.email as 'nom_user_dirige',
+                                                s.score_home, s.score_visiteur, ter.nom_terrain
+                                            FROM groupes g 
+                                            INNER JOIN equipes e1 ON e1.id_groupe = g.id_groupe
+                                            INNER JOIN matchs m ON m.id_equipe_home = e1.id_equipe
+                                            INNER JOIN equipes e2 ON m.id_equipe_visiteur = e2.id_equipe
+                                            LEFT JOIN equipes e3 ON m.id_equipe_arbitre = e3.id_equipe
+                                            LEFT JOIN users u ON u.id_user = m.id_user_dirige
+                                            LEFT JOIN terrains ter ON m.id_terrain = ter.id_terrain
+                                            LEFT JOIN sets s ON s.id_match = m.id_match
+                                            WHERE m.id_match LIKE :id_match");
+                                    
+            $stmt->bindParam(":id_match", $id_match, PDO::PARAM_INT);
+
+            if ($stmt->execute())
+            {
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $id_match_tmp = 0;
+                //créer un tableau à 2 dimmension et conserve les scores pour le même indice de l'équipe
+                foreach($response as $row){
+                    //si c'est les détails d'un nouveau match les scores des sets reprennent à 0 !
+                    if($id_match_tmp !== $row['id_match']){
+                        $id_match_tmp = $row['id_match'];
+                        $set_home = 0;
+                        $set_visiteur = 0;
+                    }
+                    else{
+                        // c'est un autre set du même match, alors enlever le score temporaire 
+                        if($res){
+                            array_pop($res);
+                        }
+                    }
+
+                    // qui a gagné le set en cours ?
+                    if($row['score_home']){
+                        $row['score_home'] > $row['score_visiteur'] ? $set_home++ : $set_visiteur++;
+                    }
+                    
+                    // reprendre tous les champs tel quel, sauf ceux des score
+                    foreach($row as $key => $val){
+                        if(strpos($key, 'score_') === false){
+                            $resultat[$row['id_match']][$key] = $val;
+                        }                    
+                    }
+
+                    // Mise en forme des score sous différents formats
+                    $resultat[$row['id_match']]['score_match'] = $set_home.'-'.$set_visiteur;
+                    if($row['score_home']){ 
+                      $resultat[$row['id_match']]['score_sets'][]['set'] = array($row['score_home'], $row['score_visiteur']);
+                    }
+                    $resultat[$row['id_match']]['set_home_gagne'] = $set_home;
+                    $resultat[$row['id_match']]['set_visiteur_gagne'] = $set_visiteur;
+
+                    // sauvegarder le résultat de ce set 
+                    $res =  $resultat[$row['id_match']];
+                }
+            }
+        } catch (Exception $e) {                
+                $res = NULL;
+        }
+        return $res;
+    }
+
+    /**
+     * Obtention de tous les résultats des matchs d'un tournoi selon son id du tournoi 
+     * @param Int $id_tournoi
      */
     public function getScoresByTournament($id_tournoi) {
         try{
@@ -1314,6 +1389,7 @@ class DbHandler {
         }
         return $res;
     }
+
 
     /**
      * Obtention des tournois

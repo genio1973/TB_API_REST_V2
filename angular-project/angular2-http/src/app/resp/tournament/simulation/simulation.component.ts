@@ -197,7 +197,7 @@ export class SimulationComponent implements OnInit {
         pauseToDo = this.configSimul.pausePresence;
         g.planning.map(m => {
           m.date_match = date_heure;
-          m.statut = 'non jouée';
+          m.statut = null;
           m.id_terrain = terrainId;
 
           //Définir la nouvelle heure pour les prochains matchs
@@ -265,7 +265,7 @@ export class SimulationComponent implements OnInit {
       // take out one match
       match = this.groupsPlan[0].planning.pop();
       match.id_terrain = pitchesPlanning[cptPitch].terrain;
-      match.statut = 'non joué';
+      match.statut = null;
       match.date_match = pitchesPlanning[cptPitch++].date_match;
       planning.push(match);
 
@@ -273,7 +273,7 @@ export class SimulationComponent implements OnInit {
       if(this.groupsPlan[0].planning.length > this.groupsPlan[numberGroups].planning.length){
         match = this.groupsPlan[0].planning.pop();
         match.id_terrain = pitchesPlanning[cptPitch].terrain;
-        match.statut = 'non joué';
+        match.statut = null;
         match.date_match = pitchesPlanning[cptPitch++].date_match;
         planning.push(match);
         i++;

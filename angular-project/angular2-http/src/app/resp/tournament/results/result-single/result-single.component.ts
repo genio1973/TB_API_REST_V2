@@ -10,7 +10,8 @@ export class ResultSingleComponent implements OnInit {
 
   @Input() result: Resultat;
   @Input() displayType: string;
-  
+  @Input() tournamentId:number;
+
   constructor() { }
 
   ngOnInit() {

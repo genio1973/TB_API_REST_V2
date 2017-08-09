@@ -33,7 +33,7 @@
                     </div>
                     <ng-container *ngFor="let result of matchsBlock.matchs; let odd=odd; let even=even;">
                         <div class="row" [ngClass]="{ odd: odd, even: even }">
-                            <my-result-single [result]="result" [displayType]="displayType"> </my-result-single> 
+                            <my-result-single [tournamentId]="tournamentId" [result]="result" [displayType]="displayType"> </my-result-single> 
                         </div>
                     </ng-container>
                 </div>
