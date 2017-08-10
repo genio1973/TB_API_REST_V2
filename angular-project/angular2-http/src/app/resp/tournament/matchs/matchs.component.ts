@@ -101,7 +101,7 @@ export class MatchsComponent implements OnChanges {
     let myPlanning: MatchDetails[] = [];
     this.groupsPlan.map(g => g.planning.map( m => myPlanning.push(m) ));
 
-    // Group mathc by pitch
+    // Group match by pitch
     terrainIds.map(numTerrain => {
       let plan = myPlanning.filter(m=> m.id_terrain == numTerrain);
       this.matchsGroupBy.push(new MatchsGroupBy(plan, `Terrrain ${numTerrain}`));

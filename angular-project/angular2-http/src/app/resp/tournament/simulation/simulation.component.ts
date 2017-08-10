@@ -11,6 +11,7 @@ import { RespTournamentService } from "../../../shared/services/resp.tournament.
 import { Pitch } from "../../../shared/models/pitch";
 import { ApiResponse } from "../../../shared/models/api-response";
 import { Match } from "../../../shared/models/match";
+import { MatchsGroupBy } from "../../../shared/plannings/matchs-group-by";
 
 
 @Component({
@@ -293,8 +294,60 @@ export class SimulationComponent implements OnInit {
       let index = memGroup.indexOf(m.equipe_home.id_groupe);  //retrieve index
       this.groupsPlan[index].planning.push(m);
     })
+
+    // Do we want an auto-referee by ohters teams ?
+    if(this.configSimul.auto_arbitrage){
+      this.selfRefereeTeam();
+    }
   }
     
+  /**
+   * Define the self-referee
+   * A referee is a team on the previous played match on the same pitch
+   */
+  private selfRefereeTeam(){  
+    
+    // Numerate the pitches from 1 to number of pitches
+    let terrainIds:number[]=[];
+    for(let i=0; i < this.configSimul.nb_terrains; i++){ 
+      terrainIds[i]=i+1;
+    }
+  
+    // Get all match in a array
+    let myPlanning: MatchDetails[] = [];
+    //console.log( this.groupsPlan[0].planning[0]);
+    this.groupsPlan.map(g => g.planning.map( m => myPlanning.push(m) ));
+    
+
+    // Group match by pitch
+    let matchsGroupBy: MatchsGroupBy[] = [];
+    terrainIds.map(numTerrain => {
+      let plan = myPlanning.filter(m=> m.id_terrain == numTerrain);
+          // trie par heure
+          plan.sort((a: any, b: any) => {
+            if (a.date_match < b.date_match) {
+              return -1;
+            } else if (a.date_match > b.date_match) {
+              return 1;
+            } else {
+              return 0;
+            }});
+      matchsGroupBy.push(new MatchsGroupBy(plan, `Terrrain ${numTerrain}`));
+    })
+
+    // Define teams referee for each matchs
+    // fist match : the referee team is one of the second match
+    // next match : the referee teams in one of previous match
+    matchsGroupBy.map( g => {
+      let referee: Team = g.planning[1].equipe_home;
+      g.planning.map( m => {
+        m.equipe_arbitre = referee;
+        referee = m.equipe_visiteur;
+      })
+    })
+
+    //console.log(matchsGroupBy);
+  }
 
   /**
    * Formatage de l'heure
@@ -317,12 +370,11 @@ export class SimulationComponent implements OnInit {
   }
 
   matchs: MatchDetails[] = [];
+  
   /**
    * Insert the planning data (with tournament) in database
    */
   InsertDataMatchsToDB(){
-
-    
 
     // Récupère tous le match en une seule liste
     this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
@@ -332,8 +384,7 @@ export class SimulationComponent implements OnInit {
     
     // Insert les matchs
     this.insertMatchsDB();
-
-    
+ 
   }
 
 
