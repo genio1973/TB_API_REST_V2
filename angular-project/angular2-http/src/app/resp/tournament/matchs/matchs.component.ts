@@ -91,20 +91,21 @@ export class MatchsComponent implements OnChanges {
   private matchsByPitches(){
     this.matchsGroupBy = [];
     
+    // Numerate the pitches from 1 to number of pitches
     let terrainIds:number[]=[];
     for(let i=0; i < this.configSimul.nb_terrains; i++){ 
       terrainIds[i]=i+1;
     }
+  
+    // Get all match in a array
+    let myPlanning: MatchDetails[] = [];
+    this.groupsPlan.map(g => g.planning.map( m => myPlanning.push(m) ));
 
-    //console.log("Debug");
-    let planning: MatchDetails[] = [];
+    // Group mathc by pitch
     terrainIds.map(numTerrain => {
-      this.groupsPlan
-        .map(g => { planning=g.planning.filter(m=> m.id_terrain == numTerrain);
-                    if(planning.length > 0){
-                      this.matchsGroupBy.push(new MatchsGroupBy(planning, `Terrrain ${planning[0].id_terrain}`));
-                    }      
-                })
-    });
+      let plan = myPlanning.filter(m=> m.id_terrain == numTerrain);
+      this.matchsGroupBy.push(new MatchsGroupBy(plan, `Terrrain ${numTerrain}`));
+    })
+    
   }
 }
