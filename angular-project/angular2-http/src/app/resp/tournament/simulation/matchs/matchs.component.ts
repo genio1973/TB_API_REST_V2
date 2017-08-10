@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { MatchsPlan } from "../../../shared/plannings/matchs-plan";
-import { Match } from "../../../shared/models/match";
-import { MatchDetails } from "../../../shared/models/match-details";
-import { MatchsGroupBy } from "../../../shared/plannings/matchs-group-by";
-import { ConfigSimul } from "../../../shared/plannings/config-simul";
+import { MatchsPlan } from "../../../../shared/plannings/matchs-plan";
+import { Match } from "../../../../shared/models/match";
+import { MatchDetails } from "../../../../shared/models/match-details";
+import { MatchsGroupBy } from "../../../../shared/plannings/matchs-group-by";
+import { ConfigSimul } from "../../../../shared/plannings/config-simul";
 
 @Component({
   selector: 'my-matchs',

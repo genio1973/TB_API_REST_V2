@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatchsPlan } from "../../../../shared/plannings/matchs-plan";
-import { Match } from "../../../../shared/models/match";
-import { MatchDetails } from "../../../../shared/models/match-details";
+import { MatchsPlan } from "../../../../../shared/plannings/matchs-plan";
+import { Match } from "../../../../../shared/models/match";
+import { MatchDetails } from "../../../../../shared/models/match-details";
 
 @Component({
   selector: 'my-match-list',

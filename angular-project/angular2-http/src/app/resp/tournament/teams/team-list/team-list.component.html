@@ -35,6 +35,6 @@
                 </tbody>
             </table>
         </div>
-        <a *ngIf="tournament && tournament.id_statut == 1" [routerLink]="['/responsible/tournament', tournamentId, 'teams', 'create', 'in-group', group.id_groupe]" class="btn btn-success btn-sm"><i class="fa fa-plus-square-o" aria-hidden="true"> Créer une nouvelle équipe</i></a>
+        <a *ngIf="tournament && tournament.id_statut == 1 && group" [routerLink]="['/responsible/tournament', tournamentId, 'teams', 'create', 'in-group', group.id_groupe]" class="btn btn-success btn-sm"><i class="fa fa-plus-square-o" aria-hidden="true"> Créer une nouvelle équipe</i></a>
     </div>
 </div>

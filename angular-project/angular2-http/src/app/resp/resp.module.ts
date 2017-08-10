@@ -24,15 +24,15 @@ import { CoachSingleComponent } from "./coachs/coach-single/coach-single.compone
 import { CoachEditComponent } from "./coachs/coach-edit/coach-edit.component";
 import { CoachCreateComponent } from "./coachs/coach-create/coach-create.component";
 import { CoachListComponent } from "./coachs/coach-list/coach-list.component";
-import { MatchSingleComponent } from "./tournament/matchs/match-single/match-single.component";
-import { MatchListComponent } from "./tournament/matchs/match-list/match-list.component";
 import { SimulationComponent } from "./tournament/simulation/simulation.component";
-import { MatchsComponent } from "./tournament/matchs/matchs.component";
 import { PitchesComponent } from "./tournament/pitches/pitches.component";
 import { ResultListComponent } from "./tournament/results/result-list/result-list.component";
 import { ResultsComponent } from "./tournament/results/results.component";
 import { ResultSingleComponent } from "./tournament/results/result-single/result-single.component";
 import { ResultEditComponent } from "./tournament/results/result-edit/result-edit.component";
+import { MatchsComponent } from "./tournament/simulation/matchs/matchs.component";
+import { MatchListComponent } from "./tournament/simulation/matchs/match-list/match-list.component";
+import { MatchSingleComponent } from "./tournament/simulation/matchs/match-single/match-single.component";
 
 @NgModule({
   imports: [

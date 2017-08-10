@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Match } from "../../../../shared/models/match";
+import { Match } from "../../../../../shared/models/match";
 
 @Component({
   selector: 'my-match-single',
