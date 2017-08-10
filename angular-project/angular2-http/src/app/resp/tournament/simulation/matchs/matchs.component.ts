@@ -19,7 +19,6 @@ export class MatchsComponent implements OnChanges {
   tournamentId:number;
   displayType: string = 'groupe';
   matchsGroupBy: MatchsGroupBy[] = [];
-  message: string;
 
 
   ngOnInit(): void {
@@ -45,8 +44,8 @@ export class MatchsComponent implements OnChanges {
   }
 
 
-  newMessage(){
-    this.simulDataService.changeMessage('Je suis le composant MatchsCoponent');
+  newDragDropSimul(){
+    this.simulDataService.changeGroupsPlan(this.groupsPlan);
     this.router.navigate(['/responsible/tournament',  this.tournamentId, 'simul-edit']);
   }
 

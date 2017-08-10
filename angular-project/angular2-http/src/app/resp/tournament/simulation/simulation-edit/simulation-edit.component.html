@@ -4,7 +4,13 @@
             <h1>Simulation - drag'n drop</h1>
     </div>
     <div class="panel-body">
-        {{message}}
+        <div *ngIf="groupsPlan">
+            <ng-container *ngFor="let g of groupsPlan">
+                <div class="row">
+                    {{g.groupId}} -{{ g.nameBlock}}
+                </div>
+            </ng-container>
+        </div>
     </div>
 </div>
 <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>

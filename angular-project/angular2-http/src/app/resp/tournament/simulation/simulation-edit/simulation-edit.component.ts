@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SimulDataService } from "../../../../shared/services/simul-data.service";
+import { MatchsPlan } from "../../../../shared/plannings/matchs-plan";
 
 @Component({
   selector: 'app-simulation-edit',
@@ -8,12 +9,19 @@ import { SimulDataService } from "../../../../shared/services/simul-data.service
 })
 export class SimulationEditComponent implements OnInit {
 
-  message: string;
+  groupsPlan: MatchsPlan[] = [];
+  /*
+    Rappel du type MatchPlan :  
+      - planning: MatchDetails[] = [];
+      - groupId: number;
+      - nameBlock?: string = '';
+      - private auto_arbitrage:boolean = false;
+  */
 
   constructor(private simulDataService: SimulDataService) { }
 
   ngOnInit() {
-    this.simulDataService.currentMessage.subscribe( message => this.message = message );
+    this.simulDataService.currentGroupsPlanSource.subscribe ( groupsPlan => this.groupsPlan = groupsPlan);
   }
 
 }

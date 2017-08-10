@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { MatchsPlan } from "../plannings/matchs-plan";
 
 @Injectable()
 export class SimulDataService {
 
-  private messageSource = new BehaviorSubject<string>("default message");
-  currentMessage = this.messageSource.asObservable();
+
+  private groupsPlan: MatchsPlan[] = [];
+  private groupsPlanSource = new BehaviorSubject<MatchsPlan[]>(this.groupsPlan);
+  currentGroupsPlanSource = this.groupsPlanSource.asObservable();
 
   constructor() { }
 
-  changeMessage(message: string){
-    this.messageSource.next(message);
-
+  changeGroupsPlan(groupsPlan: MatchsPlan[]){
+    this.groupsPlanSource.next(groupsPlan);
   }
 }
