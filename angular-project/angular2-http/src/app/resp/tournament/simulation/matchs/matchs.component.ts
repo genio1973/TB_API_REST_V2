@@ -4,6 +4,8 @@ import { Match } from "../../../../shared/models/match";
 import { MatchDetails } from "../../../../shared/models/match-details";
 import { MatchsGroupBy } from "../../../../shared/plannings/matchs-group-by";
 import { ConfigSimul } from "../../../../shared/plannings/config-simul";
+import { SimulDataService } from "../../../../shared/services/simul-data.service";
+import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'my-matchs',
@@ -14,10 +16,23 @@ export class MatchsComponent implements OnChanges {
 
   @Input() groupsPlan: MatchsPlan[] = [];
   @Input() configSimul: ConfigSimul;
+  tournamentId:number;
   displayType: string = 'groupe';
   matchsGroupBy: MatchsGroupBy[] = [];
-  
-  constructor() { }
+  message: string;
+
+
+  ngOnInit(): void {
+    // get the id from the url
+    this.route.pathFromRoot[2].params.subscribe(params => {
+      this.tournamentId = params['idtournoi'];
+    });
+  }
+
+    
+  constructor(private simulDataService: SimulDataService,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     
@@ -30,7 +45,9 @@ export class MatchsComponent implements OnChanges {
   }
 
 
-  ngOnInit(): void {
+  newMessage(){
+    this.simulDataService.changeMessage('Je suis le composant MatchsCoponent');
+    this.router.navigate(['/responsible/tournament',  this.tournamentId, 'simul-edit']);
   }
 
   pitchDisplayType(){

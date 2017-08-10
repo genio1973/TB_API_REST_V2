@@ -33,6 +33,8 @@ import { ResultEditComponent } from "./tournament/results/result-edit/result-edi
 import { MatchsComponent } from "./tournament/simulation/matchs/matchs.component";
 import { MatchListComponent } from "./tournament/simulation/matchs/match-list/match-list.component";
 import { MatchSingleComponent } from "./tournament/simulation/matchs/match-single/match-single.component";
+import { SimulationEditComponent } from "./tournament/simulation/simulation-edit/simulation-edit.component";
+import { SimulDataService } from "../shared/services/simul-data.service";
 
 @NgModule({
   imports: [
@@ -72,9 +74,9 @@ import { MatchSingleComponent } from "./tournament/simulation/matchs/match-singl
     ResultListComponent,
     ResultSingleComponent,
     ResultEditComponent,
+    SimulationEditComponent,
   ],
-  providers: [
-  ]
+ providers: [SimulDataService],
 })
 export class RespModule {}
 
