@@ -110,7 +110,7 @@ export class ResultEditComponent implements OnInit {
       data => {
       },
       err => {
-        this.errorMessage = err;
+        //this.errorMessage = err;
       });
   }
 
