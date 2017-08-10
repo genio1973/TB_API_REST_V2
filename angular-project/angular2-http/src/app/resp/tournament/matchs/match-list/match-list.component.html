@@ -1,6 +1,14 @@
 <ng-container *ngIf="matchs">
-        <ng-container *ngFor="let match of matchs">
-            <my-match-single [match]="match"> </my-match-single> 
-        </ng-container>
+    <div class="row">
+        <div class="col-sm-2">Heure</div>
+        <div class="col-sm-3">Equipe 1</div>
+        <div class="col-sm-3">Equipe 2</div>
+        <div class="col-sm-1">Ter.</div>
+        <div class="col-sm-3">(Equipe arbitre)</div>
+    </div>
+    <ng-container *ngFor="let match of matchs">
+        <my-match-single [match]="match"> </my-match-single> 
+    </ng-container>
+    
 </ng-container>
 

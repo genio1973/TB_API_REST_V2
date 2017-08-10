@@ -6,10 +6,12 @@ import { MatchDetails } from "../models/match-details";
 export class MatchsPlan {
     planning: MatchDetails[] = [];
     groupId: number;
+    nameBlock?: string = '';
     private auto_arbitrage:boolean = false;
 
-    constructor(teams: Team[], autoArbitrage:boolean) {
+    constructor(teams: Team[], autoArbitrage:boolean, nameBlock?:string ) {
         this.groupId = teams[0].id_groupe;
+        this.nameBlock = nameBlock;
         this.auto_arbitrage = autoArbitrage;
         this.initializePlan(teams);
     }

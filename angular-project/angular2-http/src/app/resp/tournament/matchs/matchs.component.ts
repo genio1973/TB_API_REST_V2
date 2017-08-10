@@ -55,7 +55,7 @@ export class MatchsComponent implements OnChanges {
     this.matchsGroupBy = [];
     this.groupsPlan.map(g => {
       if(g.planning.length>0) {
-        this.matchsGroupBy.push(new MatchsGroupBy(g.planning));
+        this.matchsGroupBy.push(new MatchsGroupBy(g.planning, g.nameBlock));
       }
     });
   }
@@ -81,7 +81,7 @@ export class MatchsComponent implements OnChanges {
       }});
     
     // place dans l'attibut de classe les matchs
-    this.matchsGroupBy.push(new MatchsGroupBy(matchs));
+    this.matchsGroupBy.push(new MatchsGroupBy(matchs, 'Horaire'));
     this.matchsGroupBy[0].groupId = null;
   }
 
@@ -102,8 +102,7 @@ export class MatchsComponent implements OnChanges {
       this.groupsPlan
         .map(g => { planning=g.planning.filter(m=> m.id_terrain == numTerrain);
                     if(planning.length > 0){
-                      //console.log(planning);
-                      this.matchsGroupBy.push(new MatchsGroupBy(planning));
+                      this.matchsGroupBy.push(new MatchsGroupBy(planning, `Terrrain ${planning[0].id_terrain}`));
                     }      
                 })
     });

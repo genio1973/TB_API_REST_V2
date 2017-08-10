@@ -18,11 +18,21 @@
         </nav>
         
         <ng-container *ngFor="let matchs of matchsGroupBy">
+          <div class="panel panel-default">
+                <div class="panel-heading">
+                        {{matchs.nameBlock}}
+                </div>
+                <div class="panel-body">
                   <my-match-list [matchs] = "matchs.planning"></my-match-list>
-                  <hr/>
+                </div>
+          </div>
         </ng-container>
 
- 
+
+
+
+
+
         
       </div>
   </div>

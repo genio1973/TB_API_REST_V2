@@ -60,7 +60,7 @@ export class SimulationComponent implements OnInit {
     this.service
       .getGroupsAndTeams(this.tournamentId)
       .subscribe(groups => { this.groups = groups;    
-                             this.configSimul.nb_terrains = groups.length;                      
+                             this.configSimul.nb_terrains = groups.length;
                           });
   }
 
@@ -82,14 +82,14 @@ export class SimulationComponent implements OnInit {
 
     // for each group build the matchs planification
     this.groups.map(group => { 
-                          console.log(group);
                           if(group.teams.length<3 || group.teams.length>8){
                             this.errorMessage = `Le nombre d'équipes par groupe doit être entre 3 et 8 !`;
                             this.simulLaunched = false;
                           }else{
-                          this.groupsPlan.push (new MatchsPlan(group.teams, this.configSimul.auto_arbitrage));
+                            this.groupsPlan.push (new MatchsPlan(group.teams, this.configSimul.auto_arbitrage, group.nom_groupe));
                           }
                         });
+
 
     // si tous les groupes sont prêts (nb équipes min, max ok)
     if(this.simulLaunched){
@@ -347,7 +347,7 @@ export class SimulationComponent implements OnInit {
     // crée autant de terrain qu'il est configuré par l'utilistateur
     for(let i=0; i<this.configSimul.nb_terrains;i++){
       let ter: Pitch = {id_terrain:0, nom_terrain:'A'};
-      ter.nom_terrain = 'Groupe_' + (i+1);
+      ter.nom_terrain = 'Ter_' + (i+1);
       pitches.push(ter);
     }
 
