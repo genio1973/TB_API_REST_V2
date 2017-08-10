@@ -1526,6 +1526,7 @@ Routes par défauts : vx/resp/route
             $json = $request->getBody();
             $data = json_decode($json, true); // transofme en tableau associatif
             $id = $request->getAttribute('id');
+            
 
             // récupère l'id du responsable en cours
             $headers = $request->getHeaders();
@@ -1539,10 +1540,11 @@ Routes par défauts : vx/resp/route
                 return echoRespnse(200, $response, $resultat);
             }
 
+
             // filtre les champs qu'il faut mettre à jour
             $fieldsToCheck = array("nom_equipe", "nb_pts", "niveau", "id_groupe", "id_personne");
             $arrayFields = filterRequiredFields($data, $fieldsToCheck);
-
+ 
             //$res = $fieldsToCheck;
             $res = $db->updateByID('equipes', $arrayFields, $id);
             $data=NULL;

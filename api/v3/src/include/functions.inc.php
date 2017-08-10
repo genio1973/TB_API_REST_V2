@@ -36,6 +36,7 @@ function validateEmail($email, $response) {
  * @return Array avec les clé et valeurs acceptées 
  */
 function filterRequiredFields($data, $fieldsToCheck) {
+    // Pour update 
     $arrayFields = array();
     foreach ($data as $key => $value){
         if(in_array($key, $fieldsToCheck) ){
@@ -43,6 +44,16 @@ function filterRequiredFields($data, $fieldsToCheck) {
         }
     }
     return $arrayFields;
+
+// ancienne version à contrôler lors d'une création
+
+    // $arrayFields = array();
+    // foreach ($data as $key => $value){
+    //     if(in_array($key, $fieldsToCheck) ){
+    //             $arrayFields[$key] = $value;
+    //     }
+    // }
+    // return $arrayFields;
 }
 
 /**

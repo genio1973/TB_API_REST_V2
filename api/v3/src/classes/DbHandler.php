@@ -175,8 +175,9 @@ class DbHandler {
                 $sql= "UPDATE $table SET ";
                 
                 foreach($array as $key=>$val){
-                    $sql.= " $key=";
-                    $sql.="'$val',";
+                    $sql .= " $key=";
+                    $sql .= $val!=null? "'$val'" : "null";
+                    $sql .= ",";
                 }
                 $sql = rtrim($sql,',') ." WHERE id_". rtrim($table,'s')."=$id; ";
                 

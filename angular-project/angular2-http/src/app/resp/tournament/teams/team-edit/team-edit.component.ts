@@ -76,11 +76,9 @@ export class TeamEditComponent implements OnInit {
             data => {
               this.successMessage = 'Equipe supprimée.';
                this.router.navigate([`/responsible/tournament/${this.tournamentId}/groups/list`]);
-              //console.log('user was deleted');
             } ,
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 
@@ -90,6 +88,7 @@ export class TeamEditComponent implements OnInit {
         updateTeam(){
         this.errorMessage = '';
         this.successMessage = '';
+        console.log(this.team);
 
         this.respService.updateTeam(this.team)
           .subscribe(
