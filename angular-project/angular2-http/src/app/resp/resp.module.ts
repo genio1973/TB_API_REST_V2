@@ -35,12 +35,14 @@ import { MatchListComponent } from "./tournament/simulation/matchs/match-list/ma
 import { MatchSingleComponent } from "./tournament/simulation/matchs/match-single/match-single.component";
 import { SimulationEditComponent } from "./tournament/simulation/simulation-edit/simulation-edit.component";
 import { SimulDataService } from "../shared/services/simul-data.service";
+import {DragulaModule , DragulaService} from "ng2-dragula/ng2-dragula"
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    respRouting
+    respRouting,
+    DragulaModule
   ],
   declarations: [
     RespComponent,
@@ -75,6 +77,7 @@ import { SimulDataService } from "../shared/services/simul-data.service";
     ResultSingleComponent,
     ResultEditComponent,
     SimulationEditComponent,
+
   ],
  providers: [SimulDataService],
 })

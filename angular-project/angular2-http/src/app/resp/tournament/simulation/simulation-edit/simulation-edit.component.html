@@ -5,11 +5,200 @@
     </div>
     <div class="panel-body">
         <div *ngIf="groupsPlan">
+            <!--
+            <div class="row">
             <ng-container *ngFor="let g of groupsPlan">
-                <div class="row">
-                    {{g.groupId}} -{{ g.nameBlock}}
-                </div>
+                    <div class="col-sm-3 wrapper">
+                        Terrain : {{ g.nameBlock}}
+                        <div class="cols-sm-3 container" [dragula]='"first-bag"' [dragulaModel]='g.planning'>
+                            <div *ngFor="let m of g.planning">{{m.equipe_home.nom_equipe}}-{{m.equipe_visiteur.nom_equipe}}</div>
+                        </div>
+                    </div>
+
             </ng-container>
+            </div>
+            -->
+        
+            <!--
+            <div class="col-sm-3 wrapper" *ngFor="let g of groupsPlan">
+                <table class="table table-striped table-bordered">
+                <caption>Terrain : {{g.nameBlock}}</caption>
+                <thead>
+                    <tr><th>Heure</th><th>Match</th><th *ngIf="g.planning[0].equipe_arbitre">Arbitre</th></tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let m of g.planning" >
+                        <tr>
+                            <td>{{m.date_match | date: 'HH:mm'}}</td>
+                            <td class="container" [dragula]='"match-bag"' [dragulaModel]='m.equipe_home' >{{m.equipe_home.nom_equipe}}-{{m.equipe_visiteur.nom_equipe}}</td>
+                            <td *ngIf="g.planning[0].equipe_arbitre">
+                                 <div class="container" [dragula]='"referee-bag"' [dragulaModel]='m.equipe_arbitre'>{{m.equipe_arbitre.nom_equipe}}</div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                </table>
+            </div>
+        -->
+
+        <!--
+            <div class="col-sm-4 wrapper" *ngFor="let g of groupsPlan">
+                <div class="row">
+                Terrain : {{g.nameBlock}}
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">Heure</div>
+                    <div class="col-sm-4">Match</div>
+                    <div *ngIf="g.planning[0].equipe_arbitre" class="col-sm-4">Artibre</div>
+                </div>
+                <div class="row" *ngFor="let m of g.planning">
+                    <div class="col-sm-4">{{m.date_match | date: 'HH:mm'}}</div>
+                    <div class="col-sm-4 container" [dragula]='"match-bag"' [dragulaModel]='m.equipe_home'>{{m.equipe_home.nom_equipe}}-{{m.equipe_visiteur.nom_equipe}}</div>
+                    <div *ngIf="g.planning[0].equipe_arbitre" class="col-sm-4 container" [dragula]='"referee-bag"' [dragulaModel]='m.equipe_arbitre'>{{m.equipe_arbitre.nom_equipe}}</div>
+                </div>
+            </div>
+        -->
+                
+<!--
+            <div class="col-sm-3 wrapper" *ngFor="let g of groupsPlan">
+                <table class="table table-striped table-bordered">
+                <caption>Terrain : {{g.nameBlock}}</caption>
+                <thead>
+                    <tr><th>Heure</th><th>Match</th></tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let m of g.planning">
+                    <tr>
+                        <td >{{m.date_match | date: 'HH:mm'}}</td> 
+                        <td>
+                            <div class="container" [attr.target-id]="m.equipe_home.id_equipe" [dragula]='"match-bag"' [dragulaModel]='g.planning'>                     
+                                <div [attr.source-id]="m.equipe_home.id_equipe">
+                                    {{m.equipe_home.nom_equipe}}-{{m.equipe_visiteur.nom_equipe}}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </ng-container>
+                </tbody>
+                </table>
+            </div>
+
+-->
+
+
+<table class="table table-striped table-bordered">
+
+    <tr> <!-- Title line -->
+        <th>
+            <div class="floating-box-header">
+                <p>Heure</p>
+            </div>
+        </th>
+        <!-- <ng-container *ngFor="let group of groupsPlan"> -->
+            <ng-container *ngFor="let pitch of pitchesPlan">
+            <th>
+                <div class="floating-box-header">
+                    <p>Match {{pitch.name}}</p>
+                </div>
+            </th>
+            <th>
+                <div class="floating-box-header">
+                    <p>Arbitre  {{pitch.name}}</p>
+                </div>
+            </th>
+            <th>
+                <div class="floating-box-header">
+                    <p></p>
+                </div>
+            </th>
+        </ng-container>
+    </tr>
+
+    <ng-container *ngFor="let h of hours; let i = index">
+        <tr> <!-- for each match : new table line -->
+            <td> <!-- Heure -->
+                <div>
+                    <p>{{h | date: 'HH:mm'}}</p>
+                </div>
+            </td>
+            <ng-container *ngFor="let pitch of pitchesPlan">
+                <td> <!-- match -->
+                    <div class="group-header" [dragula]='"match-bag"' [dragulaModel]='pitch.planning[i].matchs'>
+            
+                        <!-- <article *ngIf="!pitch.planning[i].length">Empty</article> -->
+                         <!-- <article *ngFor="let match of pitch.planning; let i = index">-->
+                        <article class="donotdrag"  *ngIf="!pitch.planning[i].matchs.length
+                                        || pitch.planning[i].matchs[0].equipe_home.id_equipe == 0"><!--Empty--></article>
+                        <article *ngFor="let match of pitch.planning[i].matchs; ">
+                            <div *ngIf="match.equipe_home.id_equipe != 0">
+                                <!--
+                               {{pitch.planning[i].matchs[0].equipe_home.nom_equipe}}
+                               -
+                               -{{pitch.planning[i].matchs[0].equipe_visiteur.nom_equipe}}
+                               -->
+                               {{match.equipe_home.nom_equipe}}
+                               -
+                               -{{match.equipe_visiteur.nom_equipe}}
+                            </div>
+                        </article>
+                        
+
+                    </div>
+                </td>
+
+                
+                <td> <!-- referee -->
+                    <!--
+                    <div class="group-header" [dragula]='"referee-bag"' [dragulaModel]='referees'>
+
+                    
+                        <article *ngIf="!teamRosters4.length">Empty</article>
+                        <article *ngFor="let item of teamRosters4; let i = index">
+                            <div>                           
+                                <img class="productarticlewidethumbnail" [src]="item.UserPhoto" />
+                                <header>
+                                    <span class="productarticlewidename">{{item.LastName}}  </span>
+                                </header>
+                            </div>
+
+                        </article>
+                    </div>
+                    -->
+                </td>
+
+                <td> <!-- col match separator -->
+                    <div class="group-header">
+
+                    </div>
+                </td>            
+            </ng-container>
+        </tr>
+    </ng-container>
+
+
+
+
+
+</table>
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
     </div>
 </div>
