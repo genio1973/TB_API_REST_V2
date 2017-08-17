@@ -5,14 +5,16 @@
     </div>
     <div class="panel-body">
         <div *ngIf="groupsPlan">
+            
+            <div class="col-sm-12 form-group">
+                <button type="submit" (click)="checkConflict()" class="btn btn-info btn-block">Check conflict</button>
+            </div>
 
             <table class="table table-bordered">
-
                 <tr> <!-- Title line -->
                     <th><div class="floating-box-header"><p>Heure</p></div></th>
                     <ng-container *ngFor="let pitch of pitchesPlan">
-                        <th><div class="floating-box-header"><p>Match {{pitch.name}}</p></div></th>
-                        <th><div class="floating-box-header"><p>Arbitre  {{pitch.name}}</p></div></th>
+                        <th><div class="floating-box-header"><p>Terrain {{pitch.name}}</p></div></th>
                         <th><div class="floating-box-header"><p></p></div></th>
                     </ng-container>
                 </tr>
@@ -24,47 +26,17 @@
                              <div><p>{{h | date: 'HH:mm'}}</p></div>
                         </td>
                         <ng-container *ngFor="let pitch of pitchesPlan; let indexColPitch = index">
-                            <td [ngStyle]="{'backgroundColor': pitch.planning[indexRowHour].matchs.length > 1 ? '#FFDAB9' : 'white' }"> <!-- match -->
-                            <td [ngStyle]="{'backgroundColor': pitch.planning[indexRowHour].matchs.length > 1 ? '#FFDAB9' : 'white' }"> <!-- match -->
+                            <td><!-- match -->
                                 <div class="group-header" [dragula]='"match-bag"' [dragulaModel]='pitch.planning[indexRowHour].matchs'>
-                                    <article *ngIf="!pitch.planning[indexRowHour].matchs.length"
-                                        [attr.data-indexrowhour]="indexRowHour"
-                                        [attr.data-indexcolpitch]="indexColPitch"
-                                        [attr.data-teamhomeid]="0" [attr.data-teamvisiteurid]="0">
+                                    <article *ngIf="!pitch.planning[indexRowHour].matchs.length">
                                         <div class="donotdrag text-danger" >### VIDE ###</div>
                                     </article>
-                                    <article *ngFor="let match of pitch.planning[indexRowHour].matchs;"
-                                        [attr.data-indexrowhour]="indexRowHour"
-                                        [attr.data-indexcolpitch]="indexColPitch"
-                                        [attr.data-teamhomeid]="match.equipe_home.id_equipe"
-                                        [attr.data-teamvisiteurid]="match.equipe_visiteur.id_equipe">
-                                            <div [ngClass]="{match.conflict ? 'red' : 'white' }">
-                                            {{match.equipe_home.nom_equipe}}
-                                            -
-                                            -{{match.equipe_visiteur.nom_equipe}}
+                                    <article *ngFor="let match of pitch.planning[indexRowHour].matchs;">
+                                            <div [ngClass]="{ 'bg-danger text-white': match.isConflict, 'bg-warning text-white': pitch.planning[indexRowHour].matchs.length > 1}">
+                                                {{match.equipe_home.nom_equipe}}-{{match.equipe_visiteur.nom_equipe}}
                                             </div>
                                     </article>
                                 </div>
-                            </td>
-
-                            
-                            <td> <!-- referee -->
-                                <!--
-                                <div class="group-header" [dragula]='"referee-bag"' [dragulaModel]='referees'>
-
-                                
-                                    <article *ngIf="!teamRosters4.length">Empty</article>
-                                    <article *ngFor="let item of teamRosters4; let i = index">
-                                        <div>                           
-                                            <img class="productarticlewidethumbnail" [src]="item.UserPhoto" />
-                                            <header>
-                                                <span class="productarticlewidename">{{item.LastName}}  </span>
-                                            </header>
-                                        </div>
-
-                                    </article>
-                                </div>
-                                -->
                             </td>
                              <!-- col match separator -->
                             <td><div class="group-header"></div></td>            

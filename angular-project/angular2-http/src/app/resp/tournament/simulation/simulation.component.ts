@@ -367,6 +367,9 @@ export class SimulationComponent implements OnInit {
     if(this.configSimul.nb_terrains < this.groups.length){
       this.configSimul.matchs_meme_terrain = true;
     }
+    if (!this.configSimul.matchs_meme_terrain){
+      this.configSimul.auto_arbitrage = false;
+    }
   }
 
   matchs: MatchDetails[] = [];

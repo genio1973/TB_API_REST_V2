@@ -11,4 +11,5 @@ export class MatchDetails {
     equipe_visiteur: Team;
     equipe_arbitre?: Team;
     id_terrain?: number;
+    isConflict?: boolean=false;
 }

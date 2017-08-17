@@ -3,10 +3,10 @@
   <!-- Simulation info -->
   <div class="panel panel-default">
       <div class="panel-heading">
-              <h1>Résultat de la simulation</h1> <button (click)="newDragDropSimul()" class="btn btn-warning">Déplacer des matchs et des équipes (en manuel)</button>
+              <h1>Résultat de la simulation</h1>              
       </div>
       <div class="panel-body">
-        
+        <button *ngIf="!configSimul.auto_arbitrage" (click)="newDragDropSimul()" class="btn btn-info btn-block">Déplacer des matchs et des équipes (en manuel)</button>
         <nav class="navbar">
           <div class="container-fluid">
             <ul class="nav navbar-nav">
