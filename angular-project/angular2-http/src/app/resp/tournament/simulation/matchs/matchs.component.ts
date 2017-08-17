@@ -45,7 +45,10 @@ export class MatchsComponent implements OnChanges {
 
 
   newDragDropSimul(){
-    this.simulDataService.changeGroupsPlan(this.groupsPlan);
+    //this.simulDataService.changeGroupsPlan(this.groupsPlan);
+    this.matchsByPitches();
+    this.simulDataService.changeGroupsPlan(this.matchsGroupBy);
+    console.log(this.matchsGroupBy);
     this.router.navigate(['/responsible/tournament',  this.tournamentId, 'simul-edit']);
   }
 

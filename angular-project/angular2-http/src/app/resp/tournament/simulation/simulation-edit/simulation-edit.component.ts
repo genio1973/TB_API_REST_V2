@@ -5,6 +5,7 @@ import { DragulaService } from "../../../../../../node_modules/ng2-dragula/ng2-d
 import { Team } from "../../../../shared/models/team";
 import { Match } from "../../../../shared/models/match";
 import { MatchDetails } from "../../../../shared/models/match-details";
+import { MatchsGroupBy } from "../../../../shared/plannings/matchs-group-by";
 
 
 @Component({
@@ -15,8 +16,10 @@ import { MatchDetails } from "../../../../shared/models/match-details";
 })
 
 export class SimulationEditComponent implements OnInit {
-  groupsPlan: MatchsPlan[] = [];
+  groupsPlanOld: MatchsPlan[] = [];
+  groupsPlan: MatchsGroupBy[] = [];
   pitchesPlan: PitchPlan[] = [];
+  
   hours: Date [] = [];
   readyToDbPush: boolean = false;
 

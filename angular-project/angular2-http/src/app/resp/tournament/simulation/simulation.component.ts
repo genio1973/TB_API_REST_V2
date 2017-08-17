@@ -226,7 +226,6 @@ export class SimulationComponent implements OnInit {
   private setMatchDifferentPitches(){
    // Get the tot matchs 
     let nbPitches = this.configSimul.nb_terrains;
-    console.log(this.configSimul.nb_terrains);
     let nbMatchTotal: number = 0;
     let pauseToDo: boolean = this.configSimul.pausePresence;
     this.groupsPlan.map(group => nbMatchTotal+= group.planning.length);
