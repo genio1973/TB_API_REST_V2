@@ -18,6 +18,7 @@ export class SimulationEditComponent implements OnInit {
   groupsPlan: MatchsPlan[] = [];
   pitchesPlan: PitchPlan[] = [];
   hours: Date [] = [];
+  readyToDbPush: boolean = false;
 
   constructor(private simulDataService: SimulDataService,
               private dragulaService: DragulaService) {
@@ -28,9 +29,14 @@ export class SimulationEditComponent implements OnInit {
     });
   }
 
+
+
   ngOnInit() {
+
     this.simulDataService.currentGroupsPlanSource.subscribe ( groupsPlan => {
+    
       this.groupsPlan = groupsPlan;
+      console.log(this.groupsPlan);
 
       // get the number of time's matchs
       // consider the pitch with the most number of match in its planning
@@ -67,6 +73,8 @@ export class SimulationEditComponent implements OnInit {
             p.planning.push(listMatch);
           }
       });
+
+      this.checkConflict();
     });
 
     
@@ -93,6 +101,7 @@ export class SimulationEditComponent implements OnInit {
       this.onOut(value.slice(1));
       this.checkConflict();
     });
+
   }
 
   private hasClass(el:any, name:string):any {
@@ -137,7 +146,7 @@ export class SimulationEditComponent implements OnInit {
    * Return false if no conflict is present
    */
   private checkConflict(){
-
+    this.readyToDbPush = true;
     // get all matchs played on the different pitches on the same hour
     this.hours.map( (h, i) => {
       let matchs: MatchDetails[] = [];
@@ -156,12 +165,14 @@ export class SimulationEditComponent implements OnInit {
           }
           else{
             m.isConflict = true;
+            this.readyToDbPush = false;
           }
           if(!uniqueTeams.includes(m.equipe_visiteur)){
             uniqueTeams.push(m.equipe_visiteur);
           }
           else{
             m.isConflict = true;
+            this.readyToDbPush = false;
           }
 
           // only if there is an self-referee
@@ -172,6 +183,7 @@ export class SimulationEditComponent implements OnInit {
             }
             else{
               m.isConflict = true;
+              this.readyToDbPush = false;
             } 
           }
           */         

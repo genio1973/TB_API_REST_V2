@@ -22,7 +22,7 @@
 
                 <div class="col-sm-12 form-group">
                     <div class="col-sm-6"><label>Nombre de terrains</label></div>
-                    <div class="col-sm-6"><input type="number" class="form-control" min="1" name="nb_terrains" [(ngModel)]="configSimul.nb_terrains"></div>
+                    <div class="col-sm-6"><input type="number" class="form-control" min="1" name="nb_terrains" (change)="numberOfPitches()" [(ngModel)]="configSimul.nb_terrains"></div>
                 </div>
 
                 <div *ngIf="configSimul.nb_terrains>=groups.length" class="col-sm-12 form-group">  

@@ -96,9 +96,12 @@ export class SimulationComponent implements OnInit {
     if(this.simulLaunched){
       if(this.configSimul.matchs_meme_terrain){
         this.setMatch(); // Each group : matchs played on the same pitch
+        console.log('Même terrains');
       }
       else{
         this.setMatchDifferentPitches();
+        console.log('différent terrains');
+        console.log(this.groupsPlan);
       }
     
       // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
@@ -223,6 +226,7 @@ export class SimulationComponent implements OnInit {
   private setMatchDifferentPitches(){
    // Get the tot matchs 
     let nbPitches = this.configSimul.nb_terrains;
+    console.log(this.configSimul.nb_terrains);
     let nbMatchTotal: number = 0;
     let pauseToDo: boolean = this.configSimul.pausePresence;
     this.groupsPlan.map(group => nbMatchTotal+= group.planning.length);
@@ -359,6 +363,15 @@ export class SimulationComponent implements OnInit {
   }
 
   /**
+   * When changing number of pitch in view
+  */
+  numberOfPitches(){
+    if(this.configSimul.nb_terrains < this.groups.length){
+      this.configSimul.matchs_meme_terrain = false;
+    }
+  }
+
+  /**
    * En cas de changement de l'attribut check : les matchs se jouent ou pas sur le même terrain
    */
   playSamePitch(){
@@ -392,7 +405,7 @@ export class SimulationComponent implements OnInit {
 
 
   /**
-   * Insert les nouveauy terrains  
+   * Insert les nouveaux terrains  
    */
   private insertPitchesDB(){
     let id_first_pitch_inserted: number = 0;

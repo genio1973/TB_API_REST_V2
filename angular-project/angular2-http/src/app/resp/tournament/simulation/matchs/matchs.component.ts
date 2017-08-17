@@ -122,6 +122,5 @@ export class MatchsComponent implements OnChanges {
       let plan = myPlanning.filter(m=> m.id_terrain == numTerrain);
       this.matchsGroupBy.push(new MatchsGroupBy(plan, `Terrrain ${numTerrain}`));
     })
-    
   }
 }

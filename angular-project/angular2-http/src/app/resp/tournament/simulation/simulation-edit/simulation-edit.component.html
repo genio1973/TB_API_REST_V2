@@ -5,11 +5,6 @@
     </div>
     <div class="panel-body">
         <div *ngIf="groupsPlan">
-            
-            <div class="col-sm-12 form-group">
-                <button type="submit" (click)="checkConflict()" class="btn btn-info btn-block">Check conflict</button>
-            </div>
-
             <table class="table table-bordered">
                 <tr> <!-- Title line -->
                     <th><div class="floating-box-header"><p>Heure</p></div></th>
@@ -50,3 +45,17 @@
 <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
 <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
+
+<div *ngIf="readyToDbPush"  class="panel panel-default">
+    <div class="panel-heading">
+            <h1>Prêt pour sauvegarder les données</h1>
+    </div>
+    <div class="panel-body">
+        <div class="col-sm-12 form-group">
+            <p>Opération définitive, le tournoi passera en statut "Ouvert".</p>
+        </div>
+        <div class="col-sm-12 form-group">
+            <button type="submit" (click)="InsertDataMatchsToDB()" class="btn btn-danger btn-block">Valider et inscire les données</button>
+        </div>
+    </div>
+</div>
