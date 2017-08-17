@@ -451,7 +451,7 @@ export class SimulationComponent implements OnInit {
   }
 
   /**
-   * Format matc to insert in db
+   * Format match to insert in db
    * @param m
    */
   private toMatchFieldCreation(m: MatchDetails): Match {
