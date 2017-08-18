@@ -52,6 +52,7 @@ import { KeysPipe } from "./shared/tools/keys-pipe";
     AuthGuardService, 
     AuthAdminGuardService
   ],
+  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

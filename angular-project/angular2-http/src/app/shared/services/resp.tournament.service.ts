@@ -19,7 +19,7 @@ import { SetMatch } from "../models/set-match";
 export class RespTournamentService {
 
     tournaments: Tournament[];
-    private tournamentUrl: string = 'http://test.romandvolley.ch/api/v3/resp';
+    private tournamentUrl: string = 'http://test.romandvolley.ch/api/v1/resp';
 
     // observable src : contains data
     private tournamentSource = new Subject<string>();

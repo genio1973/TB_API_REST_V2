@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, enableProdMode } from '@angular/core';
 import { AuthService } from "./shared/services/auth.service";
 import { Router } from "@angular/router";
 import { RolesEnum } from "./shared/models/rolesEnum";
-
+enableProdMode();
 
 @Component({
   selector: 'my-app',

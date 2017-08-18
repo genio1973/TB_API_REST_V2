@@ -1,36 +1,48 @@
 <?php
-//use \Psr\Http\Message\ServerRequestInterface as Request;
-//use \Psr\Http\Message\ResponseInterface as Response;
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
 
 require_once '../../vendor/autoload.php';
-require_once 'src/config/db.php';
+require_once 'src/include/config.php';
+require_once 'src/include/functions.inc.php';
 
-//$app->config('debug', true);
+// Accèder à toutes les données de configuration par l'intermédiaire de l'instance slim $app
+// les constantes sont également dans $config (messages d'erreur, roles...)
+$app = new \Slim\App(["settings" => $config]);
 
-// \Slim\Slim::registerAutoloader();
 
-$app = new \Slim\App;
+// Perment de charger les classes se trouvant définies dans le répertoires classes
+// Evite de faire pour chaque classe utilisée un require_once...
+//require ("./classes/AuthenticateApiKey.php");
 
-/*
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
-
-    return $response;
+spl_autoload_register(function ($classname) {
+    require ("./src/classes/" . $classname . ".php");
 });
 
+// ID utilisateur - variable globale
+//global $user_id;
+$user_id = NULL;
 
-$app->get('/hello', function (Request $request, Response $response) {
-    $response->getBody()->write("Hello");
+// toutes les routes accessibles à tout utilisateur de l'API
+require_once('src/routes/public.php');
 
-    return $response;
-});
-*/
+//Groupement des routes pour les administrateurs
+$app->group('/admin', function () use ($app) {
+//    require_once('src/routes/arbitre.php');
+//    require_once('src/routes/responsable.php');
+    require_once('src/routes/admin.php');
+})->add(new AuthenticateApiKey($config['role']['ADMIN'], $config['role']['ADMIN']));
 
-// Users Routes
-require_once 'src/routes/users.php';
+//Groupement des routes pour les responsables de tournois
+$app->group('/resp', function () use ($app) {
+//    require_once('src/routes/arbitre.php');
+    require_once('src/routes/responsable.php');
+})->add(new AuthenticateApiKey($config['role']['RESPONSABLE'], $config['role']['ADMIN']));
 
-// Public Routes
-require_once 'src/routes/public.php';
+//Groupement des routes pour les arbitres
+$app->group('/arbitre', function () use ($app) {
+    require_once('src/routes/arbitre.php');
+})->add(new AuthenticateApiKey($config['role']['ARBITRE'], $config['role']['ADMIN']));
 
 $app->run();
+?>

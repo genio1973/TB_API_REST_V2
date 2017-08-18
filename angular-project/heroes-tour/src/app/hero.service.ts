@@ -11,8 +11,8 @@ import { Observable } from "rxjs/Observable";
 @Injectable()
 export class HeroService {
     //private heroesUrl = 'api/heroes';  // URL to web api
-    //private heroesUrl = 'http://test.romandvolley.ch/api/v3/public/equipes/groupe/1';
-    private heroesUrl = 'http://test.romandvolley.ch/api/v3/public';
+    //private heroesUrl = 'http://test.romandvolley.ch/api/v1/public/equipes/groupe/1';
+    private heroesUrl = 'http://test.romandvolley.ch/api/v1/public';
     
     constructor(private http: Http) { }
     getHeroes(): Promise<Hero[]> {

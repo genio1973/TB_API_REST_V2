@@ -18,7 +18,7 @@ import { Ranking } from "../models/ranking";
 export class PublicTournamentService {
 
     tournaments: Tournament[];
-    private tournamentUrl: string = 'http://test.romandvolley.ch/api/v3/public';
+    private tournamentUrl: string = 'http://test.romandvolley.ch/api/v1/public';
 
     // observable src : contains data
     private tournamentSource = new Subject<string>();
