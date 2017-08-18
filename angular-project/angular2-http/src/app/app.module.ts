@@ -42,7 +42,7 @@ import { KeysPipe } from "./shared/tools/keys-pipe";
     FormsModule,
     PublicModule,
     RespModule,
-    AdminModule,
+    AdminModule,   
     routing
   ],
   providers: [PublicTournamentService, 

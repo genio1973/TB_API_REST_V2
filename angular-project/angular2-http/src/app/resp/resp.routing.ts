@@ -30,6 +30,8 @@ import { ResultsComponent } from "./tournament/results/results.component";
 import { ResultListComponent } from "./tournament/results/result-list/result-list.component";
 import { ResultEditComponent } from "./tournament/results/result-edit/result-edit.component";
 import { SimulationEditComponent } from "./tournament/simulation/simulation-edit/simulation-edit.component";
+import { RankingComponent } from "../public/tournament/rankings/rankings.component";
+import { RankingListComponent } from "../public/tournament/rankings/ranking-list/ranking-list.component";
 
 
 export const respRoutes: Routes = [
@@ -75,6 +77,7 @@ export const respRoutes: Routes = [
                                     { path: 'simul',        component: SimulationComponent},
                                     { path: 'simul-edit',         component: SimulationEditComponent }, 
                                     { path: 'pitches',      component: PitchesComponent }, 
+                                    { path: 'rankings',      component: RankingListComponent },
                                     {
                                         path: 'results',
                                         component: ResultsComponent,

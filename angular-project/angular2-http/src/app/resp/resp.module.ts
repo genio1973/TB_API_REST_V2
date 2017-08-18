@@ -36,6 +36,9 @@ import { MatchSingleComponent } from "./tournament/simulation/matchs/match-singl
 import { SimulationEditComponent } from "./tournament/simulation/simulation-edit/simulation-edit.component";
 import { SimulDataService } from "../shared/services/simul-data.service";
 import {DragulaModule , DragulaService} from "ng2-dragula/ng2-dragula"
+import { RankingComponent } from "../public/tournament/rankings/rankings.component";
+import { RankingListComponent } from "../public/tournament/rankings/ranking-list/ranking-list.component";
+
 
 @NgModule({
   imports: [
@@ -77,7 +80,8 @@ import {DragulaModule , DragulaService} from "ng2-dragula/ng2-dragula"
     ResultSingleComponent,
     ResultEditComponent,
     SimulationEditComponent,
-
+    RankingComponent,
+    RankingListComponent,
   ],
  providers: [SimulDataService],
 })

@@ -15,6 +15,8 @@ import { ResultListComponent } from "../resp/tournament/results/result-list/resu
 import { RankingComponent } from "./tournament/rankings/rankings.component";
 import { RankingListComponent } from "./tournament/rankings/ranking-list/ranking-list.component";
 
+
+
 export const publicRoutes: Routes = [
         { path: 'public',
           component: PublicComponent,
