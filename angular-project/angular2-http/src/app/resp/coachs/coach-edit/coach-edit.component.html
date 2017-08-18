@@ -6,18 +6,18 @@
   <form (ngSubmit)="updateCoach()">
 
     <div class="form-group">
-      <label>Prénom</label>
-      <input type="text" class="form-control" name="prenom" [(ngModel)]="coach.prenom">
+      <label>Prénom*</label>
+      <input type="text" class="form-control" name="prenom" required [(ngModel)]="coach.prenom">
     </div>
 
     <div class="form-group">
-      <label>Nom</label>
-      <input type="text" class="form-control" name="nom" [(ngModel)]="coach.nom">
+      <label>Nom*</label>
+      <input type="text" class="form-control" name="nom" required [(ngModel)]="coach.nom">
     </div>
 
     <div class="form-group">
-      <label>Email</label>
-      <input type="email" class="form-control" name="courriel" [(ngModel)]="coach.courriel">
+      <label>Email*</label>
+      <input type="email" class="form-control" name="courriel" required [(ngModel)]="coach.courriel">
     </div>
 
     <div class="form-group">
