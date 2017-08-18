@@ -1,6 +1,7 @@
 <div *ngIf="tournament">
   <div>
-  <a [routerLink]="['/responsible/tournaments']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+    <a [routerLink]="['/responsible/tournaments']" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"> Retour à la liste</i></a>
+    <a (click)="deleteTournament()" class="btn btn-danger btn-sm"><i class="fa fa-trash-o" aria-hidden="true"> Supprimer ce tournoi</i></a>
   </div>
   <form (ngSubmit)="updateTournament()">
 

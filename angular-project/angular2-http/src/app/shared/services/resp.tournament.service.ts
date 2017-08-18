@@ -137,12 +137,13 @@ export class RespTournamentService {
      * Create a new tournament
      * @param tournament 
      */
-    createTournament(tournament: Tournament): Observable<Tournament> {
-        return this.http.post(`${this.tournamentUrl}/tournoi`, tournament, this.headBuilder())
-        .do(this.checkError)
-        .map(res => res.json())
-        .do(res => this.tournamentCreated(res))
-        .catch((e) => this.handleError(e));
+    createTournament(tournament: Tournament): Observable<ApiResponse> {
+        let call = this.http.post(`${this.tournamentUrl}/tournoi`, tournament, this.headBuilder())
+                        .do(this.checkError)
+                        .map(res => res.json())
+                        .do(res => this.tournamentCreated(res))
+                        .catch((e) => this.handleError(e));
+        return call;
     }
 
 
@@ -322,7 +323,7 @@ export class RespTournamentService {
      * Création de groupes dans un tournoi
      * @param groups
      */
-    createGroups(groups: Group[]): Observable<Group> {
+    createGroups(groups: Group[]): Observable<ApiResponse> {
         return this.http.post(`${this.tournamentUrl}/groupes`, groups, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())
@@ -334,7 +335,7 @@ export class RespTournamentService {
      * Création d'équipes
      * @param teams : tableau d'équipes
      */
-    createTeams(teams: Team[]): Observable<Team> {
+    createTeams(teams: Team[]): Observable<ApiResponse> {
         return this.http.post(`${this.tournamentUrl}/equipes`, teams, this.headBuilder())
         .do(this.checkError)
         .map(res => res.json())

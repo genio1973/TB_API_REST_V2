@@ -1,19 +1,44 @@
 <div *ngIf="tournament">
-    <nav class="navbar navbar-inverse">
+    <!-- NAV TOP  -->
+    <div>
+    <nav class="navbar navbar-default navbar-cls-top navbar-inverse" role="navigation" style="margin-bottom: 0">
         <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#inner-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
 
-        <ul class="nav navbar-nav">
-            <li><a [routerLink]="['/public/tournament', tournament.id, 'teams', 'list']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Equipes</a></li>
-            <li><a [routerLink]="['/public/tournament', tournament.id, 'groups', 'list']" routerLinkActive="active" >Groupes</a></li>
-            <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'results']" routerLinkActive="active"><i class="fa fa-calendar" aria-hidden="true"></i>Resultats</a></li>
-            <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'rankings']" routerLinkActive="active"><i class="fa fa-bar-chart-o fa-cubes" aria-hidden="true"></i>Classements</a></li>
-        </ul>
+            <div class="collapse navbar-collapse" id="inner-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a [routerLink]="['/public/tournament', tournament.id, 'teams', 'list']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Equipes</a></li>
+                    <li><a [routerLink]="['/public/tournament', tournament.id, 'groups', 'list']" routerLinkActive="active" >Groupes</a></li>
+                    <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'results']" routerLinkActive="active"><i class="fa fa-calendar" aria-hidden="true"></i>Resultats</a></li>
+                    <li *ngIf="tournament.id_statut > 1"> <a [routerLink]="['/public/tournament', tournament.id, 'rankings']" routerLinkActive="active"><i class="fa fa-bar-chart-o fa-cubes" aria-hidden="true"></i>Classements</a></li>
+                </ul>
 
-        <ul class="nav navbar-nav navbar-right">
-            <li><a routerLink="/public/tournaments">Tournois</a></li>
-        </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a routerLink="/public/tournaments">Tournois</a></li>
+                </ul>
+            </div>
         </div>
-    </nav>
+    </nav> 
+    </div>
+    <!-- /NAV TOP  -->
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- Tournament info -->

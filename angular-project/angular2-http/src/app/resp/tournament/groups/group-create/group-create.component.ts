@@ -20,6 +20,7 @@ export class GroupCreateComponent implements OnInit {
                  private route: ActivatedRoute) { }
 
     ngOnInit() {
+      this.groups = [];
       this.groups[0] = new Group();
       
       // get the id from the url
@@ -35,7 +36,7 @@ export class GroupCreateComponent implements OnInit {
         this.service.createGroups(this.groups)
           .subscribe(
             data => {
-              this.successMessage = 'Tournoi a été créé.';
+              this.successMessage = 'Le groupe a été créé.';
               this.router.navigate(['/responsible/tournament',  this.groups[0].id_tournoi, 'groups']);
             },
             err => {

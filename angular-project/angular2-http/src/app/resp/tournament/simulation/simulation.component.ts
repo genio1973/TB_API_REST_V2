@@ -389,11 +389,11 @@ export class SimulationComponent implements OnInit {
     // Récupère tous le match en une seule liste
     this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});
 
-    //Insert les nouveau terrains    
+    //Insert les new pitches and matchs    
     this.insertPitchesDB();
     
     // Insert les matchs
-    this.insertMatchsDB();
+    //this.insertMatchsDB();
  
   }
 
@@ -414,6 +414,7 @@ export class SimulationComponent implements OnInit {
 
     // insert in the db all the necessary pitches
     this.respService.createPitches(pitches)
+              .map(res => {return res})
               .subscribe(
                 res => {
                   let apiResp : ApiResponse = res;
@@ -424,6 +425,7 @@ export class SimulationComponent implements OnInit {
                   this.matchs.map(m=> {
                     m.id_terrain = pitches[m.id_terrain-1].id_terrain;
                   });
+                  this.insertMatchsDB();
 
                 },
                 err => {
@@ -438,7 +440,7 @@ export class SimulationComponent implements OnInit {
     
     let matchsToPost: Match[] = [];
     
-    setTimeout(() => {
+    //setTimeout(() => {
     this.matchs.map(m => { matchsToPost.push(this.toMatchFieldCreation(m))});
 
     this.respService.createMatchs(matchsToPost)
@@ -458,7 +460,7 @@ export class SimulationComponent implements OnInit {
         err => {
           this.errorMessage = err;
         });
-    }, 2000);
+    //}, 2000);
   }
 
   /**

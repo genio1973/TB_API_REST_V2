@@ -75,4 +75,26 @@ export class TournamentEditComponent implements OnInit {
             });
     }
 
+    /**
+     * Delete a tournament
+     */
+    deleteTournament(){
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        if(this.tournament.id_statut > 1){
+          this.errorMessage = 'Il faut dans un premier temps passé le tournoi au statut NOUVEAU. Ceci par sécurité';
+          return;
+        }
+
+        this.tournamentService.deleteTournament(this.tournament.id)
+          .subscribe(
+            data => {
+              this.successMessage = 'Tournoi supprimé.';
+              this.router.navigate(['/responsible/tournaments/list']);
+            } ,
+            err => {
+              this.errorMessage = err;
+            });
+    }
 }
