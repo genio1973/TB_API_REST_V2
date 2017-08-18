@@ -13,7 +13,6 @@ import 'rxjs/add/operator/find';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/toPromise';
 
-import { UserService } from "./shared/services/user.service";
 import { AdminService } from "./shared/services/admin.service";
 import { RespComponent } from "./resp/resp.component";
 import { LoginComponent } from "./public/login/login.component";
@@ -28,8 +27,6 @@ import { RespModule } from "./resp/resp.module";
 import { PublicTournamentService } from "./shared/services/public-tournament.service";
 import { RespTournamentService } from "./shared/services/resp.tournament.service";
 import { KeysPipe } from "./shared/tools/keys-pipe";
-//import {DragulaModule, DragulaService} from "../../node_modules/ng2-dragula/ng2-dragula";
-//import {DragulaModule , DragulaService} from "ng2-dragula/ng2-dragula"
 
 
 @NgModule({
@@ -49,7 +46,6 @@ import { KeysPipe } from "./shared/tools/keys-pipe";
     routing
   ],
   providers: [PublicTournamentService, 
-    UserService,
     RespTournamentService, 
     AdminService,
     AuthService, 
