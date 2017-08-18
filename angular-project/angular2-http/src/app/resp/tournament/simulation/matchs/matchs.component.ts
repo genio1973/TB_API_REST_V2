@@ -48,7 +48,6 @@ export class MatchsComponent implements OnChanges {
     //this.simulDataService.changeGroupsPlan(this.groupsPlan);
     this.matchsByPitches();
     this.simulDataService.changeGroupsPlan(this.matchsGroupBy);
-    console.log(this.matchsGroupBy);
     this.router.navigate(['/responsible/tournament',  this.tournamentId, 'simul-edit']);
   }
 

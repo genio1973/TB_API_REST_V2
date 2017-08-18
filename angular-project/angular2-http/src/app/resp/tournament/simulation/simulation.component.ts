@@ -96,11 +96,9 @@ export class SimulationComponent implements OnInit {
     if(this.simulLaunched){
       if(this.configSimul.matchs_meme_terrain){
         this.setMatch(); // Each group : matchs played on the same pitch
-        console.log('Même terrains');
       }
       else{
         this.setMatchDifferentPitches();
-        console.log('différent terrains');
         console.log(this.groupsPlan);
       }
     
@@ -389,7 +387,7 @@ export class SimulationComponent implements OnInit {
   /**
    * Insert the planning data (with tournament) in database
    */
-  InsertDataMatchsToDB(){
+  insertDataMatchsToDB(){
 
     // Récupère tous le match en une seule liste
     this.groupsPlan.map( g =>{ g.planning.map(m => { this.matchs.push(m)})});

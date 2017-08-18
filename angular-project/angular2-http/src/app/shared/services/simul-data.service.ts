@@ -19,7 +19,5 @@ export class SimulDataService {
   //changeGroupsPlan(groupsPlan: MatchsPlan[]){
   changeGroupsPlan(groupsPlan: MatchsGroupBy[]){
     this.groupsPlanSource.next(groupsPlan);
-    console.log(groupsPlan);
-
   }
 }

@@ -3,50 +3,52 @@
     <div class="panel-heading">
             <h1>Simulation - drag'n drop</h1>
     </div>
-    <div class="panel-body">
-        <div *ngIf="groupsPlan">
-            <table class="table table-bordered">
-                <tr> <!-- Title line -->
-                    <th><div class="floating-box-header"><p>Heure</p></div></th>
-                    <ng-container *ngFor="let pitch of pitchesPlan">
-                        <th><div class="floating-box-header"><p>Terrain {{pitch.name}}</p></div></th>
-                        <th><div class="floating-box-header"><p></p></div></th>
+    <div *ngIf="groupsPlan" class="panel-body">
+        <div *ngIf="errorConflictMessage" class="alert alert-danger">{{ errorConflictMessage }}</div>
+        <div *ngIf="errorMultiTeamMessage" class="alert alert-warning">{{ errorMultiTeamMessage }}</div>
+        <table class="table table-bordered">
+            <tr> <!-- Title line -->
+                <th><div class="floating-box-header"><p>Heure</p></div></th>
+                <ng-container *ngFor="let pitch of pitchesPlan">
+                    <th><div class="floating-box-header"><p>Terrain {{pitch.name}}</p></div></th>
+                    <th><div class="floating-box-header"><p></p></div></th>
+                </ng-container>
+            </tr>
+
+            <ng-container *ngFor="let h of hours; let indexRowHour = index">
+                <tr> <!-- for each match : new table line -->
+                    <!-- Heure -->
+                    <td>
+                            <div><p>{{h | date: 'HH:mm'}}</p></div>
+                    </td>
+                    <ng-container *ngFor="let pitch of pitchesPlan; let indexColPitch = index">
+                        <td><!-- match -->
+                            <div class="group-header" [dragula]='"match-bag"' [dragulaModel]='pitch.planning[indexRowHour].matchs'>
+                                <article *ngIf="!pitch.planning[indexRowHour].matchs.length">
+                                    <div class="donotdrag text-danger" >### VIDE ###</div>
+                                </article>
+                                <article *ngFor="let match of pitch.planning[indexRowHour].matchs;">
+                                        <div [ngClass]="{ 'bg-danger text-white': match.isConflict, 'bg-warning text-white': pitch.planning[indexRowHour].matchs.length > 1}">
+                                            {{match.equipe_home.nom_equipe}}-{{match.equipe_visiteur.nom_equipe}}
+                                        </div>
+                                </article>
+                            </div>
+                        </td>
+                            <!-- col match separator -->
+                        <td><div class="group-header"></div></td>            
                     </ng-container>
                 </tr>
-
-                <ng-container *ngFor="let h of hours; let indexRowHour = index">
-                    <tr> <!-- for each match : new table line -->
-                        <!-- Heure -->
-                        <td>
-                             <div><p>{{h | date: 'HH:mm'}}</p></div>
-                        </td>
-                        <ng-container *ngFor="let pitch of pitchesPlan; let indexColPitch = index">
-                            <td><!-- match -->
-                                <div class="group-header" [dragula]='"match-bag"' [dragulaModel]='pitch.planning[indexRowHour].matchs'>
-                                    <article *ngIf="!pitch.planning[indexRowHour].matchs.length">
-                                        <div class="donotdrag text-danger" >### VIDE ###</div>
-                                    </article>
-                                    <article *ngFor="let match of pitch.planning[indexRowHour].matchs;">
-                                            <div [ngClass]="{ 'bg-danger text-white': match.isConflict, 'bg-warning text-white': pitch.planning[indexRowHour].matchs.length > 1}">
-                                                {{match.equipe_home.nom_equipe}}-{{match.equipe_visiteur.nom_equipe}}
-                                            </div>
-                                    </article>
-                                </div>
-                            </td>
-                             <!-- col match separator -->
-                            <td><div class="group-header"></div></td>            
-                        </ng-container>
-                    </tr>
-                </ng-container>
-            </table>
+            </ng-container>
+        </table>
+        <div class="col-sm-12 form-group">
+        <button type="submit" (click)="createNewHourLine()" class="btn btn-info">Ajouter une nouvelle ligne</button>
         </div>
     </div>
 </div>
-<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
 
-<div *ngIf="readyToDbPush"  class="panel panel-default">
+
+<div *ngIf="!isTeamConflict && !isMultiTeamInBox"  class="panel panel-default">
     <div class="panel-heading">
             <h1>Prêt pour sauvegarder les données</h1>
     </div>
@@ -55,7 +57,7 @@
             <p>Opération définitive, le tournoi passera en statut "Ouvert".</p>
         </div>
         <div class="col-sm-12 form-group">
-            <button type="submit" (click)="InsertDataMatchsToDB()" class="btn btn-danger btn-block">Valider et inscire les données</button>
+            <button type="submit" (click)="insertDataMatchsToDB()" class="btn btn-danger btn-block">Valider et inscire les données</button>
         </div>
     </div>
 </div>
