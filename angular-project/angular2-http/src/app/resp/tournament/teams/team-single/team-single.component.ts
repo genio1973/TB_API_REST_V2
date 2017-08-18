@@ -36,8 +36,6 @@ export class TeamSingleComponent implements OnInit {
         this.tournamentId = params['idtournoi'];
       });
 
-    console.log("idTeam"+this.teamId);
-
     this.service
       .getTeam(this.teamId)
       .subscribe(team => this.team = team);       

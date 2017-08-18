@@ -32,7 +32,6 @@ export class ResultListComponent implements OnInit, OnDestroy {
     });
       
     // Detect if its a public route or not
-    //console.log(this.route.pathFromRoot[1].snapshot.url[0].path);
     if(this.route.pathFromRoot[1].snapshot.url[0].path === 'public'){
       this.responsibleRoute = false;
     }

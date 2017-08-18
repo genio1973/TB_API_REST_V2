@@ -15,7 +15,6 @@ export class TournamentListComponent implements OnInit {
                  private tournamentService: RespTournamentService ){}
 
     ngOnInit(): void {
-      console.log('je passe par là');
       this.tournamentService.getTournaments()
           .subscribe(
             tournaments => this.tournaments = tournaments);

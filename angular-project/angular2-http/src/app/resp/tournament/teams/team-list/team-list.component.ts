@@ -32,12 +32,10 @@ export class TeamListComponent implements OnInit {
     ngOnInit(): void {
       // get the id from the url
       this.route.pathFromRoot[2].params.subscribe(params => {
-        console.log(params['idtournoi']);
         this.tournamentId = params['idtournoi'];
       });
 
       // Detect if its a public route or not
-      //console.log(this.route.pathFromRoot[1].snapshot.url[0].path);
       if(this.route.pathFromRoot[1].snapshot.url[0].path === 'public'){
         this.responsibleRoute = false;
       }

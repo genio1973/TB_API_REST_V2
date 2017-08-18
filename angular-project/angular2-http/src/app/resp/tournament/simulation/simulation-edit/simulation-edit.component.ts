@@ -389,8 +389,6 @@ export class SimulationEditComponent implements OnInit {
               id_terrain: m.id_terrain,
               statut: m.statut,
       }
-    console.log(m.date_match);
-    console.log(match.heure);
     if(m.equipe_arbitre){
       match.id_equipe_arbitre = m.equipe_arbitre.id_equipe;
     }

@@ -37,11 +37,9 @@ export class GroupCreateComponent implements OnInit {
             data => {
               this.successMessage = 'Tournoi a été créé.';
               this.router.navigate(['/responsible/tournament',  this.groups[0].id_tournoi, 'groups']);
-              //console.log('user was created');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 

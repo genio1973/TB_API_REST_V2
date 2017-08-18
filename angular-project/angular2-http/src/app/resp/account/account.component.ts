@@ -53,11 +53,9 @@ export class AccountComponent implements OnInit {
             user => {
               this.successMessage = 'User was updated.';              
               this.router.navigate(['/account']);
-              //console.log('user was updated');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
         this.clearMessages();
     }

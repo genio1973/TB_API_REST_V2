@@ -99,7 +99,6 @@ export class SimulationComponent implements OnInit {
       }
       else{
         this.setMatchDifferentPitches();
-        console.log(this.groupsPlan);
       }
     
       // Contrôle s'il existe des conflits (equipe impliquée sur plusieurs front en même temps)
@@ -316,7 +315,6 @@ export class SimulationComponent implements OnInit {
   
     // Get all match in a array
     let myPlanning: MatchDetails[] = [];
-    //console.log( this.groupsPlan[0].planning[0]);
     this.groupsPlan.map(g => g.planning.map( m => myPlanning.push(m) ));
     
 
@@ -347,7 +345,6 @@ export class SimulationComponent implements OnInit {
       })
     })
 
-    //console.log(matchsGroupBy);
   }
 
   /**
@@ -477,8 +474,6 @@ export class SimulationComponent implements OnInit {
               id_terrain: m.id_terrain,
               statut: m.statut,
       }
-    console.log(m.date_match);
-    console.log(match.heure);
     if(m.equipe_arbitre){
       match.id_equipe_arbitre = m.equipe_arbitre.id_equipe;
     }

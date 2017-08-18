@@ -28,7 +28,7 @@ export class PitchesComponent implements OnInit {
     // get every teams in groups in this tournament
     this.service
       .getTournamentPitches(this.tournamentId)
-      .subscribe(pitches => { this.pitches = pitches; console.log(this.pitches); });
+      .subscribe(pitches => { this.pitches = pitches });
     
   }
 

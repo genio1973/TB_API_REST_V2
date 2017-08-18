@@ -64,11 +64,9 @@ export class TeamCreateComponent implements OnInit {
                 this.router.navigate(['/responsible/tournament',  this.group.id_tournoi, 'groups']);
               }
               
-              //console.log('user was created');
             },
             err => {
               this.errorMessage = err;
-              //console.log(err);
             });
     }
 
