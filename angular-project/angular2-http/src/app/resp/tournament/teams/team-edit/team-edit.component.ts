@@ -17,7 +17,7 @@ export class TeamEditComponent implements OnInit {
     teamId: number;
     tournamentId: number;
     tournament: Tournament;
-    coachs: Coach[];
+    coachs: Coach[] = [];
     coach: Coach = {id_personne:0, nom:'', prenom: '', courriel:''};  
     
     group: Group;
@@ -42,19 +42,19 @@ export class TeamEditComponent implements OnInit {
         this.tournamentId = params['idtournoi'];
       });
 
-      this.publicService.getTournament(this.tournamentId)
-          .subscribe( t => this.tournament = t);
+      this.publicService.getTournament(this.tournamentId).subscribe( t => this.tournament = t);
 
-      this.publicService
-          .getTeam(this.teamId)
-          .subscribe(team => this.team = team);
+      this.publicService.getTeam(this.teamId).subscribe(team => this.team = team);
 
       this.respService
         .getCoachs()
         .subscribe(coachs => {
           this.coachs = coachs;
           this.coach = coachs.find(c => c.id_personne == this.team.id_personne);
-         } ); 
+          } ,
+          err => {
+            this.coachs = [];
+          });
 
       this.publicService
       .getGroupsTournament(this.tournamentId)

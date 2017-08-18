@@ -27,6 +27,7 @@ export class CoachListComponent implements OnInit {
         this.tournamentId = params['idtournoi'];
       });
 
+      let isGetTeamsOk: boolean = false;
       if(this.tournamentId){
         this.RespService
             .getTournamentTeams(this.tournamentId)
@@ -35,10 +36,20 @@ export class CoachListComponent implements OnInit {
                 this.coachs.push({ id_personne: t.id_personne, nom: t.nom, prenom: t.prenom,
                                     courriel: t.courriel, tel: t.tel, tel_mobile: t.tel_mobile,
                                     adresse: t.adresse, localite: t.localite});
-              });
+                isGetTeamsOk = true;
+                } ,
+                err => {
+                  this.coachs = [];
+                });
+            } ,
+            err => {
+              this.coachs = [];
             });
       }
-      else {
+      
+      // if no teams present for a coach or no id tournament
+      if(!isGetTeamsOk){
+      
         this.RespService
             .getCoachs()
             .subscribe(coachs => this.coachs = coachs,

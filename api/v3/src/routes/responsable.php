@@ -118,8 +118,8 @@ Routes par défauts : vx/resp/route
                 $data["result"] = $res;
             } else {
                 $data["error"] = true;
-                $data["message"] = "400";
-                $data["result"] = "Impossible d'accèder aux données. S'il vous plaît essayer à nouveau";
+                $data["message"] = "200";
+                $data["result"] = "Pas de données. S'il vous plaît essayer à nouveau";
                 return echoRespnse(400, $response, $data);
             }     
              
@@ -273,7 +273,7 @@ Routes par défauts : vx/resp/route
             } else {
                 $data["error"] = true;
                 $data["message"] = "400";
-                $data["result"] = "Impossible de récupérer les données. S'il vous plaît essayer à nouveau";
+                $data["result"] = "Pas d'équipe à récupérer. Il n'y a peut être pas d'équipe.";
                 return echoRespnse(400, $response, $data);
             }
             // echo de la réponse  JSON
