@@ -14,7 +14,6 @@ export class TeamsComponent implements OnInit {
   ngOnInit() {
           // get the id from the url
       this.route.pathFromRoot[2].params.subscribe(params => {
-        console.log(params['idtournoi']);
         this.tournamentId = params['idtournoi'];
       })
   }

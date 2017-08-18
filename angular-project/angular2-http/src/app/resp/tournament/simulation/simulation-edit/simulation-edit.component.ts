@@ -376,20 +376,21 @@ export class SimulationEditComponent implements OnInit {
     }, 2000);
   }
 
- /**
+  /**
    * Format match to insert in db
    * @param m
    */
   private toMatchFieldCreation(m: MatchDetails): Match {
     let match: Match = {
-              date_match: `${m.date_match.getFullYear()}-${m.date_match.getMonth()}-${m.date_match.getDay()}`,
+              date_match: `${m.date_match.getFullYear()}-${m.date_match.getMonth()+1}-${m.date_match.getDate()}`,
               heure: `${m.date_match.getHours()}:${m.date_match.getMinutes()}:00`,
               id_equipe_home: m.equipe_home.id_equipe,
               id_equipe_visiteur: m.equipe_visiteur.id_equipe,
               id_terrain: m.id_terrain,
               statut: m.statut,
       }
-
+    console.log(m.date_match);
+    console.log(match.heure);
     if(m.equipe_arbitre){
       match.id_equipe_arbitre = m.equipe_arbitre.id_equipe;
     }
