@@ -71,18 +71,20 @@ export class ResultEditComponent implements OnInit {
     this.createNewMatchResult();
 
     // update statut match
-    this.updateMatchStatut();
+    // Wait to complete old scores deletion
+    setTimeout(() => {
+       this.updateMatchStatut();
+    }, 1000);
 
-    // si pas d'erreur redirige à la liste des résultats
+    // if no erro go back to the result list
     if(this.errorMessage == ''){
-      this.successMessage = 'Résultat mis à jour.';
+      this.successMessage = 'Résultat mis à jour. Vous allez être redirigés sur la page des résulats';
 
       setTimeout(() => {
         this.router.navigate(['/responsible/tournament',  this.tournamentId, 'results','list']);
-      }, 3000);
+      }, 2000);
       
     }
-
   }
 
   /**

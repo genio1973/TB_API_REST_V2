@@ -311,7 +311,7 @@ export class SimulationEditComponent implements OnInit {
     });
 
     //Insert les nouveau terrains et les matchs   
-    this.insertPitchesDB();
+    this.insertPitchesAndMatchsDB();
     
     // Insert les matchs
     //this.insertMatchsDB();
@@ -321,7 +321,7 @@ export class SimulationEditComponent implements OnInit {
   /**
    * Insert les nouveaux terrains  
    */
-  private insertPitchesDB(){
+  private insertPitchesAndMatchsDB(){
     let id_first_pitch_inserted: number = 0;
     let pitches: Pitch[] = [];
 
