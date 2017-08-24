@@ -10,8 +10,8 @@ import { Subject } from "rxjs/Subject";
 export class AdminService {
 
     responsibles: Responsible[];    
-    private adminUrl: string = 'http://test.romandvolley.ch/api/v1/admin';
-    private respUrl: string = 'http://test.romandvolley.ch/api/v1/resp';
+    private adminUrl: string = 'http://tournoi.romandvolley.ch/api/v1/admin';
+    private respUrl: string = 'http://tournoi.romandvolley.ch/api/v1/resp';
 
     // observable src : contains data
     private responsibleCreatedSource = new Subject<Responsible>();

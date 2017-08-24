@@ -7,7 +7,7 @@ import { ApiResponse } from "../models/api-response";
 @Injectable()
 export class AuthService {
 
-  private authUrl: string = 'http://test.romandvolley.ch/api/v1/public/user';
+  private authUrl: string = 'http://tournoi.romandvolley.ch/api/v1/public/user';
   private loggedIn: boolean = false;
   private loggedInAsAdmin: boolean = false;
   private loggedUser = {email: '', droits:'', id_role:''};
