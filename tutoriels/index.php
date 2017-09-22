@@ -30,13 +30,16 @@
                         Les tutoriels
                         </h1>
                     </div>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 panel ">
                     <div class="panel-body">
                          <!-- Début vidéo -->
                         <ul class="video-box">
                             <li class="row left clearfix">
                                 <span class=".col-xs-12 .col-sm-6 .col-lg-4 video-img pull-left">
-                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/BVUejWVwQhk" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/yuTEofoQT3g" frameborder="0" allowfullscreen></iframe>
                                 </span>
                                 <div class=".col-xs-12 .col-sm-6 .col-lg-8 video-body"> 
                                     <strong >Création d'un tournoi</strong> 
@@ -50,7 +53,7 @@
                         <ul class="video-box">
                             <li class="row left clearfix">
                                 <span class=".col-xs-12 .col-sm-6 .col-lg-4 video-img pull-left">
-                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/-ptNcQAwwzc" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/iJR6akjfjmg" frameborder="0" allowfullscreen></iframe>
                                 </span>
                                 <div class=".col-xs-12 .col-sm-6 .col-lg-8 video-body"> 
                                     <strong >Créer des coachs</strong> 
@@ -64,7 +67,7 @@
                         <ul class="video-box">
                             <li class="row left clearfix">
                                 <span class=".col-xs-12 .col-sm-6 .col-lg-4 video-img pull-left">
-                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/5fnsBrwsnN4" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/bpGGL6zhxes" frameborder="0" allowfullscreen></iframe>
                                 </span>
                                 <div class=".col-xs-12 .col-sm-6 .col-lg-8 video-body"> 
                                     <strong >Génération de planning</strong> 
@@ -78,7 +81,7 @@
                         <ul class="video-box">
                             <li class="row left clearfix">
                                 <span class=".col-xs-12 .col-sm-6 .col-lg-4 video-img pull-left">
-                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/mBUST0TC9b4" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/G8I4fiwSdjM" frameborder="0" allowfullscreen></iframe>
                                 </span>
                                 <div class=".col-xs-12 .col-sm-6 .col-lg-8 video-body"> 
                                     <strong >Inscrire les résultats</strong> 
@@ -92,7 +95,7 @@
                         <ul class="video-box">
                             <li class="row left clearfix">
                                 <span class=".col-xs-12 .col-sm-6 .col-lg-4 video-img pull-left">
-                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/Kgv8h0wILuI" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="300" height="180" src="https://www.youtube.com/embed/pWrGoxji3jY" frameborder="0" allowfullscreen></iframe>
                                 </span>
                                 <div class=".col-xs-12 .col-sm-6 .col-lg-8 video-body"> 
                                     <strong >Eléments supplémentaires</strong> 

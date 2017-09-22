@@ -13,12 +13,14 @@ import { Pitch } from "../models/pitch";
 import { Resultat } from "../models/resultat";
 import { ScoreSet } from "../models/score-set";
 import { Ranking } from "../models/ranking";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class PublicTournamentService {
 
     tournaments: Tournament[];
-    private tournamentUrl: string = 'http://tournoi.romandvolley.ch/api/v1/public';
+    //private tournamentUrl: string = 'http://tournoi.romandvolley.ch/api/v1/public';
+    private tournamentUrl: string = environment.apiUrl + '/public';
 
     // observable src : contains data
     private tournamentSource = new Subject<string>();

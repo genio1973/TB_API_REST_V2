@@ -14,12 +14,14 @@ import { Coach } from "../models/coach";
 import { Pitch } from "../models/pitch";
 import { Match } from "../models/match";
 import { SetMatch } from "../models/set-match";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class RespTournamentService {
 
     tournaments: Tournament[];
-    private tournamentUrl: string = 'http://tournoi.romandvolley.ch/api/v1/resp';
+    //private tournamentUrl: string = 'https://test.romandvolley.ch/api/v1/resp';
+    private tournamentUrl: string = environment.apiUrl + '/resp';
 
     // observable src : contains data
     private tournamentSource = new Subject<string>();

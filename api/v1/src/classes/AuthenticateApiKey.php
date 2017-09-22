@@ -55,11 +55,7 @@ class AuthenticateApiKey
             $data['result'] = "Clé API est manquante";
             return echoRespnse(400, $response, $data);
         }
-
-/*        global $user_id;
-        // Obtenir l'ID utilisateur (clé primaire)
-        $user_id = $db->getUserId($api_key);
-*/        
+       
         $response = $next($request, $response);
 
         return $response;

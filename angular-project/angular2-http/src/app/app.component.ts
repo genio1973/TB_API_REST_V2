@@ -2,7 +2,7 @@ import { Component, enableProdMode } from '@angular/core';
 import { AuthService } from "./shared/services/auth.service";
 import { Router } from "@angular/router";
 import { RolesEnum } from "./shared/models/rolesEnum";
-enableProdMode();
+enableProdMode(); // s'assure du passage en mode production, masque les messages de debogage
 
 @Component({
   selector: 'my-app',

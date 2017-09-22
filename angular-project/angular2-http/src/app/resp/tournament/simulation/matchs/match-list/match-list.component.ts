@@ -9,7 +9,7 @@ import { MatchDetails } from "../../../../../shared/models/match-details";
   styleUrls: ['./match-list.component.css']
 })
 export class MatchListComponent implements OnInit{
-  @Input() groupsPlan: MatchsPlan[];
+  //@Input() groupsPlan: MatchsPlan[];
   @Input() matchs: MatchDetails[] = [];
   
   constructor() { }

@@ -3,11 +3,14 @@ import { Http, Response, RequestOptions, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { ApiResponse } from "../models/api-response";
+import { environment } from "../../../environments/environment";
+
 
 @Injectable()
 export class AuthService {
-
-  private authUrl: string = 'http://tournoi.romandvolley.ch/api/v1/public/user';
+ 
+  //private authUrl: string = 'http://tournoi.romandvolley.ch/api/v1/public/user';
+  private authUrl: string = environment.apiUrl + '/public/user';
   private loggedIn: boolean = false;
   private loggedInAsAdmin: boolean = false;
   private loggedUser = {email: '', droits:'', id_role:''};

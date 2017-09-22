@@ -5,13 +5,16 @@ import { ApiResponse } from "../models/api-response";
 
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AdminService {
 
     responsibles: Responsible[];    
-    private adminUrl: string = 'http://tournoi.romandvolley.ch/api/v1/admin';
-    private respUrl: string = 'http://tournoi.romandvolley.ch/api/v1/resp';
+    //private adminUrl: string = 'http://tournoi.romandvolley.ch/api/v1/admin';
+    //private respUrl: string = 'http://tournoi.romandvolley.ch/api/v1/resp';
+    private adminUrl: string = environment.apiUrl + '/admin';
+    private respUrl: string = environment.apiUrl + '/resp';
 
     // observable src : contains data
     private responsibleCreatedSource = new Subject<Responsible>();
@@ -65,9 +68,6 @@ export class AdminService {
             .map(this.toResponsible)
             .catch((e) => this.handleError(e));
     }
-    // test(data){
-    //     console.log(data.json());
-    // }
 
     /**
     * Get a single responsible

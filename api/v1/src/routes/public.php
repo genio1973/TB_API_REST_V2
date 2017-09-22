@@ -38,9 +38,9 @@ Routes par défauts : vx/public/route
                     // vérifier que le compte est tourjours actif !
                     if($user['status'] == 1){
                         $result['error'] = false;
-                        $result['message'] = '401';
+                        $result['message'] = '200';
                         $result['result'] = $user;
-                        $statusCode = 401;
+                        $statusCode = 200;
                     }
                     else {
                         $result['error'] = true;
@@ -172,7 +172,7 @@ $app->get('/public/tournoi/{id_tournoi}/resultats', function (Request $request, 
         });
 
 
-/* Liste des résultats d'un groupe
+/* Liste les informations d'une équipe
  * url - /public/equipe/{id_equipe}
  * methode - GET
  */

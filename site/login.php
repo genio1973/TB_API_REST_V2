@@ -11,7 +11,7 @@ if(isset($_POST['users_pass']))
     $pass = filter_var($_POST["users_pass"], FILTER_SANITIZE_STRING);
 
     //Use API to connect
-    $client = new  ApiSimpleGetRestClient('http://test.romandvolley.ch/api/v1/public/login');
+    $client = new  ApiSimpleGetRestClient('https://test.romandvolley.ch/api/v1/public/login');
     $response = $client->get($email.'/'.$pass);
     $user = json_decode(($response), false);
     if($user!==null)
@@ -26,7 +26,7 @@ if(isset($_POST['users_pass']))
 }
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="https://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,7 +38,7 @@ if(isset($_POST['users_pass']))
         <!-- CUSTOM STYLES-->
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
-   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 
 </head>
 <body>

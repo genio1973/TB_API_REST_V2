@@ -67,7 +67,7 @@ $app->get('/roles', function(Request $request, Response $response) {
             } else {
                 $data["error"] = true;
                 $data["message"] = "400";
-                $data["result"] = "Impossible de réucupérer les rôles. S'il vous plaît essayer à nouveau";
+                $data["result"] = "Impossible de récupérer les rôles. S'il vous plaît essayer à nouveau";
                 return echoRespnse(400, $response, $data);
             }
         });
