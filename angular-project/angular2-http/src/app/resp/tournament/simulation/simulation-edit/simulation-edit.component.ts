@@ -70,7 +70,7 @@ export class SimulationEditComponent implements OnInit {
       // Get all match to made a drag n'drop system. A drag'n drop bag contains more matchs. (Dragula need it !)
       let i = 0;
       this.groupsPlan.map( g => {
-        if(g.planning.length > greatherPitchLength) { greatherPitchName =  g.nameBlock}
+        if(g.planning.length > greatherPitchLength) { greatherPitchName =  g.nameBlock; greatherPitchLength = g.planning.length}
 
         this.pitchesPlan.push(new PitchPlan());
         g.planning.map ( m => {
@@ -90,8 +90,14 @@ export class SimulationEditComponent implements OnInit {
         });
 
       // Add a 1 row, to give opportonuty of shifting
-      //this.createNewHourLine();
+      // this.createNewHourLine();
       this.addMatchEndPitches();
+      console.log('this.groupsPlan');
+      console.log(this.groupsPlan);
+      console.log('Récupère les matchs par terrain');
+      console.log(this.pitchesPlan);
+      console.log('Tableau des heures (hours[])');
+      console.log(this.hours);
 
       this.checkConflict();
       this.checkMultiTeams();
