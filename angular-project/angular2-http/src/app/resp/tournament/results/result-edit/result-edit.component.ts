@@ -19,7 +19,7 @@ export class ResultEditComponent implements OnInit {
   errorMessage: string = '';
   statuts: string[] = ['', 'partiel', 'final'];
   tournamentId: number;
-
+  resultLocked: boolean = true;
 
   constructor(  private service: PublicTournamentService,
                 private respService: RespTournamentService,
@@ -58,14 +58,26 @@ export class ResultEditComponent implements OnInit {
       });
   }
 
+  /*
+  * Dévérouille et supprime les résultats
+  */
+  toggleLock(){
+    this.resultLocked = !this.resultLocked;
+    if(!this.resultLocked){
+      this.deletePreMatchResult();
+    }
+  }
 
+  /*
+  * Mise à jour des résultats
+  */
   updateResult(){
 
     this.errorMessage = '';
     this.successMessage = '';
     
     // delete old match's result (all sets) 
-    this.deletePreMatchResult();
+    //this.deletePreMatchResult();
 
     // create new match's result
     this.createNewMatchResult();
@@ -114,6 +126,10 @@ export class ResultEditComponent implements OnInit {
       err => {
         //this.errorMessage = err;
       });
+      
+      // Mettre à jour le satut du match
+      this.result.statut = '';
+      this.updateMatchStatut();
   }
 
   /**

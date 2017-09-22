@@ -89,16 +89,7 @@ export class SimulationEditComponent implements OnInit {
           this.hours.push(m.date_match);
         });
 
-      // Add a 1 row, to give opportonuty of shifting
-      // this.createNewHourLine();
       this.addMatchEndPitches();
-      console.log('this.groupsPlan');
-      console.log(this.groupsPlan);
-      console.log('Récupère les matchs par terrain');
-      console.log(this.pitchesPlan);
-      console.log('Tableau des heures (hours[])');
-      console.log(this.hours);
-
       this.checkConflict();
       this.checkMultiTeams();
     });
