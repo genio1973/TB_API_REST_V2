@@ -233,18 +233,18 @@ export class SimulationComponent implements OnInit {
     for(let i=0; i<nbMatchTotal; i++){      
       pitchesPlanning.push({terrain: i%nbPitches+1, date_match: date_heure});
       if(i%nbPitches==nbPitches-1){
-        date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000))
-          //Définir la nouvelle heure pour les prochains matchs
-          date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
+        //date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000))
+        //Définir la nouvelle heure pour les prochains matchs
+        date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000));
 
-          //Si c'est dans l'heure de la pause alors décaler de la durée de la pause
-          if(pauseToDo && date_heure.getTime() >= this.d_pause.getTime()){
-            date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000) + (this.configSimul.pause_duree*60*1000)); 
-            pauseToDo = false;
-          }
+        //Si c'est dans l'heure de la pause alors décaler de la durée de la pause
+        if(pauseToDo && date_heure.getTime() >= this.d_pause.getTime()){
+          date_heure = new Date((new Date(date_heure)).getTime() + (this.configSimul.match_duree*60*1000) + (this.configSimul.pause_duree*60*1000)); 
+          pauseToDo = false;
+        }
       }
     }
-    
+    console.log(pitchesPlanning);
 
     // Build general planning. Put for each match the pitch number
     let numberGroups: number = this.groupsPlan.length -1 ; // 0 to length-1
