@@ -10,6 +10,7 @@
                         <!--<th>id</th>--><th>Date (réf)</th><th>Nom</th><th>Statut</th>
                     </tr>
                 </thead>
+                
                 <tbody>
                     <ng-container *ngFor="let tournament of tournaments" >
                           <tr class="odd gradeX" [routerLink]="['/public/tournament/', tournament.id] ">

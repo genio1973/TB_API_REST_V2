@@ -67,6 +67,7 @@ export class SimulationEditComponent implements OnInit {
       let greatherPitchName: string = ''; // = this.groupsPlan[0].nameBlock;
       let greatherPitchLength: number = 0;
 
+      
       // Get all match to made a drag n'drop system. A drag'n drop bag contains more matchs. (Dragula need it !)
       let i = 0;
       this.groupsPlan.map( g => {
@@ -75,7 +76,8 @@ export class SimulationEditComponent implements OnInit {
         this.pitchesPlan.push(new PitchPlan());
         g.planning.map ( m => {
           let listMatch = new ListMatch();
-          listMatch.matchs.push(m);
+          if(m.equipe_home.id_equipe != -1) // si ce n'est pas le match tampon alors...
+            listMatch.matchs.push(m);
           
           this.pitchesPlan[i].planning.push(listMatch);
         })

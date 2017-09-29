@@ -244,7 +244,7 @@ export class SimulationComponent implements OnInit {
           }
       }
     }
-
+    
 
     // Build general planning. Put for each match the pitch number
     let numberGroups: number = this.groupsPlan.length -1 ; // 0 to length-1
@@ -284,7 +284,6 @@ export class SimulationComponent implements OnInit {
       }
     }
 
-
     // replace les matchs dans les plannings de chaque groupe
     // mémoriser les numéro des groupes
     let memGroup: number[] = [];
@@ -316,7 +315,6 @@ export class SimulationComponent implements OnInit {
     // Get all match in a array
     let myPlanning: MatchDetails[] = [];
     this.groupsPlan.map(g => g.planning.map( m => myPlanning.push(m) ));
-    
 
     // Group match by pitch
     let matchsGroupBy: MatchsGroupBy[] = [];
